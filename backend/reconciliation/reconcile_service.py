@@ -28,7 +28,7 @@ def process_files(file_entries: List[Dict], show_progress=True) -> pd.DataFrame:
             logger.warning("File validation failed for %s %s - skipping", bank, account)
             continue
 
-        normalized = parser.normalize_transactions(df, bank, account)
+        normalized = normalize_transactions(df, bank, account)
         normalized_list.append(normalized)
 
     if not normalized_list:
@@ -50,4 +50,5 @@ def process_files(file_entries: List[Dict], show_progress=True) -> pd.DataFrame:
         classified = classified.reset_index(drop=True)
 
     return classified
+
 
