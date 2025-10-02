@@ -88,15 +88,32 @@ BANK_PRESETS = {
 
 
 # ------------------------
-# Heuristic column finder
+# Helpers
 # ------------------------
+def _clean_columns(df):
+    """Strip whitespace and lowercase all column headers for safe matching."""
+    return {c.strip().lower(): c for c in df.columns}
+
+
 def _find_column(df, keywords):
-    cols = {c.lower(): c for c in df.columns}
+    """Heuristic finder with case-insensitive + space-tolerant match."""
+    cols = _clean_columns(df)
     for k in keywords:
+        k = k.strip().lower()
+        if k in cols:
+            return cols[k]
         for c_lower, c_orig in cols.items():
             if k in c_lower:
                 return c_orig
     return None
+
+
+def _match_column_case_insensitive(df, col_name):
+    """Match preset column to actual DataFrame col (case-insensitive + space-tolerant)."""
+    if not col_name:
+        return None
+    cols = _clean_columns(df)
+    return cols.get(col_name.strip().lower(), None)
 
 
 # ------------------------
@@ -116,16 +133,35 @@ def normalize_transactions(df: pd.DataFrame, bank_name: str, account_number: str
     df_local = df.copy()
     df_local.columns = [c.strip() for c in df_local.columns]
 
+    # Log columns for debugging
+    logger.info(f"Bank: {bank_name}, Available columns: {df_local.columns.tolist()}")
+
     preset = BANK_PRESETS.get(bank_name.strip().title()) or BANK_PRESETS.get(bank_name.strip().upper())
 
     if preset:
         logger.info(f"Using preset mapping for {bank_name}")
-        date_col = preset.get("date")
-        desc_col = preset.get("description")
-        debit_col = preset.get("debit")
-        credit_col = preset.get("credit")
-        amount_col = preset.get("amount")
-        balance_col = preset.get("balance")
+        date_col = _match_column_case_insensitive(df_local, preset.get("date"))
+        desc_col = _match_column_case_insensitive(df_local, preset.get("description"))
+        debit_col = _match_column_case_insensitive(df_local, preset.get("debit"))
+        credit_col = _match_column_case_insensitive(df_local, preset.get("credit"))
+        amount_col = _match_column_case_insensitive(df_local, preset.get("amount"))
+        balance_col = _match_column_case_insensitive(df_local, preset.get("balance"))
+
+        # Fallback if preset not found
+        if not date_col:
+            logger.warning(f"Preset date column not found. Falling back.")
+            date_col = _find_column(df_local, ["date", "txn_date", "value_date"])
+        if not desc_col:
+            desc_col = _find_column(df_local, ["description", "details", "narrative", "memo"])
+        if not debit_col:
+            debit_col = _find_column(df_local, ["debit", "withdrawal", "money out"])
+        if not credit_col:
+            credit_col = _find_column(df_local, ["credit", "deposit", "money in"])
+        if not amount_col:
+            amount_col = _find_column(df_local, ["amount", "transaction amount", "value"])
+        if not balance_col:
+            balance_col = _find_column(df_local, ["balance", "running balance"])
+
     else:
         logger.info(f"Falling back to heuristic mapping for {bank_name}")
         date_col = _find_column(df_local, ["date", "txn_date", "value_date"])
@@ -154,8 +190,8 @@ def normalize_transactions(df: pd.DataFrame, bank_name: str, account_number: str
         df_out["debit"] = pd.to_numeric(df_local[debit_col], errors="coerce").fillna(0)
         df_out["credit"] = pd.to_numeric(df_local[credit_col], errors="coerce").fillna(0)
     elif amount_col:
-        df_out["debit"] = df_local[amount_col].apply(lambda x: abs(x) if float(x) < 0 else 0)
-        df_out["credit"] = df_local[amount_col].apply(lambda x: float(x) if float(x) > 0 else 0)
+        df_out["debit"] = pd.to_numeric(df_local[amount_col], errors="coerce").apply(lambda x: abs(x) if x < 0 else 0)
+        df_out["credit"] = pd.to_numeric(df_local[amount_col], errors="coerce").apply(lambda x: x if x > 0 else 0)
     else:
         df_out["debit"], df_out["credit"] = 0, 0
 
@@ -172,3 +208,5 @@ def normalize_transactions(df: pd.DataFrame, bank_name: str, account_number: str
     df_out["accounttype"] = None
 
     return df_out
+
+
