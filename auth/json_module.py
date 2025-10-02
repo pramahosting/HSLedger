@@ -14,8 +14,8 @@ import tempfile
 USERS_FILE = "users.json"
 
 # ===== EMAIL SETTINGS =====
-EMAIL_USER = st.secrets.get("EMAIL_USER", "")
-EMAIL_PASSWORD = st.secrets.get("EMAIL_PASSWORD", "")
+EMAIL_USER = os.getenv("EMAIL_USER", "")
+EMAIL_PASS = os.getenv("EMAIL_PASS", "")
 SMTP_SERVER = "smtp.gmail.com"
 SMTP_PORT = 587
 
@@ -221,4 +221,5 @@ def send_reset_email(email: str, token: str):
             server.sendmail(EMAIL_USER or "no-reply", email, msg.as_string())
         st.success("Password reset link sent to your email.")
     except Exception as e:
+
         st.error(f"Error sending email: {e}")
