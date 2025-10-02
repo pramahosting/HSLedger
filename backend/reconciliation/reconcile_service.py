@@ -2,7 +2,6 @@
 
 from typing import List, Dict
 import pandas as pd
-from backend.reconciliation import parser
 from backend.reconciliation.bank_normalizer import normalize_transactions
 from backend.reconciliation import classifier
 from backend.utils.file_utils import load_csv, validate_file
@@ -51,3 +50,4 @@ def process_files(file_entries: List[Dict], show_progress=True) -> pd.DataFrame:
         classified = classified.reset_index(drop=True)
 
     return classified
+
