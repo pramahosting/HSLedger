@@ -4,7 +4,12 @@ import streamlit as st
 import bcrypt
 from datetime import datetime, timedelta
 import extra_streamlit_components as stx
-from json_module import (
+
+auth_dir = os.path.join(current_dir, "Auth")
+if auth_dir not in sys.path:
+    sys.path.append(auth_dir)
+
+from auth.json_module import(
     get_user, get_user_count, add_user, update_password,
     set_reset_token, get_user_by_token, update_user, delete_user,
     send_reset_email, get_all_users
@@ -169,3 +174,4 @@ def auth_ui():
         signup_tab()
     
     return False  # Not admin
+
