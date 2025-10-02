@@ -1,0 +1,22 @@
+# Core
+streamlit
+pandas
+openpyxl
+python-dateutil
+
+# Logging & Utilities
+loguru
+
+# PDF parsing (for pdf_parser module)
+pdfplumber
+PyPDF2
+
+# Excel/CSV helpers
+xlrd
+xlsxwriter
+
+# Optional: for better performance with large CSVs
+pyarrow
+
+# If you’re dealing with environment variables
+python-dotenv

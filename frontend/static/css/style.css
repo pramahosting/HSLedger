@@ -1,0 +1,21 @@
+/* frontend/static/css/style.css */
+body {
+    font-family: Inter, Arial, sans-serif;
+    background: #f5f7fb;
+    color: #1f2937;
+}
+
+/* Classification color tokens */
+.internal {
+    background-color: #d4f7dc;
+}
+
+.external {
+    background-color: #e8f3ff;
+}
+
+.doubtful {
+    background-color: #fff3cd;
+}
+
+/* Table style when exported to Excel will be handled on Excel generation side */
