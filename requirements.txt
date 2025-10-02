@@ -3,6 +3,7 @@ streamlit
 pandas
 openpyxl
 python-dateutil
+bcrypt==4.1.3
 
 # Logging & Utilities
 loguru
