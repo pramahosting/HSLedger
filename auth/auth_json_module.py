@@ -5,6 +5,7 @@ import bcrypt
 from datetime import datetime, timedelta
 import extra_streamlit_components as stx
 import os
+current_dir = os.path.dirname(os.path.abspath(__file__))
 auth_dir = os.path.join(current_dir, "Auth")
 if auth_dir not in sys.path:
     sys.path.append(auth_dir)
@@ -174,5 +175,6 @@ def auth_ui():
         signup_tab()
     
     return False  # Not admin
+
 
 
