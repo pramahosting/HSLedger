@@ -1,7 +1,8 @@
 import streamlit as st
 import os
 import ollama  # Required to fetch local models
-from train_ollama import convert_csv_to_jsonl, train_model
+# from train_ollama import convert_csv_to_jsonl, train_model
+from backend.ai_model.train_ollama import convert_csv_to_jsonl, train_model
 
 def get_local_models():
     """Fetches a list of locally installed Ollama models."""

@@ -11,7 +11,7 @@ if frontend_dir not in sys.path:
 
 # --- Import components ---
 from frontend.components import navbar, reconciliation_ui, trading_ui
-
+from backend.ai_model import fine_tune_llm, train_ollama
 # --- Auth module path ---
 auth_dir = os.path.join(current_dir, "Auth")
 if auth_dir not in sys.path:
@@ -51,6 +51,8 @@ if tab == "Reconciliation":
     reconciliation_ui.render()
 elif tab == "Trading":
     trading_ui.render()
+elif tab == "Fine Tune LLM":
+    fine_tune_llm.render()
 else:
     st.markdown(
         """
