@@ -26,7 +26,7 @@ def get_local_models():
 def render():
     st.set_page_config(page_title="LLM Fine-Tuning UI", layout="centered")
 
-    st.title("🦙 LLaMA Fine-Tuning with CSV")
+    st.title("Ollama Fine-Tuning with CSV")
     st.write("Upload a CSV file and automatically fine-tune a custom LLaMA model.")
 
     uploaded_file = st.file_uploader(
@@ -56,7 +56,7 @@ def render():
 
         st.success("CSV uploaded successfully!")
 
-        if st.button("🚀 Start Training"):
+        if st.button("Start Training"):
             with st.spinner("Converting CSV → JSONL..."):
                 jsonl_path = convert_csv_to_jsonl(
                     csv_path,
