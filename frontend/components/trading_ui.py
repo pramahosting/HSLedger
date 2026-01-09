@@ -153,3 +153,5 @@ def render():
             file_name="trading_report.xlsx",
             mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
         )
+
+
