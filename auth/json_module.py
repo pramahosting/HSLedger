@@ -11,7 +11,8 @@ import streamlit as st
 from typing import Optional, List, Dict
 import tempfile
 
-USERS_FILE = "users.json"
+current_dir = os.path.dirname(os.path.abspath(__file__))
+USERS_FILE = os.path.join(current_dir, "users.json")
 
 # ===== EMAIL SETTINGS =====
 EMAIL_USER = os.getenv("EMAIL_USER", "")
@@ -223,3 +224,4 @@ def send_reset_email(email: str, token: str):
     except Exception as e:
 
         st.error(f"Error sending email: {e}")
+
