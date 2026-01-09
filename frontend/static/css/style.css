@@ -1,21 +1,63 @@
 /* frontend/static/css/style.css */
+
+/* --- Base layout --- */
 body {
     font-family: Inter, Arial, sans-serif;
     background: #f5f7fb;
     color: #1f2937;
+    margin: 0;
+    padding: 0;
 }
 
-/* Classification color tokens */
+/* --- Header Bar --- */
+.header-bar {
+    background-color: #d3d3d3; /* light grey */
+    height: 70px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    margin-top: 10px; /* default top margin */
+}
+
+/* --- Header Bar (Login Page Variant) --- */
+.header-bar.auth {
+    background-color: #d3d3d3;
+    height: 70px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    margin-top: 0px;
+}
+
+.header-bar.auth .header-title {
+    color: #003366;
+    font-size: 32px;
+    font-weight: 700;
+    font-family: 'Inter', Arial, sans-serif;
+}
+
+
+.header-title {
+    color: #003366; /* dark blue */
+    font-size: 32px;
+    font-weight: 700;
+    font-family: 'Inter', Arial, sans-serif;
+}
+
+/* --- Classification color tokens --- */
 .internal {
-    background-color: #d4f7dc;
+    background-color: #d4f7dc; /* light green for internal */
 }
 
 .external {
-    background-color: #e8f3ff;
+    background-color: #e8f3ff; /* light blue for external */
 }
 
 .doubtful {
-    background-color: #fff3cd;
+    background-color: #fff3cd; /* pale yellow for doubtful */
 }
 
-/* Table style when exported to Excel will be handled on Excel generation side */
