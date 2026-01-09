@@ -1,4 +1,3 @@
-# frontend/app.py
 import streamlit as st
 import os
 import sys
@@ -9,18 +8,24 @@ frontend_dir = current_dir
 if frontend_dir not in sys.path:
     sys.path.append(frontend_dir)
 
-# --- Import components ---
-from frontend.components import navbar, reconciliation_ui, trading_ui
-
 # --- Auth module path ---
 auth_dir = os.path.join(current_dir, "Auth")
 if auth_dir not in sys.path:
     sys.path.append(auth_dir)
 
+# --- Import components ---
 from auth.auth_json_module import auth_ui
+from frontend.components import navbar, reconciliation_ui, trading_ui
 
 # --- Streamlit config ---
 st.set_page_config(page_title="HSLedger", layout="wide")
+
+# --- Load external CSS ---
+def local_css(file_name):
+    with open(file_name) as f:
+        st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
+
+local_css(os.path.join("frontend", "static", "css", "style.css"))
 
 # --- Clear session on first load ---
 if "initialized" not in st.session_state:
@@ -28,21 +33,74 @@ if "initialized" not in st.session_state:
     st.session_state.logged_in = False
     st.session_state.user = {}
     st.session_state.initialized = True
+    st.session_state.session_loaded = False
 
 # --- Handle logout request ---
 if st.session_state.get("logout_request", False):
+    # Clear all session data including reconciliation data
+    keys_to_clear = [
+        "logged_in", "user", "logout_request",
+        "reconciliation_results", "page_number", "accounts", 
+        "gst_calculated", "edited_df_cache", "pending_changes", 
+        "updated_pages", "current_session_id", "accounts_metadata",
+        "loaded_files_data", "selected_rows", "session_loaded"
+    ]
+    for key in keys_to_clear:
+        if key in st.session_state:
+            del st.session_state[key]
+    
     st.session_state.logged_in = False
     st.session_state.user = {}
     st.session_state.logout_request = False
+    st.session_state.session_loaded = False
     st.rerun()
 
-# --- Show login if not logged in ---
+# --- Show header BEFORE deciding page type ---
 if not st.session_state.get("logged_in", False):
+    # Header for login (smaller top margin)
+    st.markdown(
+        """
+        <div class="auth-page">
+            <div class="header-bar auth">
+                <div class="header-title">HSLedger - Reconciliation & Analysis</div>
+            </div>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+    # Show login form
     auth_ui()
     st.stop()
+else:
+    # Header for main pages
+    st.markdown(
+        """
+        <div class="header-bar">
+            <div class="header-title">HSLedger - Reconciliation & Analysis</div>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
 
-# --- Main title ---
-st.title("HSLedger - Reconciliation & Analysis")
+# --- Auto-load latest session on login ---
+if st.session_state.get("logged_in") and not st.session_state.get("session_loaded", False):
+    from backend.reconciliation.session_manager import session_manager
+    
+    username = st.session_state.user.get("username", "default_user")
+    latest_session = session_manager.get_latest_session(username)
+    
+    if latest_session:
+        # Session will be loaded automatically in reconciliation_ui.render()
+        st.session_state.session_loaded = True
+
+# ==================================================
+# ✅ Sidebar Logout Button
+# ==================================================
+with st.sidebar:
+    if st.button("🚪Logout", use_container_width=True):
+        st.session_state.logout_request = True
+        st.rerun()
+# ==================================================
 
 # --- Navigation ---
 tab = navbar.render_navbar()
@@ -57,3 +115,4 @@ else:
         Navigate using the top menu to Reconciliation or Trading.
         """
     )
+
