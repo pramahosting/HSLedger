@@ -138,6 +138,7 @@ def render():
         st.session_state.gst_calculated = False
     if "edited_df_cache" not in st.session_state:
         st.session_state.edited_df_cache = None
+
     if "pending_changes" not in st.session_state:
         st.session_state.pending_changes = {}
     if "updated_pages" not in st.session_state:

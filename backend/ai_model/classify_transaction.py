@@ -21,7 +21,7 @@ def classify_with_ollama(model_name, description):
     except Exception as e:
         return f"Error: {e}"
 
-def main():
+def render():
     st.set_page_config(page_title="Bank Transaction Classifier", layout="wide")
     st.title("Bank Transaction Classifier")
     st.write("Upload Bank Transaction CSV to automatically categorize spending.")
@@ -81,4 +81,4 @@ def main():
             st.error("The uploaded CSV is missing the 'Description' column.")
 
 if __name__ == "__main__":
-    main()
+    render()

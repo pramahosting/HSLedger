@@ -31,7 +31,7 @@ def convert_csv_to_jsonl(csv_path, output_jsonl):
     return output_jsonl
 
 
-def train_model(jsonl_path, output_dir, model_name="unsloth/Llama-3.2-3B-Instruct"):
+def train_model(jsonl_path, output_dir = "models", model_name="unsloth/Llama-3.2-3B-Instruct", max_steps = 60):
     model, tokenizer = FastLanguageModel.from_pretrained(
         model_name=model_name,
         max_seq_length=2048,

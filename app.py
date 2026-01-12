@@ -16,6 +16,7 @@ if auth_dir not in sys.path:
 # --- Import components ---
 from auth.auth_json_module import auth_ui
 from frontend.components import navbar, reconciliation_ui, trading_ui
+from backend.ai_model import fine_tune_llm, classify_transaction
 
 # --- Streamlit config ---
 st.set_page_config(page_title="HSLedger", layout="wide")
@@ -109,8 +110,8 @@ if tab == "Reconciliation":
     reconciliation_ui.render()
 elif tab == "Trading":
     trading_ui.render()
-elif tab == "Fine Tune LLM":
-    fine_tune_llm.render()
+elif tab == "Classify Transactions":
+    classify_transaction.render()
 else:
     st.markdown(
         """

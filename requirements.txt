@@ -24,3 +24,6 @@ pyarrow
 # If you’re dealing with environment variables
 python-dotenv
 
+# Testing
+pytest
+
