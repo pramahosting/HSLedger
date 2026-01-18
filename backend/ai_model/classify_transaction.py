@@ -3,12 +3,13 @@ import pandas as pd
 import ollama
 import time
 
-def classify_with_ollama(model_name, description):
+def classify_with_ollama(model_name, description, system_prompt=None):
     """
     Sends description to your fine-tuned Ollama model.
     """
-    # System prompt helps guide the model if it wasn't strictly fine-tuned on categories
-    system_prompt = "You are a financial assistant. Classify the transaction description into: Food, Travel, Shopping, Groceries, Income, or Utilities."
+    # Default system prompt if not provided
+    if system_prompt is None:
+        system_prompt = "You are a financial assistant. Classify the transaction description into: Food, Travel, Shopping, Groceries, Income, or Utilities."
     
     try:
         response = ollama.generate(

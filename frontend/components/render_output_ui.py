@@ -7,6 +7,33 @@ from backend.reconciliation.session_manager import session_manager
 from backend.reconciliation.gst_calculator import GST_CATEGORY_OPTIONS, calculate_gst_value
 from backend.ai_model.classify_transaction import classify_with_ollama
 
+# GL Account options for dropdown
+GL_ACCOUNT_OPTIONS = [
+    "Revenue",
+    "Direct Costs",
+    "Expense",
+    "Inventory",
+    "Fixed Asset",
+    "GST",
+    "Equity",
+    "",  # Empty option
+]
+
+def classify_gl_account_with_ollama(model_name, description):
+    """
+    Classify transaction description to a GL Account category using Ollama.
+    """
+    from backend.ai_model.classify_transaction import classify_with_ollama
+    
+    system_prompt = "You are a financial accounting assistant. Classify the transaction description into a GL Account category. Respond with ONLY the category name, nothing else."
+    
+    try:
+        response = classify_with_ollama(model_name, description, system_prompt=system_prompt)
+        return response.strip()
+    except Exception as e:
+        st.error(f"Classification error: {e}")
+        return ""
+
 def get_excel_bytes(df_total, monthly_summary):
     return exporter.export_excel_bytes(df_total, monthly_summary)
 
@@ -73,7 +100,7 @@ def select_model_dialog(input_text=None):
 
                 for i, desc in enumerate(lines):
                     status.text(f"Classifying {i+1}/{len(lines)}...")
-                    cat = classify_with_ollama(model_name, desc)
+                    cat = classify_gl_account_with_ollama(model_name, desc)
                     results.append({"Description": desc, "Predicted": cat})
                     # Update progress (avoid going to 100% before done)
                     progress.progress((i + 1) / len(lines))
@@ -164,9 +191,9 @@ def select_model_dialog(input_text=None):
                             continue
                         status.text(f"Classifying row {i+1}/{len(rows)} (idx {idx})...")
                         try:
-                            cat = classify_with_ollama(selected, desc)
+                            cat = classify_gl_account_with_ollama(selected, desc)
                         except Exception as e:
-                            cat = f"Error: {e}"
+                            cat = ""
                         target_df.at[idx, "GL Account"] = cat
                         results.append({"Index": idx, "Description": desc, "Predicted": cat})
                         progress.progress((i + 1) / len(rows))
@@ -521,7 +548,36 @@ def render_output_ui(username, save_current_session):
                 with cols[8]:
                     st.markdown(f"<div class='table-cell'>{str(row_data.get('PairID', ''))}</div>", unsafe_allow_html=True)
                 with cols[9]:
-                    st.markdown(f"<div class='table-cell'>{str(row_data.get('GL Account', ''))}</div>", unsafe_allow_html=True)
+                    # GL Account selectbox - editable
+                    current_gl = row_data.get('GL Account', '')
+                    
+                    # Apply CSS for font size
+                    st.markdown(
+                       """
+                       <style>
+                       div[data-baseweb="select"] > div > div > div {
+                          font-size: 12px;
+                          padding-top: 0px !important;
+                          height: 24px !important;
+                       }
+                       </style>
+                       """,
+                       unsafe_allow_html=True
+                    )
+                    
+                    new_gl = st.selectbox(
+                        "GL Account",
+                        options=GL_ACCOUNT_OPTIONS,
+                        index=GL_ACCOUNT_OPTIONS.index(current_gl) if current_gl in GL_ACCOUNT_OPTIONS else len(GL_ACCOUNT_OPTIONS) - 1,
+                        key=f"gl_account_{original_idx}_{st.session_state.page_number}",
+                        label_visibility="collapsed"
+                    )
+                    
+                    # Track GL Account changes separately
+                    original_gl = st.session_state.edited_df_cache.at[original_idx, "GL Account"] if pd.notnull(st.session_state.edited_df_cache.at[original_idx, "GL Account"]) else ""
+                    if new_gl != original_gl:
+                        # Update directly in edited_df_cache without using pending_changes
+                        st.session_state.edited_df_cache.at[original_idx, "GL Account"] = new_gl
                 with cols[10]:
                     st.markdown(f"<div class='table-cell'>{str(row_data.get('GST', ''))}</div>", unsafe_allow_html=True)
                 
