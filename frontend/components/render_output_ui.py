@@ -16,6 +16,7 @@ GL_ACCOUNT_OPTIONS = [
     "Fixed Asset",
     "GST",
     "Equity",
+    "Transfer",
     "",  # Empty option
 ]
 
@@ -78,96 +79,7 @@ def select_model_dialog(input_text=None):
 
         selected = st.selectbox("Select local engine:", models)
 
-        st.markdown("---")
-        st.write("### Descriptions to classify")
-        user_descriptions = st.text_area("Descriptions (each transaction separated by a blank line)", value=descriptions_text, height=240)
-
-        # Button to start classification for the provided descriptions inside the dialog
-        if st.button("Start Classification"):
-            # Persist selection and input into session state
-            st.session_state.selected_model = selected
-            st.session_state.classifier_input = user_descriptions
-
-            # Run classification inline and show progress
-            if not user_descriptions.strip():
-                st.error("No descriptions provided to classify.")
-            else:
-                lines = [s.strip() for s in user_descriptions.split("\n\n") if s.strip()]
-                progress = st.progress(0)
-                status = st.empty()
-                results = []
-                model_name = selected
-
-                for i, desc in enumerate(lines):
-                    status.text(f"Classifying {i+1}/{len(lines)}...")
-                    cat = classify_gl_account_with_ollama(model_name, desc)
-                    results.append({"Description": desc, "Predicted": cat})
-                    # Update progress (avoid going to 100% before done)
-                    progress.progress((i + 1) / len(lines))
-
-                # Show results as dataframe
-                res_df = pd.DataFrame(results)
-                st.success(f"Classification complete ({len(results)} items).")
-                st.dataframe(res_df)
-                st.session_state.last_classification_results = res_df
-
-                # --- Apply predictions into GL Account column ---
-                try:
-                    # Choose which dataframe to update
-                    target_df = None
-                    if st.session_state.get("edited_df_cache") is not None:
-                        target_df = st.session_state.edited_df_cache
-                    else:
-                        target_df = st.session_state.reconciliation_results
-
-                    # Ensure GL Account column exists
-                    if "GL Account" not in target_df.columns:
-                        target_df["GL Account"] = None
-
-                    applied = 0
-                    for i, row in enumerate(results):
-                        desc = row["Description"]
-                        cat = row["Predicted"]
-
-                        applied_to_index = None
-
-                        # Prefer positional mapping if descriptions unchanged and we have prefilled_pairs
-                        if i < len(prefilled_pairs) and prefilled_pairs[i][1] == desc:
-                            applied_to_index = prefilled_pairs[i][0]
-                            target_df.at[applied_to_index, "GL Account"] = cat
-                            applied += 1
-                        else:
-                            # Fallback: match by exact description text and apply to all matches
-                            matches = target_df.index[target_df["Description"].astype(str) == desc].tolist()
-                            for m in matches:
-                                target_df.at[m, "GL Account"] = cat
-                            applied += len(matches)
-
-                    # Persist updates back to session state
-                    st.session_state.edited_df_cache = target_df.copy()
-                    st.session_state.reconciliation_results = target_df.copy()
-
-                    # Save to session storage if available
-                    if st.session_state.get("current_session_id"):
-                        session_manager.save_output_data(
-                            st.session_state.get("username", ""),
-                            st.session_state.current_session_id,
-                            st.session_state.reconciliation_results,
-                            st.session_state.pending_changes,
-                            st.session_state.updated_pages,
-                            st.session_state.page_number,
-                        )
-
-                    st.success(f"Applied GL Account prediction to {applied} row(s).")
-
-                except Exception as e:
-                    st.error(f"Failed to apply predictions to GL Account column: {e}")
-
-                # Optionally set run_inference flag for other parts of app
-                st.session_state.run_inference = False
-                st.rerun()
-
-        # New: Classify all rows in the current session dataframe and write into GL Account
+        # Classify all rows in the current session dataframe and write into GL Account
         if st.button("Classify All Rows in Session"):
             st.session_state.selected_model = selected
             try:
@@ -189,6 +101,12 @@ def select_model_dialog(input_text=None):
                         desc = str(df_source.at[idx, "Description"]) if pd.notnull(df_source.at[idx, "Description"]) else ""
                         if not desc.strip():
                             continue
+                        
+                        # Check if GL Account is already set and valid - skip if so
+                        current_gl = target_df.at[idx, "GL Account"] if pd.notnull(target_df.at[idx, "GL Account"]) else ""
+                        if current_gl and current_gl in GL_ACCOUNT_OPTIONS:
+                            continue
+                        
                         status.text(f"Classifying row {i+1}/{len(rows)} (idx {idx})...")
                         try:
                             cat = classify_gl_account_with_ollama(selected, desc)
@@ -217,6 +135,7 @@ def select_model_dialog(input_text=None):
 
                     st.success(f"Applied GL Account prediction to {len(results)} row(s).")
                     st.dataframe(res_df)
+                    st.session_state.force_refresh = True
                     st.rerun()
 
             except Exception as e:
@@ -252,6 +171,11 @@ def render_output_ui(username, save_current_session):
             df_total = st.session_state.edited_df_cache.copy()
         else:
             df_total = st.session_state.reconciliation_results.copy()
+
+        # Force refresh after classification by copying fresh from session state
+        if st.session_state.get("force_refresh"):
+            df_total = st.session_state.edited_df_cache.copy()
+            st.session_state.force_refresh = False
 
         if not st.session_state.show_gst and "GST" in df_total.columns:
             df_total = df_total.drop(columns=["GST"])
@@ -416,6 +340,12 @@ def render_output_ui(username, save_current_session):
             for idx in df_page.index:
                 if idx in st.session_state.pending_changes:
                     df_page.at[idx, "GST Category"] = st.session_state.pending_changes[idx]
+            
+            # Sync GL Account values from latest edited_df_cache for current page rows
+            if "GL Account" in df_page.columns and "GL Account" in st.session_state.edited_df_cache.columns:
+                for idx in df_page.index:
+                    gl_val = st.session_state.edited_df_cache.at[idx, "GL Account"]
+                    df_page.at[idx, "GL Account"] = gl_val
 
             # Prepare display with formatting for non-editable columns
             df_page_display = df_page.copy()
@@ -549,7 +479,13 @@ def render_output_ui(username, save_current_session):
                     st.markdown(f"<div class='table-cell'>{str(row_data.get('PairID', ''))}</div>", unsafe_allow_html=True)
                 with cols[9]:
                     # GL Account selectbox - editable
-                    current_gl = row_data.get('GL Account', '')
+                    # Always get the latest value from edited_df_cache, not from row_data
+                    current_gl = st.session_state.edited_df_cache.at[original_idx, "GL Account"] if pd.notnull(st.session_state.edited_df_cache.at[original_idx, "GL Account"]) else ""
+                    classification = row_data.get('Classification', '')
+                    
+                    # Auto-set GL Account to Revenue for income transactions
+                    if classification == "🔵Incoming" and not current_gl:
+                        current_gl = "Revenue"
                     
                     # Apply CSS for font size
                     st.markdown(
@@ -569,15 +505,28 @@ def render_output_ui(username, save_current_session):
                         "GL Account",
                         options=GL_ACCOUNT_OPTIONS,
                         index=GL_ACCOUNT_OPTIONS.index(current_gl) if current_gl in GL_ACCOUNT_OPTIONS else len(GL_ACCOUNT_OPTIONS) - 1,
-                        key=f"gl_account_{original_idx}_{st.session_state.page_number}",
+                        key=f"gl_account_{original_idx}_{current_gl}_{st.session_state.page_number}",
                         label_visibility="collapsed"
                     )
                     
                     # Track GL Account changes separately
                     original_gl = st.session_state.edited_df_cache.at[original_idx, "GL Account"] if pd.notnull(st.session_state.edited_df_cache.at[original_idx, "GL Account"]) else ""
                     if new_gl != original_gl:
-                        # Update directly in edited_df_cache without using pending_changes
+                        # Update directly in edited_df_cache and reconciliation_results
                         st.session_state.edited_df_cache.at[original_idx, "GL Account"] = new_gl
+                        st.session_state.reconciliation_results.at[original_idx, "GL Account"] = new_gl
+                        st.session_state.updated_pages.add(st.session_state.page_number)
+                        
+                        # Save to session immediately
+                        if st.session_state.get("current_session_id"):
+                            session_manager.save_output_data(
+                                username,
+                                st.session_state.current_session_id,
+                                st.session_state.reconciliation_results,
+                                st.session_state.pending_changes,
+                                st.session_state.updated_pages,
+                                st.session_state.page_number
+                            )
                 with cols[10]:
                     st.markdown(f"<div class='table-cell'>{str(row_data.get('GST', ''))}</div>", unsafe_allow_html=True)
                 

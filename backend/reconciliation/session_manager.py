@@ -91,6 +91,7 @@ class SessionManager:
         """
         session_dir = self.get_session_dir(username, session_id)
         output_dir = session_dir / "output" / "results"
+        output_dir.mkdir(parents=True, exist_ok=True)
         
         # Save results DataFrame
         df_results.to_pickle(output_dir / "results.pkl")
