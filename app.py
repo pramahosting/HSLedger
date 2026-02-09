@@ -15,7 +15,7 @@ if auth_dir not in sys.path:
 
 # --- Import components ---
 from auth.auth_json_module import auth_ui
-from frontend.components import navbar, reconciliation_ui, trading_ui
+from frontend.components import navbar, reconciliation_ui, trading_ui, rdr_ui
 from backend.ai_model import classify_transaction
 
 # --- Streamlit config ---
@@ -112,6 +112,8 @@ elif tab == "Trading":
     trading_ui.render()
 elif tab == "Classify Transactions":
     classify_transaction.render()
+elif tab == "RDR Rules Editor":
+    rdr_ui.render()
 else:
     st.markdown(
         """

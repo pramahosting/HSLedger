@@ -483,9 +483,7 @@ def render_output_ui(username, save_current_session):
                     current_gl = st.session_state.edited_df_cache.at[original_idx, "GL Account"] if pd.notnull(st.session_state.edited_df_cache.at[original_idx, "GL Account"]) else ""
                     classification = row_data.get('Classification', '')
                     
-                    # Auto-set GL Account to Revenue for income transactions
-                    if classification == "🔵Incoming" and not current_gl:
-                        current_gl = "Revenue"
+                
                     
                     # Apply CSS for font size
                     st.markdown(

@@ -1,0 +1,12 @@
+[
+  {
+    "id": "r001",
+    "priority": 1000,
+    "then": "Inventory",
+    "if": {
+      "contains_any": [
+        "test"
+      ]
+    }
+  }
+]
