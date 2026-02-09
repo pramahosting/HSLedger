@@ -1,0 +1,38 @@
+FROM Llama-3.2-3B-Instruct.Q4_K_M.gguf
+
+PARAMETER temperature 0
+PARAMETER top_p 1
+PARAMETER num_predict 6
+
+# Stop if it tries to continue
+PARAMETER stop "\n"
+PARAMETER stop "###"
+PARAMETER stop "Explanation:"
+PARAMETER stop "Because"
+
+SYSTEM """
+You are a strict classifier.
+You must output ONLY ONE label from this list and nothing else:
+
+Revenue
+Direct Costs
+Expense
+Inventory
+Fixed Asset
+GST
+Equity
+Transfer
+Liability
+
+No extra words. No punctuation. No JSON. No explanation.
+"""
+
+TEMPLATE """### Instruction:
+Return ONLY ONE label from this list:
+Revenue, Direct Costs, Expense, Inventory, Fixed Asset, GST, Equity, Transfer, Liability
+
+### Input:
+{{ .Prompt }}
+
+### Response:
+"""
