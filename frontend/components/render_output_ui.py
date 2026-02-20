@@ -5,7 +5,7 @@ import pandas as pd
 from backend.reconciliation import exporter
 from backend.reconciliation.session_manager import session_manager
 from backend.reconciliation.gst_calculator import GST_CATEGORY_OPTIONS, calculate_gst_value
-from backend.ai_model.classify_transaction import classify_with_ollama
+from backend.ai_model import classify_category
 
 # GL Account options for dropdown
 GL_ACCOUNT_OPTIONS = [
@@ -19,21 +19,16 @@ GL_ACCOUNT_OPTIONS = [
     "Transfer",
     "",  # Empty option
 ]
+GST_ENUM = [
+    "GST on Expenses",
+    "GST on Capital",
+    "GST on Income",
+    "GST Free Expenses",
+    "GST Free Income",
+    "BAS Excluded",
+]
 
-def classify_gl_account_with_ollama(model_name, description):
-    """
-    Classify transaction description to a GL Account category using Ollama.
-    """
-    from backend.ai_model.classify_transaction import classify_with_ollama
-    
-    system_prompt = "You are a financial accounting assistant. Classify the transaction description into a GL Account category. Respond with ONLY the category name, nothing else."
-    
-    try:
-        response = classify_with_ollama(model_name, description, system_prompt=system_prompt)
-        return response.strip()
-    except Exception as e:
-        st.error(f"Classification error: {e}")
-        return ""
+GST_CLASSIFY_OPTIONS = list(dict.fromkeys(GST_CATEGORY_OPTIONS + classify_category.GST_ENUM))
 
 def get_excel_bytes(df_total, monthly_summary):
     return exporter.export_excel_bytes(df_total, monthly_summary)
@@ -90,31 +85,105 @@ def select_model_dialog(input_text=None):
 
                     # Ensure GL Account column exists
                     if "GL Account" not in target_df.columns:
-                        target_df["GL Account"] = None
+                        target_df["GL Account"] = ""
+                    if "GST Category" not in target_df.columns:
+                        target_df["GST Category"] = "Unknown"
 
                     rows = list(df_source.index)
                     progress = st.progress(0)
                     status = st.empty()
                     results = []
 
-                    for i, idx in enumerate(rows):
+                    desc_by_idx = {}
+                    for idx in rows:
                         desc = str(df_source.at[idx, "Description"]) if pd.notnull(df_source.at[idx, "Description"]) else ""
-                        if not desc.strip():
+                        if desc.strip():
+                            desc_by_idx[idx] = desc
+
+                    unique_descs = [d for d in pd.unique(pd.Series(list(desc_by_idx.values()))) if str(d).strip()]
+
+                    gl_mapping = {}
+                    gst_mapping = {}
+                    cache_hits = 0
+                    cache_misses = 0
+                    disk_cache = classify_category.load_disk_cache()
+                    mem_cache = {}
+
+                    for i, desc in enumerate(unique_descs):
+                        status.text(f"Classifying unique {i+1}/{len(unique_descs)}")
+                        dnorm = classify_category.normalize_desc(desc)
+                        k = classify_category.cache_key(selected, dnorm, classify_category._DEFAULT_TXN_PROMPT)
+
+                        if k in mem_cache:
+                            gl_mapping[desc] = mem_cache[k].get("gl_account", mem_cache[k].get("category", ""))
+                            cache_hits += 1
+                        elif k in disk_cache:
+                            gl_mapping[desc] = disk_cache[k].get("gl_account", disk_cache[k].get("category", ""))
+                            mem_cache[k] = disk_cache[k]
+                            cache_hits += 1
+                        else:
+                            cache_misses += 1
+                            gl_mapping[desc] = classify_category.ollama_classify_gl_account_cached(
+                                model=selected,
+                                prompt=f"{classify_category._DEFAULT_TXN_PROMPT}\n{dnorm}",
+                                base_url=classify_category.OLLAMA_CHAT_URL_DEFAULT,
+                                temperature=0.0,
+                                top_p=1.0,
+                            )["category"]
+                            mem_cache[k] = {"gl_account": gl_mapping[desc], "category": gl_mapping[desc]}
+                            disk_cache[k] = {"gl_account": gl_mapping[desc], "category": gl_mapping[desc]}
+
+                        gst_k = classify_category.cache_key(selected, f"{dnorm}||{gl_mapping[desc]}", classify_category._DEFAULT_GST_PROMPT)
+                        if gst_k in mem_cache:
+                            gst_mapping[desc] = mem_cache[gst_k].get("gst_category", "")
+                            cache_hits += 1
+                        elif gst_k in disk_cache:
+                            gst_mapping[desc] = disk_cache[gst_k].get("gst_category", "")
+                            mem_cache[gst_k] = disk_cache[gst_k]
+                            cache_hits += 1
+                        else:
+                            cache_misses += 1
+                            gst_mapping[desc] = classify_category.ollama_predict_gst_cached(
+                                model=selected,
+                                prompt=f"{classify_category._DEFAULT_GST_PROMPT}\nCategory: {gl_mapping[desc]}\nDescription: {dnorm}",
+                                base_url=classify_category.OLLAMA_CHAT_URL_DEFAULT,
+                                temperature=0.0,
+                                top_p=1.0,
+                            )["gst_category"]
+                            mem_cache[gst_k] = {"gst_category": gst_mapping[desc]}
+                            disk_cache[gst_k] = {"gst_category": gst_mapping[desc]}
+
+                        progress.progress((i + 1) / max(1, len(unique_descs)))
+
+                    classify_category.save_disk_cache(disk_cache)
+
+                    for idx in rows:
+                        desc = desc_by_idx.get(idx, "")
+                        if not desc:
                             continue
-                        
-                        # Check if GL Account is already set and valid - skip if so
+
                         current_gl = target_df.at[idx, "GL Account"] if pd.notnull(target_df.at[idx, "GL Account"]) else ""
-                        if current_gl and current_gl in GL_ACCOUNT_OPTIONS:
-                            continue
-                        
-                        status.text(f"Classifying row {i+1}/{len(rows)} (idx {idx})...")
-                        try:
-                            cat = classify_gl_account_with_ollama(selected, desc)
-                        except Exception as e:
-                            cat = ""
-                        target_df.at[idx, "GL Account"] = cat
-                        results.append({"Index": idx, "Description": desc, "Predicted": cat})
-                        progress.progress((i + 1) / len(rows))
+                        current_gst = target_df.at[idx, "GST Category"] if pd.notnull(target_df.at[idx, "GST Category"]) else ""
+
+                        should_update_gl = not current_gl or current_gl not in GL_ACCOUNT_OPTIONS
+                        should_update_gst = not str(current_gst).strip() or str(current_gst).strip() not in GST_CLASSIFY_OPTIONS
+
+                        predicted_gl = gl_mapping.get(desc, "")
+                        predicted_gst = gst_mapping.get(desc, "Unknown")
+
+                        if should_update_gl:
+                            target_df.at[idx, "GL Account"] = predicted_gl
+                        if should_update_gst:
+                            target_df.at[idx, "GST Category"] = predicted_gst
+
+                        results.append(
+                            {
+                                "Index": idx,
+                                "Description": desc,
+                                "Predicted_GL_Account": predicted_gl,
+                                "Predicted_GST_Category": predicted_gst,
+                            }
+                        )
 
                     # Persist updates back to session state
                     st.session_state.edited_df_cache = target_df.copy()
@@ -133,7 +202,10 @@ def select_model_dialog(input_text=None):
                             st.session_state.page_number,
                         )
 
-                    st.success(f"Applied GL Account prediction to {len(results)} row(s).")
+                    st.success(
+                        f"Applied GL+GST prediction to {len(results)} row(s). "
+                        f"Cache: {len(disk_cache)} entries, {cache_hits} hits, {cache_misses} misses."
+                    )
                     st.dataframe(res_df)
                     st.session_state.force_refresh = True
                     st.rerun()
@@ -347,6 +419,12 @@ def render_output_ui(username, save_current_session):
                     gl_val = st.session_state.edited_df_cache.at[idx, "GL Account"]
                     df_page.at[idx, "GL Account"] = gl_val
 
+            # Sync GST Category values from latest edited_df_cache for current page rows
+            if "GST Category" in df_page.columns and "GST Category" in st.session_state.edited_df_cache.columns:
+                for idx in df_page.index:
+                    gst_cat_val = st.session_state.edited_df_cache.at[idx, "GST Category"]
+                    df_page.at[idx, "GST Category"] = gst_cat_val
+
             # Prepare display with formatting for non-editable columns
             df_page_display = df_page.copy()
             for col in ["Debit", "Credit", "GST"]:
@@ -551,14 +629,22 @@ def render_output_ui(username, save_current_session):
                     
                     new_category = st.selectbox(
                         "GST Cat",
-                        options=GST_CATEGORY_OPTIONS,
-                        index=GST_CATEGORY_OPTIONS.index(current_category) if current_category in GST_CATEGORY_OPTIONS else 0,
-                        key=f"gst_cat_{original_idx}_{st.session_state.page_number}",
+                        options=GST_CLASSIFY_OPTIONS,
+                        index=next(
+                            (
+                                idx
+                                for idx, option in enumerate(GST_CLASSIFY_OPTIONS)
+                                if str(option).lower() == str(current_category).strip().lower()
+                            ),
+                            GST_CLASSIFY_OPTIONS.index("Unknown") if "Unknown" in GST_CLASSIFY_OPTIONS else 0,
+                        ),
+                        key=f"gst_cat_{original_idx}_{str(current_category).strip().lower()}_{st.session_state.page_number}",
                         label_visibility="collapsed"
                     )
                     
                     # Track changes
                     original_from_cache = st.session_state.edited_df_cache.at[original_idx, "GST Category"]
+                    original_from_cache = "" if pd.isna(original_from_cache) else str(original_from_cache)
                     if new_category != original_from_cache:
                         st.session_state.pending_changes[original_idx] = new_category
                     elif original_idx in st.session_state.pending_changes:

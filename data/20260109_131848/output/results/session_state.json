@@ -3,7 +3,9 @@
     "0": "GST on Sale",
     "62": "BAS Excluded",
     "13": "GST Free Sale",
-    "2455": "GST on Sale"
+    "2455": "GST on Sale",
+    "61": "GST on Sale",
+    "60": "GST Free Sale"
   },
   "updated_pages": [
     1,
@@ -11,5 +13,5 @@
     3
   ],
   "page_number": 1,
-  "last_updated": "2026-02-02T14:13:25.166776"
+  "last_updated": "2026-02-20T13:24:13.581082"
 }

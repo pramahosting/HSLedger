@@ -1,11 +1,9 @@
-# app.py
-# Streamlit: Upload CSV -> classify each row using a description column -> outputs:
-#   - category
-#   - gst_category
-# Uses Ollama /api/chat with JSON Schema (hard constraint) + FAST caching:
-#   1) classify ONLY unique descriptions per run
-#   2) persistent disk cache across runs (ollama_cache.json)
+# CLI transaction classifier:
+# - Reads a CSV with a Description column
+# - Classifies unique descriptions into category and GST category
+# - Uses persistent disk cache across runs (ollama_cache.json)
 
+import argparse
 import json
 import hashlib
 import time
@@ -16,17 +14,13 @@ from typing import Dict
 import pandas as pd
 import ollama
 import requests
-import streamlit as st
 
 # -------------------------
 # Config
 # -------------------------
-st.set_page_config(page_title="Bank Transaction Classifier", layout="wide")
-
 OLLAMA_CHAT_URL_DEFAULT = "http://localhost:11434/api/chat"
 CACHE_FILE = Path("ollama_cache.json")
 CACHE_VERSION = "v2"
-WORKSPACE_ROOT = Path(__file__).resolve().parents[1]
 _DEFAULT_TXN_PROMPT = "Classify this transaction description:"
 _DEFAULT_GST_PROMPT = "Given the category and transaction description, return the GST category label:"
 
@@ -90,7 +84,6 @@ def load_disk_cache() -> Dict[str, Dict[str, str]]:
 def save_disk_cache(cache: Dict[str, Dict[str, str]]) -> None:
     CACHE_FILE.write_text(json.dumps(cache, ensure_ascii=False), encoding="utf-8")
 
-@st.cache_data(show_spinner=False)
 def list_ollama_models() -> list[str]:
     return [m.model for m in ollama.list().models]
 
@@ -169,8 +162,6 @@ def ollama_predict_gst(
 
     return {"gst_category": "Unknown"}
 
-# Optional: cache the function at Streamlit level too (helps reruns)
-@st.cache_data(show_spinner=False)
 def ollama_classify_cached(
     model: str,
     prompt: str,
@@ -180,7 +171,6 @@ def ollama_classify_cached(
 ) -> Dict[str, str]:
     return ollama_classify(model, prompt, base_url, temperature, top_p)
 
-@st.cache_data(show_spinner=False)
 def ollama_predict_gst_cached(
     model: str,
     prompt: str,
@@ -191,124 +181,132 @@ def ollama_predict_gst_cached(
     return ollama_predict_gst(model, prompt, base_url, temperature, top_p)
 
 # -------------------------
-# UI
+# CLI flow
 # -------------------------
-def main():
-    st.title("Bank Transaction Classifier")
-    st.write("Upload Bank Transaction CSV to automatically categorize spending.")
+def classify_csv(
+    input_csv: Path,
+    output_csv: Path,
+    model: str,
+    base_url: str,
+) -> None:
+    df = pd.read_csv(input_csv)
+    if "Description" not in df.columns:
+        raise ValueError("The input CSV is missing the 'Description' column.")
 
-    with st.sidebar:
-        st.header("Settings")
-        try:
-            models = list_ollama_models()
-            selected_model = st.selectbox("Select your Fine-Tuned Model", options=models)
-        except Exception:
-            st.error("Ollama not detected. Ensure Ollama is running locally.")
-            selected_model = None
+    start_time = time.time()
 
-        st.caption("Speed: this UI deduplicates descriptions and caches results (exact + similar).")
+    desc_series = df["Description"].fillna("").astype(str)
+    unique_descs = [d for d in pd.unique(desc_series) if str(d).strip()]
 
-    uploaded_file = st.file_uploader("Upload Your CSV File", type=["csv"])
+    mapping: Dict[str, str] = {}
+    gst_mapping: Dict[str, str] = {}
+    cache_hits = 0
+    cache_misses = 0
+    disk_cache = load_disk_cache()
+    mem_cache: Dict[str, Dict[str, str]] = {}
 
-    if uploaded_file and selected_model:
-        df = pd.read_csv(uploaded_file)
+    for i, desc in enumerate(unique_descs):
+        print(f"Classifying unique {i + 1}/{len(unique_descs)}", flush=True)
+        dnorm = normalize_desc(desc)
+        k = cache_key(model, dnorm, _DEFAULT_TXN_PROMPT)
 
-        if "Description" not in df.columns:
-            st.error("The uploaded CSV is missing the 'Description' column.")
-            return
+        if k in mem_cache:
+            mapping[desc] = mem_cache[k].get("category", "")
+            cache_hits += 1
+        elif k in disk_cache:
+            mapping[desc] = disk_cache[k].get("category", "")
+            mem_cache[k] = disk_cache[k]
+            cache_hits += 1
+        else:
+            cache_misses += 1
+            mapping[desc] = ollama_classify_cached(
+                model=model,
+                prompt=f"{_DEFAULT_TXN_PROMPT}\n{dnorm}",
+                base_url=base_url,
+                temperature=0.0,
+                top_p=1.0,
+            )["category"]
+            mem_cache[k] = {"category": mapping[desc]}
+            disk_cache[k] = {"category": mapping[desc]}
 
-        st.success("CSV Loaded Successfully!")
-        st.dataframe(df.head(5))
+        gst_k = cache_key(model, f"{dnorm}||{mapping[desc]}", _DEFAULT_GST_PROMPT)
+        if gst_k in mem_cache:
+            gst_mapping[desc] = mem_cache[gst_k].get("gst_category", "")
+            cache_hits += 1
+        elif gst_k in disk_cache:
+            gst_mapping[desc] = disk_cache[gst_k].get("gst_category", "")
+            mem_cache[gst_k] = disk_cache[gst_k]
+            cache_hits += 1
+        else:
+            cache_misses += 1
+            gst_mapping[desc] = ollama_predict_gst_cached(
+                model=model,
+                prompt=f"{_DEFAULT_GST_PROMPT}\nCategory: {mapping[desc]}\nDescription: {dnorm}",
+                base_url=base_url,
+                temperature=0.0,
+                top_p=1.0,
+            )["gst_category"]
+            mem_cache[gst_k] = {"gst_category": gst_mapping[desc]}
+            disk_cache[gst_k] = {"gst_category": gst_mapping[desc]}
 
-        if st.button("🚀 Run Classification"):
-            start_time = time.time()
+    save_disk_cache(disk_cache)
 
-            # DEDUPE: classify only unique descriptions
-            desc_series = df["Description"].fillna("").astype(str)
-            unique_descs = [d for d in pd.unique(desc_series) if str(d).strip()]
+    df["Predicted_Category"] = desc_series.map(mapping).fillna("")
+    df["Predicted_GST_Category"] = desc_series.map(gst_mapping).fillna("")
+    df.to_csv(output_csv, index=False)
 
-            progress_bar = st.progress(0)
-            status_text = st.empty()
+    duration = time.time() - start_time
+    unknown_gst_count = int((df["Predicted_GST_Category"] == "Unknown").sum())
+    print(
+        f"Done! {len(df)} rows, {len(unique_descs)} unique. "
+        f"Time: {duration:.2f}s | Cache: {len(disk_cache)} entries, {cache_hits} hits, {cache_misses} misses."
+    )
+    print(f"Unknown GST rows: {unknown_gst_count}")
+    print(f"Saved: {output_csv}")
 
-            mapping: Dict[str, str] = {}
-            gst_mapping: Dict[str, str] = {}
-            cache_hits = 0
-            cache_misses = 0
-            disk_cache = load_disk_cache()
-            mem_cache: Dict[str, Dict[str, str]] = {}
 
-            for i, desc in enumerate(unique_descs):
-                status_text.text(f"Classifying unique {i+1}/{len(unique_descs)}")
-                dnorm = normalize_desc(desc)
-                k = cache_key(selected_model, dnorm, _DEFAULT_TXN_PROMPT)
-                gst_k = cache_key(selected_model, f"{dnorm}||{mapping.get(desc, '')}", _DEFAULT_GST_PROMPT)
+def main() -> None:
+    parser = argparse.ArgumentParser(description="Classify bank transaction CSV using Ollama.")
+    parser.add_argument("input_csv", type=Path, help="Path to input CSV file")
+    parser.add_argument(
+        "--output",
+        type=Path,
+        default=None,
+        help="Output CSV path (default: <input_stem>_categorized.csv)",
+    )
+    parser.add_argument(
+        "--model",
+        type=str,
+        default=None,
+        help="Ollama model name (default: first available model)",
+    )
+    parser.add_argument(
+        "--base-url",
+        type=str,
+        default=OLLAMA_CHAT_URL_DEFAULT,
+        help=f"Ollama chat endpoint (default: {OLLAMA_CHAT_URL_DEFAULT})",
+    )
+    args = parser.parse_args()
 
-                if k in mem_cache:
-                    mapping[desc] = mem_cache[k].get("category", "")
-                    cache_hits += 1
-                elif k in disk_cache:
-                    mapping[desc] = disk_cache[k].get("category", "")
-                    mem_cache[k] = disk_cache[k]
-                    cache_hits += 1
-                else:
-                    cache_misses += 1
-                    mapping[desc] = ollama_classify_cached(
-                        model=selected_model,
-                        prompt=f"{_DEFAULT_TXN_PROMPT}\n{dnorm}",
-                        base_url=OLLAMA_CHAT_URL_DEFAULT,
-                        temperature=0.0,
-                        top_p=1.0,
-                    )["category"]
-                    mem_cache[k] = {"category": mapping[desc]}
-                    disk_cache[k] = {"category": mapping[desc]}
+    if not args.input_csv.exists():
+        raise FileNotFoundError(f"Input file not found: {args.input_csv}")
 
-                gst_k = cache_key(selected_model, f"{dnorm}||{mapping[desc]}", _DEFAULT_GST_PROMPT)
-                if gst_k in mem_cache:
-                    gst_mapping[desc] = mem_cache[gst_k].get("gst_category", "")
-                    cache_hits += 1
-                elif gst_k in disk_cache:
-                    gst_mapping[desc] = disk_cache[gst_k].get("gst_category", "")
-                    mem_cache[gst_k] = disk_cache[gst_k]
-                    cache_hits += 1
-                else:
-                    cache_misses += 1
-                    gst_mapping[desc] = ollama_predict_gst_cached(
-                        model=selected_model,
-                        prompt=f"{_DEFAULT_GST_PROMPT}\nCategory: {mapping[desc]}\nDescription: {dnorm}",
-                        base_url=OLLAMA_CHAT_URL_DEFAULT,
-                        temperature=0.0,
-                        top_p=1.0,
-                    )["gst_category"]
-                    mem_cache[gst_k] = {"gst_category": gst_mapping[desc]}
-                    disk_cache[gst_k] = {"gst_category": gst_mapping[desc]}
+    output_csv = args.output or args.input_csv.with_name(f"{args.input_csv.stem}_categorized.csv")
 
-                progress_bar.progress((i + 1) / max(1, len(unique_descs)))
+    model = args.model
+    if not model:
+        models = list_ollama_models()
+        if not models:
+            raise RuntimeError("No Ollama models found. Ensure Ollama is running and a model is available.")
+        model = models[0]
+        print(f"Using model: {model}")
 
-            save_disk_cache(disk_cache)
-
-            df["Predicted_Category"] = desc_series.map(mapping).fillna("")
-            df["Predicted_GST_Category"] = desc_series.map(gst_mapping).fillna("")
-
-            duration = time.time() - start_time
-            st.success(
-                f"Done! {len(df)} rows, {len(unique_descs)} unique. "
-                f"Time: {duration:.2f}s | Cache: {len(disk_cache)} entries, {cache_hits} hits, {cache_misses} misses."
-            )
-
-            def highlight_unknown_gst(row):
-                if row.get("Predicted_GST_Category") == "Unknown":
-                    return ["border: 2px solid red"] * len(row)
-                return [""] * len(row)
-
-            st.dataframe(df.style.apply(highlight_unknown_gst, axis=1))
-
-            csv_data = df.to_csv(index=False).encode("utf-8")
-            st.download_button(
-                label="Download Categorized CSV",
-                data=csv_data,
-                file_name="categorized_transactions.csv",
-                mime="text/csv",
-            )
+    classify_csv(
+        input_csv=args.input_csv,
+        output_csv=output_csv,
+        model=model,
+        base_url=args.base_url,
+    )
 
 if __name__ == "__main__":
     main()
