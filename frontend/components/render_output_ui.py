@@ -129,6 +129,7 @@ def select_model_dialog(input_text=None):
                                 base_url=classify_category.OLLAMA_CHAT_URL_DEFAULT,
                                 temperature=0.0,
                                 top_p=1.0,
+                                cache_version=classify_category.CACHE_VERSION,
                             )["category"]
                             mem_cache[k] = {"gl_account": gl_mapping[desc], "category": gl_mapping[desc]}
                             disk_cache[k] = {"gl_account": gl_mapping[desc], "category": gl_mapping[desc]}
@@ -149,6 +150,7 @@ def select_model_dialog(input_text=None):
                                 base_url=classify_category.OLLAMA_CHAT_URL_DEFAULT,
                                 temperature=0.0,
                                 top_p=1.0,
+                                cache_version=classify_category.CACHE_VERSION,
                             )["gst_category"]
                             mem_cache[gst_k] = {"gst_category": gst_mapping[desc]}
                             disk_cache[gst_k] = {"gst_category": gst_mapping[desc]}

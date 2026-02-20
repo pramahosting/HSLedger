@@ -177,6 +177,7 @@ def ollama_classify_gl_account_cached(
     base_url: str,
     temperature: float,
     top_p: float,
+    cache_version: str = CACHE_VERSION,
 ) -> Dict[str, str]:
     return ollama_classify_gl_account(model, prompt, base_url, temperature, top_p)
 
@@ -187,6 +188,7 @@ def ollama_predict_gst_cached(
     base_url: str,
     temperature: float,
     top_p: float,
+    cache_version: str = CACHE_VERSION,
 ) -> Dict[str, str]:
     return ollama_predict_gst(model, prompt, base_url, temperature, top_p)
 
@@ -259,6 +261,7 @@ def main():
                         base_url=OLLAMA_CHAT_URL_DEFAULT,
                         temperature=0.0,
                         top_p=1.0,
+                        cache_version=CACHE_VERSION,
                     )["gl_account"]
                     mem_cache[k] = {"gl_account": mapping[desc]}
                     disk_cache[k] = {"gl_account": mapping[desc]}
@@ -279,6 +282,7 @@ def main():
                         base_url=OLLAMA_CHAT_URL_DEFAULT,
                         temperature=0.0,
                         top_p=1.0,
+                        cache_version=CACHE_VERSION,
                     )["gst_category"]
                     mem_cache[gst_k] = {"gst_category": gst_mapping[desc]}
                     disk_cache[gst_k] = {"gst_category": gst_mapping[desc]}
