@@ -15,7 +15,7 @@ if auth_dir not in sys.path:
 
 # --- Import components ---
 from auth.auth_json_module import auth_ui
-from frontend.components import navbar, reconciliation_ui, trading_ui, rdr_ui
+from frontend.components import navbar, reconciliation_ui, trading_ui, rdr_ui, openbanking_ui
 from backend.ai_model import classify_transaction
 
 # --- Streamlit config ---
@@ -108,6 +108,8 @@ tab = navbar.render_navbar()
 
 if tab == "Reconciliation":
     reconciliation_ui.render()
+elif tab == "Open Banking":
+    openbanking_ui.render()
 elif tab == "Trading":
     trading_ui.render()
 elif tab == "Classify Transactions":
