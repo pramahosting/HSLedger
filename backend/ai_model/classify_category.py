@@ -20,7 +20,7 @@ import streamlit as st
 
 OLLAMA_CHAT_URL_DEFAULT = "http://localhost:11434/api/chat"
 CACHE_FILE = Path("ollama_cache.json")
-CACHE_VERSION = "v2"
+CACHE_VERSION = "v3"
 WORKSPACE_ROOT = Path(__file__).resolve().parents[1]
 _DEFAULT_TXN_PROMPT = "Classify this transaction description:"
 _DEFAULT_GST_PROMPT = "Given the category and transaction description, return the GST category label:"
@@ -59,8 +59,13 @@ GL_SYSTEM_MSG = (
 
 GST_SYSTEM_MSG = (
     "You are a strict GST classifier for bank transactions. "
-    "Return ONLY the GST category label as plain text. "
-    "No explanations, no extra keys, no markdown."
+    "Return ONLY one of these GST category labels as plain text: "
+    "GST on Expenses, GST on Capital, GST on Income, GST Free Expenses, GST Free Income, BAS Excluded. "
+    "No explanations, no extra keys, no markdown. "
+    "Rules: Most business expenses include GST -> GST on Expenses. "
+    "Asset purchases -> GST on Capital. "
+    "Sales/revenue -> GST on Income. "
+    "Transfers between accounts, wages, some financial fees -> BAS Excluded."
 )
 
 # -------------------------
