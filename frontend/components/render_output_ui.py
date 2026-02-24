@@ -7,18 +7,8 @@ from backend.reconciliation.session_manager import session_manager
 from backend.reconciliation.gst_calculator import GST_CATEGORY_OPTIONS, calculate_gst_value
 from backend.ai_model import classify_category
 
-# GL Account options for dropdown
-GL_ACCOUNT_OPTIONS = [
-    "Revenue",
-    "Direct Costs",
-    "Expense",
-    "Inventory",
-    "Fixed Asset",
-    "GST",
-    "Equity",
-    "Transfer",
-    "",  # Empty option
-]
+# GL Account options for dropdown (keep in sync with classifier enums)
+GL_ACCOUNT_OPTIONS = list(dict.fromkeys(classify_category.CATEGORY_ENUM + [""]))
 GST_ENUM = [
     "GST on Expenses",
     "GST on Capital",
@@ -29,6 +19,18 @@ GST_ENUM = [
 ]
 
 GST_CLASSIFY_OPTIONS = list(dict.fromkeys(GST_CATEGORY_OPTIONS + classify_category.GST_ENUM))
+
+
+def normalize_gl_account(value):
+    text = "" if pd.isna(value) else str(value).strip()
+    if not text:
+        return ""
+
+    for option in classify_category.CATEGORY_ENUM:
+        if option.lower() == text.lower():
+            return option
+
+    return ""
 
 def get_excel_bytes(df_total, monthly_summary):
     return exporter.export_excel_bytes(df_total, monthly_summary)
@@ -88,6 +90,8 @@ def select_model_dialog(input_text=None):
                         target_df["GL Account"] = ""
                     if "GST Category" not in target_df.columns:
                         target_df["GST Category"] = "Unknown"
+                    if "Who" not in target_df.columns:
+                        target_df["Who"] = "Other/Unknown"
 
                     rows = list(df_source.index)
                     progress = st.progress(0)
@@ -165,18 +169,16 @@ def select_model_dialog(input_text=None):
                             continue
 
                         current_gl = target_df.at[idx, "GL Account"] if pd.notnull(target_df.at[idx, "GL Account"]) else ""
-                        current_gst = target_df.at[idx, "GST Category"] if pd.notnull(target_df.at[idx, "GST Category"]) else ""
 
                         should_update_gl = not current_gl or current_gl not in GL_ACCOUNT_OPTIONS
-                        should_update_gst = not str(current_gst).strip() or str(current_gst).strip() not in GST_CLASSIFY_OPTIONS
 
-                        predicted_gl = gl_mapping.get(desc, "")
-                        predicted_gst = gst_mapping.get(desc, "Unknown")
+                        predicted_gl = normalize_gl_account(gl_mapping.get(desc, ""))
+                        predicted_gst = gst_mapping.get(desc, "")
 
                         if should_update_gl:
                             target_df.at[idx, "GL Account"] = predicted_gl
-                        if should_update_gst:
-                            target_df.at[idx, "GST Category"] = predicted_gst
+                        target_df.at[idx, "GST Category"] = predicted_gst
+                        target_df.at[idx, "Who"] = classify_category.extract_who_bank(desc)
 
                         results.append(
                             {
@@ -184,6 +186,7 @@ def select_model_dialog(input_text=None):
                                 "Description": desc,
                                 "Predicted_GL_Account": predicted_gl,
                                 "Predicted_GST_Category": predicted_gst,
+                                "Predicted_Who": classify_category.extract_who_bank(desc),
                             }
                         )
 
@@ -427,6 +430,12 @@ def render_output_ui(username, save_current_session):
                     gst_cat_val = st.session_state.edited_df_cache.at[idx, "GST Category"]
                     df_page.at[idx, "GST Category"] = gst_cat_val
 
+            # Sync Who values from latest edited_df_cache for current page rows
+            if "Who" in df_page.columns and "Who" in st.session_state.edited_df_cache.columns:
+                for idx in df_page.index:
+                    who_val = st.session_state.edited_df_cache.at[idx, "Who"]
+                    df_page.at[idx, "Who"] = who_val
+
             # Prepare display with formatting for non-editable columns
             df_page_display = df_page.copy()
             for col in ["Debit", "Credit", "GST"]:
@@ -560,7 +569,7 @@ def render_output_ui(username, save_current_session):
                 with cols[9]:
                     # GL Account selectbox - editable
                     # Always get the latest value from edited_df_cache, not from row_data
-                    current_gl = st.session_state.edited_df_cache.at[original_idx, "GL Account"] if pd.notnull(st.session_state.edited_df_cache.at[original_idx, "GL Account"]) else ""
+                    current_gl = normalize_gl_account(st.session_state.edited_df_cache.at[original_idx, "GL Account"])
                     classification = row_data.get('Classification', '')
                     
                 
@@ -588,11 +597,12 @@ def render_output_ui(username, save_current_session):
                     )
                     
                     # Track GL Account changes separately
-                    original_gl = st.session_state.edited_df_cache.at[original_idx, "GL Account"] if pd.notnull(st.session_state.edited_df_cache.at[original_idx, "GL Account"]) else ""
-                    if new_gl != original_gl:
+                    original_gl = normalize_gl_account(st.session_state.edited_df_cache.at[original_idx, "GL Account"])
+                    if normalize_gl_account(new_gl) != original_gl:
                         # Update directly in edited_df_cache and reconciliation_results
-                        st.session_state.edited_df_cache.at[original_idx, "GL Account"] = new_gl
-                        st.session_state.reconciliation_results.at[original_idx, "GL Account"] = new_gl
+                        normalized_new_gl = normalize_gl_account(new_gl)
+                        st.session_state.edited_df_cache.at[original_idx, "GL Account"] = normalized_new_gl
+                        st.session_state.reconciliation_results.at[original_idx, "GL Account"] = normalized_new_gl
                         st.session_state.updated_pages.add(st.session_state.page_number)
                         
                         # Save to session immediately
@@ -651,6 +661,16 @@ def render_output_ui(username, save_current_session):
                         st.session_state.pending_changes[original_idx] = new_category
                     elif original_idx in st.session_state.pending_changes:
                         del st.session_state.pending_changes[original_idx]
+
+                    # Save GST pending changes to session immediately (same behavior as GL edits)
+                    if st.session_state.get("current_session_id"):
+                        session_manager.save_pending_changes_only(
+                            username,
+                            st.session_state.current_session_id,
+                            st.session_state.pending_changes,
+                            st.session_state.updated_pages,
+                            st.session_state.page_number
+                        )
                 
                 # Who column
                 with cols[12]:
@@ -709,6 +729,9 @@ def render_output_ui(username, save_current_session):
                         # Update reconciliation results
                         st.session_state.reconciliation_results = st.session_state.edited_df_cache.copy()
                         st.session_state.updated_pages.add(st.session_state.page_number)
+
+                        # Clear pending changes before save to avoid reloading stale pending values
+                        st.session_state.pending_changes = {}
                         
                         # Save to session
                         if st.session_state.current_session_id:
@@ -720,9 +743,6 @@ def render_output_ui(username, save_current_session):
                                 st.session_state.updated_pages,
                                 st.session_state.page_number
                             )
-                        
-                        # Clear pending changes
-                        st.session_state.pending_changes = {}
                         
                         st.success(f"✅ Changes submitted! Page {st.session_state.page_number} updated.")
                         st.rerun()

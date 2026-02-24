@@ -418,6 +418,24 @@ def render_output_ui(username, save_current_session):
                 if idx in st.session_state.pending_changes:
                     df_page.at[idx, "GST Category"] = st.session_state.pending_changes[idx]
 
+            # Sync GL Account values from latest edited_df_cache for current page rows
+            if "GL Account" in df_page.columns and "GL Account" in st.session_state.edited_df_cache.columns:
+                for idx in df_page.index:
+                    gl_val = st.session_state.edited_df_cache.at[idx, "GL Account"]
+                    df_page.at[idx, "GL Account"] = gl_val
+
+            # Sync GST Category values from latest edited_df_cache for current page rows
+            if "GST Category" in df_page.columns and "GST Category" in st.session_state.edited_df_cache.columns:
+                for idx in df_page.index:
+                    gst_cat_val = st.session_state.edited_df_cache.at[idx, "GST Category"]
+                    df_page.at[idx, "GST Category"] = gst_cat_val
+
+            # Sync Who values from latest edited_df_cache for current page rows
+            if "Who" in df_page.columns and "Who" in st.session_state.edited_df_cache.columns:
+                for idx in df_page.index:
+                    who_val = st.session_state.edited_df_cache.at[idx, "Who"]
+                    df_page.at[idx, "Who"] = who_val
+
             # Prepare display with formatting for non-editable columns
             df_page_display = df_page.copy()
             for col in ["Debit", "Credit", "GST"]:
@@ -635,6 +653,16 @@ def render_output_ui(username, save_current_session):
                         st.session_state.pending_changes[original_idx] = new_category
                     elif original_idx in st.session_state.pending_changes:
                         del st.session_state.pending_changes[original_idx]
+
+                    # Save GST pending changes to session immediately (same behavior as GL edits)
+                    if st.session_state.get("current_session_id"):
+                        session_manager.save_pending_changes_only(
+                            username,
+                            st.session_state.current_session_id,
+                            st.session_state.pending_changes,
+                            st.session_state.updated_pages,
+                            st.session_state.page_number
+                        )
                 
                 # Who column
                 with cols[12]:
@@ -693,6 +721,9 @@ def render_output_ui(username, save_current_session):
                         # Update reconciliation results
                         st.session_state.reconciliation_results = st.session_state.edited_df_cache.copy()
                         st.session_state.updated_pages.add(st.session_state.page_number)
+
+                        # Clear pending changes before save to avoid reloading stale pending values
+                        st.session_state.pending_changes = {}
                         
                         # Save to session
                         if st.session_state.current_session_id:
@@ -704,9 +735,6 @@ def render_output_ui(username, save_current_session):
                                 st.session_state.updated_pages,
                                 st.session_state.page_number
                             )
-                        
-                        # Clear pending changes
-                        st.session_state.pending_changes = {}
                         
                         st.success(f"✅ Changes submitted! Page {st.session_state.page_number} updated.")
                         st.rerun()

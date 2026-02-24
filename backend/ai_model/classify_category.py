@@ -20,7 +20,7 @@ import streamlit as st
 
 OLLAMA_CHAT_URL_DEFAULT = "http://localhost:11434/api/chat"
 CACHE_FILE = Path("ollama_cache.json")
-CACHE_VERSION = "v3"
+CACHE_VERSION = "v4"
 WORKSPACE_ROOT = Path(__file__).resolve().parents[1]
 _DEFAULT_TXN_PROMPT = "Classify this transaction description:"
 _DEFAULT_GST_PROMPT = "Given the category and transaction description, return the GST category label:"
@@ -35,6 +35,7 @@ CATEGORY_ENUM = [
     "Equity",
     "Transfer",
     "Liability",
+    ""
 ]
 
 GST_ENUM = [
@@ -44,6 +45,28 @@ GST_ENUM = [
     "GST Free Expenses",
     "GST Free Income",
     "BAS Excluded",
+]
+
+WHO_BANK_PATTERNS = [
+    ("ANZ", [r"\banz\b", r"\baustralia and new zealand bank\b"]),
+    ("CBA", [r"\bcba\b", r"\bcommbank\b", r"\bcommonwealth bank\b", r"\bcommonwealthbk\b"]),
+    ("NAB", [r"\bnab\b", r"\bnational australia bank\b"]),
+    ("Westpac", [r"\bwestpac\b"]),
+    ("St.George", [r"\bst\.?\s*george\b", r"\bstg\b"]),
+    ("BankSA", [r"\bbanksa\b", r"\bbank sa\b"]),
+    ("Bank of Melbourne", [r"\bbank of melbourne\b", r"\bbom\b"]),
+    ("Macquarie", [r"\bmacquarie\b"]),
+    ("ING", [r"\bing\b", r"\bing direct\b"]),
+    ("Bendigo Bank", [r"\bbendigo\b", r"\bbendigo bank\b"]),
+    ("Suncorp", [r"\bsuncorp\b"]),
+    ("BOQ", [r"\bboq\b", r"\bbank of queensland\b"]),
+    ("ME Bank", [r"\bme bank\b", r"\bmebank\b"]),
+    ("UP", [r"\bup bank\b", r"\bup\b"]),
+    ("ubank", [r"\bubank\b", r"\bu bank\b"]),
+    ("AMP", [r"\bamp\b", r"\bamp bank\b"]),
+    ("HSBC", [r"\bhsbc\b"]),
+    ("Citi", [r"\bciti\b", r"\bcitibank\b"]),
+    ("Other/Unknown", []),
 ]
 
 GL_SYSTEM_MSG = (
@@ -58,15 +81,27 @@ GL_SYSTEM_MSG = (
 )
 
 GST_SYSTEM_MSG = (
-    "You are a strict GST classifier for bank transactions. "
-    "Return ONLY one of these GST category labels as plain text: "
-    "GST on Expenses, GST on Capital, GST on Income, GST Free Expenses, GST Free Income, BAS Excluded. "
-    "No explanations, no extra keys, no markdown. "
-    "Rules: Most business expenses include GST -> GST on Expenses. "
-    "Asset purchases -> GST on Capital. "
-    "Sales/revenue -> GST on Income. "
-    "Transfers between accounts, wages, some financial fees -> BAS Excluded."
+    "You are a strict Australian GST classifier for bank transactions. "
+    "Return exactly ONE label as plain text, and nothing else. "
+    "Allowed labels: GST on Expenses, GST on Capital, GST on Income, GST Free Expenses, GST Free Income, BAS Excluded. "
+    "Never output JSON, punctuation, explanation, or markdown. "
+    "Use both inputs: transaction category and description. Category is the primary signal; description is secondary for refinement. "
+    "Decision rules (in priority order): "
+    "1) Internal transfers, owner drawings/contributions, wages/salary/payroll, loan repayments, bank charges/interest, tax payments, and purely financial movements -> BAS Excluded. "
+    "2) Sales/revenue/income/credit receipts for taxable supply -> GST on Income. "
+    "3) Sales/income explicitly GST-free (e.g., GST-free export/medical/education/rent where indicated) -> GST Free Income. "
+    "4) Asset/capital purchases (equipment, vehicle, fitout, hardware, long-term assets) -> GST on Capital. "
+    "5) Operating/business expenses and merchant purchases (fuel, food, office, software, subscriptions, utilities, repairs, travel) -> GST on Expenses. "
+    "6) Expenses explicitly GST-free -> GST Free Expenses. "
+    "If uncertain, prefer: Expense -> GST on Expenses, Revenue -> GST on Income, Transfer/Equity/Liability/financial-only movement -> BAS Excluded. "
+    "Output only the final label."
 )
+
+# GST_SYSTEM_MSG = (
+#     "You are a strict GST classifier for bank transactions. "
+#     "Return ONLY the GST category label as plain text. "
+#     "No explanations, no extra keys, no markdown."
+# )
 
 # -------------------------
 # Helpers: caching
@@ -74,9 +109,25 @@ GST_SYSTEM_MSG = (
 def normalize_desc(s: str) -> str:
     return " ".join(str(s or "").split()).strip().lower()
 
+
+def extract_who_bank(description: str) -> str:
+    text = normalize_desc(description)
+    if not text:
+        return "Other/Unknown"
+
+    for bank_name, patterns in WHO_BANK_PATTERNS:
+        for pattern in patterns:
+            if re.search(pattern, text, flags=re.IGNORECASE):
+                return bank_name
+
+    return "Other/Unknown"
+
 def cache_key(model: str, desc_normed: str, prompt_prefix: str) -> str:
-    # Include model and prompt so cache updates when instructions change
-    raw = f"{CACHE_VERSION}||{model}||{prompt_prefix}||{desc_normed}"
+    # Include model + prompt prefixes + system prompt fingerprints so cache updates
+    # automatically when classifier instructions are modified.
+    gl_sig = hashlib.sha1(GL_SYSTEM_MSG.encode("utf-8")).hexdigest()[:10]
+    gst_sig = hashlib.sha1(GST_SYSTEM_MSG.encode("utf-8")).hexdigest()[:10]
+    raw = f"{CACHE_VERSION}||{model}||{prompt_prefix}||{gl_sig}||{gst_sig}||{desc_normed}"
     return hashlib.sha1(raw.encode("utf-8")).hexdigest()
 
 def load_disk_cache() -> Dict[str, Dict[str, str]]:
@@ -140,6 +191,14 @@ def ollama_predict_gst(
     temperature: float,
     top_p: float,
 ) -> Dict[str, str]:
+    category_match = re.search(r"Category\s*:\s*(.+)", prompt, re.IGNORECASE)
+    category_text = category_match.group(1).strip() if category_match else ""
+    category_text = category_text.splitlines()[0].strip() if category_text else ""
+    normalized_category = category_text.lower()
+
+    if normalized_category in {"transfer", "equity", "liability"}:
+        return {"gst_category": "BAS Excluded"}
+
     payload = {
         "model": model,
         "stream": False,
@@ -166,6 +225,15 @@ def ollama_predict_gst(
     if match:
         normalized = next(c for c in GST_ENUM if c.lower() == match.group(0).lower())
         return {"gst_category": normalized}
+
+    if normalized_category in {"expense", "direct costs"}:
+        return {"gst_category": "GST on Expenses"}
+    if normalized_category == "fixed asset":
+        return {"gst_category": "GST on Capital"}
+    if normalized_category == "revenue":
+        return {"gst_category": "GST on Income"}
+    if normalized_category in {"gst", "transfer", "equity", "liability"}:
+        return {"gst_category": "BAS Excluded"}
 
     return {"gst_category": "Unknown"}
 

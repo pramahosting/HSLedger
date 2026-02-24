@@ -1,17 +1,10 @@
 {
-  "pending_changes": {
-    "0": "GST on Sale",
-    "62": "BAS Excluded",
-    "13": "GST Free Sale",
-    "2455": "GST on Sale",
-    "61": "GST on Sale",
-    "60": "GST Free Sale"
-  },
+  "pending_changes": {},
   "updated_pages": [
     1,
     2,
     3
   ],
   "page_number": 1,
-  "last_updated": "2026-02-20T14:18:28.834718"
+  "last_updated": "2026-02-24T12:18:07.791249"
 }
