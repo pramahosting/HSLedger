@@ -21,7 +21,7 @@ import streamlit as st
 OLLAMA_CHAT_URL_DEFAULT = "http://localhost:11434/api/chat"
 CACHE_FILE = Path("ollama_cache.json")
 CACHE_VERSION = "v4"
-WORKSPACE_ROOT = Path(__file__).resolve().parents[1]
+WORKSPACE_ROOT = Path(__file__).resolve().parents[2]
 _DEFAULT_TXN_PROMPT = "Classify this transaction description:"
 _DEFAULT_GST_PROMPT = "Given the category and transaction description, return the GST category label:"
 
@@ -46,6 +46,21 @@ GST_ENUM = [
     "GST Free Income",
     "BAS Excluded",
 ]
+
+RDR_RULES = []
+RDR_LABEL_TO_CATEGORY = {
+    "inventory": "Inventory",
+    "fixed_asset": "Fixed Asset",
+    "fixed asset": "Fixed Asset",
+    "transfer": "Transfer",
+    "revenue": "Revenue",
+    "expense": "Expense",
+    "direct costs": "Direct Costs",
+    "direct_costs": "Direct Costs",
+    "gst": "GST",
+    "equity": "Equity",
+    "liability": "Liability",
+}
 
 WHO_BANK_PATTERNS = [
     ("ANZ", [r"\banz\b", r"\baustralia and new zealand bank\b"]),
@@ -129,6 +144,67 @@ def cache_key(model: str, desc_normed: str, prompt_prefix: str) -> str:
     gst_sig = hashlib.sha1(GST_SYSTEM_MSG.encode("utf-8")).hexdigest()[:10]
     raw = f"{CACHE_VERSION}||{model}||{prompt_prefix}||{gl_sig}||{gst_sig}||{desc_normed}"
     return hashlib.sha1(raw.encode("utf-8")).hexdigest()
+
+def load_rdr_rules() -> list[dict]:
+    candidate_paths = [
+        WORKSPACE_ROOT / "data" / "rdr_rules.json",
+        WORKSPACE_ROOT / "rdr_rules.json",
+    ]
+
+    for path in candidate_paths:
+        if not path.exists():
+            continue
+        try:
+            rules = json.loads(path.read_text(encoding="utf-8"))
+            if not isinstance(rules, list):
+                continue
+            cleaned = []
+            for rule in rules:
+                if not isinstance(rule, dict):
+                    continue
+                cond = rule.get("if", {})
+                if not isinstance(cond, dict):
+                    continue
+                then_value = str(rule.get("then", "")).strip()
+                if not then_value:
+                    continue
+                cleaned.append(rule)
+            cleaned.sort(key=lambda r: int(r.get("priority", 0)), reverse=True)
+            return cleaned
+        except Exception:
+            continue
+
+    return []
+
+def normalize_rdr_label(label: str) -> str:
+    if not label:
+        return ""
+    normalized = RDR_LABEL_TO_CATEGORY.get(str(label).strip().lower(), "")
+    return normalized if normalized in CATEGORY_ENUM else ""
+
+def rdr_apply(description: str) -> str:
+    text = normalize_desc(description)
+    if not text:
+        return ""
+
+    for rule in RDR_RULES:
+        cond = rule.get("if", {})
+
+        if "contains_any" in cond:
+            keywords = cond.get("contains_any") or []
+            if not any(str(k).lower() in text for k in keywords):
+                continue
+
+        if "regex_any" in cond:
+            patterns = cond.get("regex_any") or []
+            if not any(re.search(rx, text) for rx in patterns):
+                continue
+
+        mapped = normalize_rdr_label(rule.get("then", ""))
+        if mapped:
+            return mapped
+
+    return ""
 
 def load_disk_cache() -> Dict[str, Dict[str, str]]:
     if CACHE_FILE.exists():
@@ -282,6 +358,9 @@ def main():
     uploaded_file = st.file_uploader("Upload Your CSV File", type=["csv"])
 
     if uploaded_file and selected_model:
+        global RDR_RULES
+        RDR_RULES = load_rdr_rules()
+
         df = pd.read_csv(uploaded_file)
 
         if "Description" not in df.columns:
@@ -312,27 +391,35 @@ def main():
                 status_text.text(f"Classifying unique {i+1}/{len(unique_descs)}")
                 dnorm = normalize_desc(desc)
                 k = cache_key(selected_model, dnorm, _DEFAULT_TXN_PROMPT)
-                gst_k = cache_key(selected_model, f"{dnorm}||{mapping.get(desc, '')}", _DEFAULT_GST_PROMPT)
 
-                if k in mem_cache:
-                    mapping[desc] = mem_cache[k].get("gl_account", mem_cache[k].get("category", ""))
+                forced_category = rdr_apply(dnorm)
+
+                if forced_category:
+                    mapping[desc] = forced_category
+                    mem_cache[k] = {"category": forced_category}
+                    disk_cache[k] = {"category": forced_category}
                     cache_hits += 1
-                elif k in disk_cache:
-                    mapping[desc] = disk_cache[k].get("gl_account", disk_cache[k].get("category", ""))
-                    mem_cache[k] = disk_cache[k]
-                    cache_hits += 1
+
                 else:
-                    cache_misses += 1
-                    mapping[desc] = ollama_classify_gl_account_cached(
-                        model=selected_model,
-                        prompt=f"{_DEFAULT_TXN_PROMPT}\n{dnorm}",
-                        base_url=OLLAMA_CHAT_URL_DEFAULT,
-                        temperature=0.0,
-                        top_p=1.0,
-                        cache_version=CACHE_VERSION,
-                    )["gl_account"]
-                    mem_cache[k] = {"gl_account": mapping[desc]}
-                    disk_cache[k] = {"gl_account": mapping[desc]}
+                    if k in mem_cache:
+                        mapping[desc] = mem_cache[k].get("category", "")
+                        cache_hits += 1
+                    elif k in disk_cache:
+                        mapping[desc] = disk_cache[k].get("category", "")
+                        mem_cache[k] = disk_cache[k]
+                        cache_hits += 1
+                    else:
+                        cache_misses += 1
+                        mapping[desc] = ollama_classify_gl_account_cached(
+                            model=selected_model,
+                            prompt=f"{_DEFAULT_TXN_PROMPT}\n{dnorm}",
+                            base_url=OLLAMA_CHAT_URL_DEFAULT,
+                            temperature=0.0,
+                            top_p=1.0,
+                            cache_version=CACHE_VERSION,
+                        )["category"]
+                        mem_cache[k] = {"category": mapping[desc]}
+                        disk_cache[k] = {"category": mapping[desc]}
 
                 gst_k = cache_key(selected_model, f"{dnorm}||{mapping[desc]}", _DEFAULT_GST_PROMPT)
                 if gst_k in mem_cache:

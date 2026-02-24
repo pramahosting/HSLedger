@@ -1,5 +1,6 @@
 import pandas as pd
 import re, json, hashlib
+from pathlib import Path
 from urllib.request import Request, urlopen
 from urllib.error import URLError, HTTPError
 
@@ -9,7 +10,11 @@ OLLAMA_URL = "http://localhost:11434/api/chat"
 
 ALLOWED = {"Inventory", "Fixed_Asset", "Transfer", "Revenue", "Expense", "Other"}
 
-RDR_JSON_PATH = "rdr_rules.json"
+WORKSPACE_ROOT = Path(__file__).resolve().parents[2]
+RDR_JSON_PATHS = [
+    WORKSPACE_ROOT / "data" / "rdr_rules.json",
+    WORKSPACE_ROOT / "rdr_rules.json",
+]
 RDR_RULES = []
 
 
@@ -85,36 +90,38 @@ def cache_key(desc: str, debit: float, credit: float) -> str:
 # Add more rules as you find mistakes.
 # Each rule is: if condition matches -> force label
 # ---------------------------
-def load_rdr_rules(path: str):
-    try:
-        with open(path, "r", encoding="utf-8") as f:
-            rules = json.load(f)
+def load_rdr_rules(paths):
+    for path in paths:
+        try:
+            with open(path, "r", encoding="utf-8") as f:
+                rules = json.load(f)
 
-        if not isinstance(rules, list):
-            raise ValueError("RDR rules JSON must be a list")
+            if not isinstance(rules, list):
+                raise ValueError("RDR rules JSON must be a list")
 
-        # highest priority first (so exceptions override)
-        rules.sort(key=lambda r: int(r.get("priority", 0)), reverse=True)
+            # highest priority first (so exceptions override)
+            rules.sort(key=lambda r: int(r.get("priority", 0)), reverse=True)
 
-        # optional validation
-        cleaned = []
-        for r in rules:
-            label = r.get("then", "")
-            cond = r.get("if", {})
-            if label not in ALLOWED:
-                continue
-            if not isinstance(cond, dict):
-                continue
-            cleaned.append(r)
+            # optional validation
+            cleaned = []
+            for r in rules:
+                label = r.get("then", "")
+                cond = r.get("if", {})
+                if label not in ALLOWED:
+                    continue
+                if not isinstance(cond, dict):
+                    continue
+                cleaned.append(r)
 
-        return cleaned
+            return cleaned
 
-    except FileNotFoundError:
-        print(f"WARNING: {path} not found. No RDR rules loaded.")
-        return []
-    except Exception as e:
-        print(f"WARNING: Failed to load RDR rules from {path}: {e}")
-        return []
+        except FileNotFoundError:
+            continue
+        except Exception as e:
+            print(f"WARNING: Failed to load RDR rules from {path}: {e}")
+
+    print(f"WARNING: No RDR rules found in: {', '.join(str(p) for p in paths)}")
+    return []
 
 def rdr_apply(desc: str, debit: float, credit: float):
     d = (desc or "").lower()
@@ -191,8 +198,8 @@ def main():
     df = pd.read_csv(CSV_PATH).dropna(how="all")
 
     global RDR_RULES
-    RDR_RULES = load_rdr_rules(RDR_JSON_PATH)
-    print(f"Loaded {len(RDR_RULES)} RDR rules from {RDR_JSON_PATH}")
+    RDR_RULES = load_rdr_rules(RDR_JSON_PATHS)
+    print(f"Loaded {len(RDR_RULES)} RDR rules")
 
     col_desc = pick_col(df, ["Description", "Narration", "Details", "Transaction Details", "Merchant", "Memo"])
     col_debit = pick_col(df, ["Debit", "Out", "Money Out", "Spent", "Withdrawal", "Amount"])
