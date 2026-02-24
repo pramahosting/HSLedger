@@ -358,6 +358,90 @@ def render_output_ui(username, save_current_session):
         )
 
         with st.expander("📄Transaction Details", expanded=True):
+            # Add transaction form (top of section)
+            with st.expander("➕ Add Transaction", expanded=False):
+                with st.form("add_transaction_form", clear_on_submit=True):
+                    form_col1, form_col2, form_col3, form_col4 = st.columns(4)
+
+                    with form_col1:
+                        new_date_value = st.date_input("Date")
+                        new_bank = st.text_input("Bank")
+                        new_account = st.text_input("Account")
+
+                    with form_col2:
+                        new_description = st.text_input("Description")
+                        new_classification = st.selectbox(
+                            "Classification",
+                            ["🟢Internal", "🔵Incoming", "🟡Outgoing"],
+                            index=1,
+                        )
+                        new_pairid = st.text_input("PairID", value="")
+
+                    with form_col3:
+                        new_debit = st.number_input("Debit", min_value=0.0, value=0.0, step=0.01)
+                        new_credit = st.number_input("Credit", min_value=0.0, value=0.0, step=0.01)
+                        new_gl_account = st.selectbox("GL Account", GL_ACCOUNT_OPTIONS, index=0)
+
+                    with form_col4:
+                        default_gst_index = GST_CLASSIFY_OPTIONS.index("Unknown") if "Unknown" in GST_CLASSIFY_OPTIONS else 0
+                        new_gst_category = st.selectbox(
+                            "GST Category",
+                            GST_CLASSIFY_OPTIONS,
+                            index=default_gst_index,
+                        )
+                        inferred_who = classify_category.extract_who_bank(new_description)
+                        new_who = st.text_input("Who", value=inferred_who)
+
+                    add_submit = st.form_submit_button("Add Entry")
+
+                if add_submit:
+                    if not new_description.strip():
+                        st.error("Description is required.")
+                    else:
+                        new_date = new_date_value.strftime("%d/%m/%Y") if new_date_value else ""
+                        new_gst_value = calculate_gst_value(new_debit, new_credit, new_gst_category)
+
+                        numeric_index = pd.to_numeric(st.session_state.edited_df_cache.index, errors="coerce")
+                        if len(numeric_index.dropna()) > 0:
+                            new_index = int(numeric_index.max()) + 1
+                        else:
+                            new_index = len(st.session_state.edited_df_cache)
+
+                        new_row = {col: "" for col in st.session_state.edited_df_cache.columns}
+                        new_row.update(
+                            {
+                                "Date": new_date,
+                                "Bank": new_bank,
+                                "Account": new_account,
+                                "Description": new_description,
+                                "Debit": float(new_debit),
+                                "Credit": float(new_credit),
+                                "Classification": new_classification,
+                                "PairID": new_pairid,
+                                "GL Account": normalize_gl_account(new_gl_account),
+                                "GST Category": new_gst_category,
+                                "GST": float(new_gst_value),
+                                "Who": new_who.strip() if new_who.strip() else inferred_who,
+                            }
+                        )
+
+                        st.session_state.edited_df_cache.loc[new_index] = new_row
+                        st.session_state.reconciliation_results = st.session_state.edited_df_cache.copy()
+                        st.session_state.updated_pages.add(st.session_state.page_number)
+
+                        if st.session_state.get("current_session_id"):
+                            session_manager.save_output_data(
+                                username,
+                                st.session_state.current_session_id,
+                                st.session_state.reconciliation_results,
+                                st.session_state.pending_changes,
+                                st.session_state.updated_pages,
+                                st.session_state.page_number,
+                            )
+
+                        st.success("Transaction added and saved to session.")
+                        st.rerun()
+
             # Status bar and filters in same row
             status_col1, status_col2 = st.columns([3, 1])
             
@@ -675,7 +759,7 @@ def render_output_ui(username, save_current_session):
                 # Who column
                 with cols[12]:
                     st.markdown(f"<div class='table-cell'>{str(row_data.get('Who', ''))}</div>", unsafe_allow_html=True)
-            
+
             # Pagination controls and Submit button
             pag_col1, pag_col2, pag_col3, pag_col4 = st.columns([1, 1, 1, 1])
             
