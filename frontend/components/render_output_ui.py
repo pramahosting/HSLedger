@@ -442,6 +442,165 @@ def render_output_ui(username, save_current_session):
                         st.success("Transaction added and saved to session.")
                         st.rerun()
 
+            with st.expander("✏️ Edit Transaction", expanded=False):
+                if st.session_state.edited_df_cache is None or st.session_state.edited_df_cache.empty:
+                    st.info("No transactions available to edit.")
+                else:
+                    edit_indices = sorted(
+                        idx
+                        for idx in st.session_state.selected_rows
+                        if idx in st.session_state.edited_df_cache.index
+                    )
+
+                    if not edit_indices:
+                        st.info("Select row(s) from the table checkbox first, then edit here.")
+                        edit_indices = []
+
+                    def format_edit_option(idx):
+                        row = st.session_state.edited_df_cache.loc[idx]
+                        date_txt = "" if pd.isna(row.get("Date", "")) else str(row.get("Date", ""))
+                        desc_txt = "" if pd.isna(row.get("Description", "")) else str(row.get("Description", ""))
+                        desc_txt = desc_txt[:40] + ("..." if len(desc_txt) > 40 else "")
+                        return f"{idx} | {date_txt} | {desc_txt}"
+
+                    if edit_indices:
+                        selected_edit_idx = st.selectbox(
+                            "Select entry to edit",
+                            options=edit_indices,
+                            format_func=format_edit_option,
+                        )
+
+                        selected_row = st.session_state.edited_df_cache.loc[selected_edit_idx]
+
+                        current_date = pd.to_datetime(selected_row.get("Date", ""), errors="coerce", dayfirst=True)
+                        default_edit_date = current_date.date() if pd.notnull(current_date) else pd.Timestamp.today().date()
+
+                        current_classification = str(selected_row.get("Classification", "") or "")
+                        classification_options = ["🟢Internal", "🔵Incoming", "🟡Outgoing"]
+                        default_classification_idx = (
+                            classification_options.index(current_classification)
+                            if current_classification in classification_options
+                            else 1
+                        )
+
+                        current_gl = normalize_gl_account(selected_row.get("GL Account", ""))
+                        default_gl_idx = (
+                            GL_ACCOUNT_OPTIONS.index(current_gl)
+                            if current_gl in GL_ACCOUNT_OPTIONS
+                            else len(GL_ACCOUNT_OPTIONS) - 1
+                        )
+
+                        current_gst_category = str(selected_row.get("GST Category", "") or "")
+                        default_gst_idx = next(
+                            (
+                                idx
+                                for idx, option in enumerate(GST_CLASSIFY_OPTIONS)
+                                if str(option).lower() == current_gst_category.strip().lower()
+                            ),
+                            GST_CLASSIFY_OPTIONS.index("Unknown") if "Unknown" in GST_CLASSIFY_OPTIONS else 0,
+                        )
+
+                        current_debit = pd.to_numeric(selected_row.get("Debit", 0.0), errors="coerce")
+                        current_credit = pd.to_numeric(selected_row.get("Credit", 0.0), errors="coerce")
+
+                        with st.form(f"edit_transaction_form_{selected_edit_idx}"):
+                            edit_col1, edit_col2, edit_col3, edit_col4 = st.columns(4)
+
+                            with edit_col1:
+                                edit_date_value = st.date_input("Date", value=default_edit_date, key=f"edit_date_{selected_edit_idx}")
+                                edit_bank = st.text_input("Bank", value="" if pd.isna(selected_row.get("Bank", "")) else str(selected_row.get("Bank", "")), key=f"edit_bank_{selected_edit_idx}")
+                                edit_account = st.text_input("Account", value="" if pd.isna(selected_row.get("Account", "")) else str(selected_row.get("Account", "")), key=f"edit_account_{selected_edit_idx}")
+
+                            with edit_col2:
+                                edit_description = st.text_input("Description", value="" if pd.isna(selected_row.get("Description", "")) else str(selected_row.get("Description", "")), key=f"edit_desc_{selected_edit_idx}")
+                                edit_classification = st.selectbox(
+                                    "Classification",
+                                    classification_options,
+                                    index=default_classification_idx,
+                                    key=f"edit_classification_{selected_edit_idx}",
+                                )
+                                edit_pairid = st.text_input("PairID", value="" if pd.isna(selected_row.get("PairID", "")) else str(selected_row.get("PairID", "")), key=f"edit_pairid_{selected_edit_idx}")
+
+                            with edit_col3:
+                                edit_debit = st.number_input(
+                                    "Debit",
+                                    min_value=0.0,
+                                    value=float(current_debit) if pd.notnull(current_debit) else 0.0,
+                                    step=0.01,
+                                    key=f"edit_debit_{selected_edit_idx}",
+                                )
+                                edit_credit = st.number_input(
+                                    "Credit",
+                                    min_value=0.0,
+                                    value=float(current_credit) if pd.notnull(current_credit) else 0.0,
+                                    step=0.01,
+                                    key=f"edit_credit_{selected_edit_idx}",
+                                )
+                                edit_gl_account = st.selectbox(
+                                    "GL Account",
+                                    GL_ACCOUNT_OPTIONS,
+                                    index=default_gl_idx,
+                                    key=f"edit_gl_{selected_edit_idx}",
+                                )
+
+                            with edit_col4:
+                                edit_gst_category = st.selectbox(
+                                    "GST Category",
+                                    GST_CLASSIFY_OPTIONS,
+                                    index=default_gst_idx,
+                                    key=f"edit_gst_cat_{selected_edit_idx}",
+                                )
+                                inferred_edit_who = classify_category.extract_who_bank(edit_description)
+                                edit_who = st.text_input(
+                                    "Who",
+                                    value="" if pd.isna(selected_row.get("Who", "")) else str(selected_row.get("Who", "")),
+                                    key=f"edit_who_{selected_edit_idx}",
+                                )
+
+                            update_submit = st.form_submit_button("Update Entry")
+
+                        if update_submit:
+                            if not edit_description.strip():
+                                st.error("Description is required.")
+                            else:
+                                edit_date = edit_date_value.strftime("%d/%m/%Y") if edit_date_value else ""
+                                edit_gst_value = calculate_gst_value(edit_debit, edit_credit, edit_gst_category)
+
+                                updates = {
+                                    "Date": edit_date,
+                                    "Bank": edit_bank,
+                                    "Account": edit_account,
+                                    "Description": edit_description,
+                                    "Debit": float(edit_debit),
+                                    "Credit": float(edit_credit),
+                                    "Classification": edit_classification,
+                                    "PairID": edit_pairid,
+                                    "GL Account": normalize_gl_account(edit_gl_account),
+                                    "GST Category": edit_gst_category,
+                                    "GST": float(edit_gst_value),
+                                    "Who": edit_who.strip() if edit_who.strip() else inferred_edit_who,
+                                }
+
+                                for col, val in updates.items():
+                                    if col in st.session_state.edited_df_cache.columns:
+                                        st.session_state.edited_df_cache.at[selected_edit_idx, col] = val
+
+                                st.session_state.reconciliation_results = st.session_state.edited_df_cache.copy()
+                                st.session_state.updated_pages.add(st.session_state.page_number)
+
+                                if st.session_state.get("current_session_id"):
+                                    session_manager.save_output_data(
+                                        username,
+                                        st.session_state.current_session_id,
+                                        st.session_state.reconciliation_results,
+                                        st.session_state.pending_changes,
+                                        st.session_state.updated_pages,
+                                        st.session_state.page_number,
+                                    )
+
+                                st.success("Transaction updated and saved to session.")
+                                st.rerun()
+
             # Status bar and filters in same row
             status_col1, status_col2 = st.columns([3, 1])
             
