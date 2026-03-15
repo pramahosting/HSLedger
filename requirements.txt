@@ -23,6 +23,7 @@ pyarrow
 
 # If you’re dealing with environment variables
 python-dotenv
+cassandra-driver
 
 # Testing
 pytest
