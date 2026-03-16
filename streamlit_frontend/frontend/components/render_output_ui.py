@@ -1,16 +1,21 @@
 # frontend/components/render_output_ui.py
 
 import json
+import os
 from urllib import error, request
 
 import streamlit as st
 import pandas as pd
+from dotenv import find_dotenv, load_dotenv
 from backend.reconciliation import exporter
 from backend.reconciliation.session_manager import session_manager
 from backend.reconciliation.gst_calculator import GST_CATEGORY_OPTIONS, calculate_gst_value
 from backend.ai_model import classify_category
 
-API_BASE_URL = "http://127.0.0.1:8000"
+# Load environment variables from the nearest .env in current/parent directories.
+load_dotenv(find_dotenv(), override=False)
+
+API_BASE_URL = os.getenv("HSLEDGER_API_BASE_URL", "http://127.0.0.1:8000").strip() or "http://127.0.0.1:8000"
 
 
 def _value_or_none(value):
