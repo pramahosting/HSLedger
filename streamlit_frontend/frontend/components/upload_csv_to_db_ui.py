@@ -41,23 +41,7 @@ def _build_transactions_payload(df: pd.DataFrame) -> list[dict]:
     return rows
 
 
-def _normalize_gl_account(value: str) -> str:
-    text = str(value or "").strip()
-    if not text:
-        return ""
-
-    for option in classify_category.CATEGORY_ENUM:
-        if option.lower() == text.lower():
-            return option
-
-    return ""
-
-
-def _is_blank(value: str | None) -> bool:
-    return not str(value or "").strip()
-
-
-def _enrich_gl_gst_who(df: pd.DataFrame, selected_model: str | None) -> pd.DataFrame:
+def _enrich_gl_gst_who(df: pd.DataFrame) -> pd.DataFrame:
     enriched = df.copy()
 
     if "description" not in enriched.columns:
@@ -73,124 +57,8 @@ def _enrich_gl_gst_who(df: pd.DataFrame, selected_model: str | None) -> pd.DataF
     desc_series = enriched["description"].fillna("").astype(str)
     enriched["who"] = desc_series.apply(classify_category.extract_who_bank)
 
-    # If model is not selected/available, keep WHO enrichment and existing GL/GST values.
-    if not selected_model:
-        return enriched
-
-    unique_descs = [d for d in pd.unique(desc_series) if str(d).strip()]
-
-    try:
-        disk_cache = classify_category.load_disk_cache()
-    except Exception:
-        disk_cache = {}
-
-    mem_cache: dict[str, dict[str, str]] = {}
-    gl_mapping: dict[str, str] = {}
-    gst_mapping: dict[str, str] = {}
-    gl_errors = 0
-    gst_errors = 0
-
-    # Give explicit defaults to blank descriptions so they are not silently skipped.
-    for desc in pd.unique(desc_series):
-        if _is_blank(desc):
-            gl_mapping[desc] = FALLBACK_GL_ACCOUNT
-            gst_mapping[desc] = FALLBACK_GST_CATEGORY
-
-    if not unique_descs:
-        enriched["gl account"] = desc_series.map(gl_mapping).fillna(enriched["gl account"]).replace("", FALLBACK_GL_ACCOUNT)
-        enriched["gst category"] = desc_series.map(gst_mapping).fillna(enriched["gst category"]).replace("", FALLBACK_GST_CATEGORY)
-        return enriched
-
-    progress = st.progress(0.0, text="Classifying GL account...")
-
-    # Phase 1: classify GL account for all unique descriptions.
-    for i, desc in enumerate(unique_descs, start=1):
-        dnorm = classify_category.normalize_desc(desc)
-        gl_key = classify_category.cache_key(selected_model, dnorm, classify_category._DEFAULT_TXN_PROMPT)
-
-        gl_label = ""
-        if gl_key in mem_cache:
-            gl_label = mem_cache[gl_key].get("gl_account", mem_cache[gl_key].get("category", ""))
-        elif gl_key in disk_cache:
-            gl_label = disk_cache[gl_key].get("gl_account", disk_cache[gl_key].get("category", ""))
-            mem_cache[gl_key] = disk_cache[gl_key]
-
-        # Reclassify when cache is missing/blank to avoid silent empty categories.
-        if _is_blank(gl_label):
-            try:
-                gl_label = classify_category.ollama_classify_gl_account_cached(
-                    model=selected_model,
-                    prompt=f"{classify_category._DEFAULT_TXN_PROMPT}\n{dnorm}",
-                    base_url=classify_category.OLLAMA_CHAT_URL_DEFAULT,
-                    temperature=0.0,
-                    top_p=1.0,
-                    cache_version=classify_category.CACHE_VERSION,
-                )["category"]
-            except Exception:
-                gl_errors += 1
-                gl_label = FALLBACK_GL_ACCOUNT
-
-            mem_cache[gl_key] = {"gl_account": gl_label, "category": gl_label}
-            disk_cache[gl_key] = {"gl_account": gl_label, "category": gl_label}
-
-        gl_mapping[desc] = _normalize_gl_account(gl_label) or FALLBACK_GL_ACCOUNT
-
-        progress.progress(i / max(1, len(unique_descs)), text=f"Classifying GL account... {i}/{len(unique_descs)}")
-
-    # Phase 2: classify GST category using the classified GL account.
-    progress.progress(0.0, text="Classifying GST category...")
-    for i, desc in enumerate(unique_descs, start=1):
-        dnorm = classify_category.normalize_desc(desc)
-        gst_key = classify_category.cache_key(
-            selected_model,
-            f"{dnorm}||{gl_mapping[desc]}",
-            classify_category._DEFAULT_GST_PROMPT,
-        )
-        gst_label = ""
-        if gst_key in mem_cache:
-            gst_label = mem_cache[gst_key].get("gst_category", FALLBACK_GST_CATEGORY)
-        elif gst_key in disk_cache:
-            gst_label = disk_cache[gst_key].get("gst_category", FALLBACK_GST_CATEGORY)
-            mem_cache[gst_key] = disk_cache[gst_key]
-
-        if _is_blank(gst_label):
-            try:
-                gst_label = classify_category.ollama_predict_gst_cached(
-                    model=selected_model,
-                    prompt=(
-                        f"{classify_category._DEFAULT_GST_PROMPT}\n"
-                        f"Category: {gl_mapping[desc]}\nDescription: {dnorm}"
-                    ),
-                    base_url=classify_category.OLLAMA_CHAT_URL_DEFAULT,
-                    temperature=0.0,
-                    top_p=1.0,
-                    cache_version=classify_category.CACHE_VERSION,
-                )["gst_category"]
-            except Exception:
-                gst_errors += 1
-                gst_label = FALLBACK_GST_CATEGORY
-
-            mem_cache[gst_key] = {"gst_category": gst_label}
-            disk_cache[gst_key] = {"gst_category": gst_label}
-
-        gst_mapping[desc] = gst_label or FALLBACK_GST_CATEGORY
-        progress.progress(i / max(1, len(unique_descs)), text=f"Classifying GST category... {i}/{len(unique_descs)}")
-
-    classify_category.save_disk_cache(disk_cache)
-    progress.empty()
-
-    enriched["gl account"] = desc_series.map(gl_mapping).fillna(enriched["gl account"]).replace("", FALLBACK_GL_ACCOUNT)
-    enriched["gst category"] = (
-        desc_series.map(gst_mapping)
-        .fillna(enriched["gst category"])
-        .replace("", FALLBACK_GST_CATEGORY)
-    )
-
-    if gl_errors or gst_errors:
-        st.warning(
-            f"Classification fallback used for {gl_errors} GL and {gst_errors} GST rows. "
-            f"They were set to '{FALLBACK_GL_ACCOUNT}'/'{FALLBACK_GST_CATEGORY}'."
-        )
+    enriched["gl account"] = enriched["gl account"].fillna("").replace("", FALLBACK_GL_ACCOUNT)
+    enriched["gst category"] = enriched["gst category"].fillna("").replace("", FALLBACK_GST_CATEGORY)
 
     return enriched
 
@@ -247,19 +115,7 @@ def render() -> None:
         account_number = st.text_input("Account Number", value="ACCT-001")
         st.text_input("User ID", value=str(user_id), disabled=True)
     with col2:
-        use_ai_classifier = st.checkbox("Local Ollama model", value=True)
-        selected_model = None
-        if use_ai_classifier:
-            try:
-                models = classify_category.list_ollama_models()
-                if models:
-                    selected_model = st.selectbox("Model", options=models)
-                else:
-                    st.warning("No Ollama model found. GL/GST classification will be skipped.")
-            except Exception as exc:
-                st.warning(f"Ollama unavailable: {exc}. GL/GST classification will be skipped.")
-        else:
-            st.caption("WHO will still be extracted from description.")
+        st.caption("GL Account and GST Category stay as existing values or defaults during upload.")
         uploaded_file = st.file_uploader("Upload CSV", type=["csv"], accept_multiple_files=False)
 
     process_btn = st.button("Prepare Transactions", use_container_width=True)
@@ -281,7 +137,7 @@ def render() -> None:
             normalized.columns = normalized.columns.str.strip().str.lower()
             classified = classifier.classify_transactions(normalized, show_progress=False)
             classified.columns = classified.columns.str.strip().str.lower()
-            classified = _enrich_gl_gst_who(classified, selected_model)
+            classified = _enrich_gl_gst_who(classified)
 
             payload_rows = _build_transactions_payload(classified)
             st.session_state.upload_preview_df = classified

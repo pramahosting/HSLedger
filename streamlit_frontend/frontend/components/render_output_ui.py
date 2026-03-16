@@ -230,200 +230,8 @@ def normalize_gl_account(value):
 def get_excel_bytes(df_total, monthly_summary):
     return exporter.export_excel_bytes(df_total, monthly_summary)
 
-@st.dialog("Configure Local Classifier")
-def select_model_dialog(input_text=None):
-    """Dialog to select a local Ollama model and start classification.
-
-    This dialog will:
-    - Fetch locally available Ollama models
-    - Pre-populate a textarea with transaction descriptions from the current session data
-    - Allow the user to run classification and display results inline
-    """
-    st.write("Fetching models from your local Ollama server...")
-
-    # Pre-fill descriptions from the current dataset (edited cache preferred)
-    descriptions_text = ""
-    prefilled_pairs = []  # list of (index, description) used to map results back
-    try:
-        df_source = None
-        if st.session_state.get("edited_df_cache") is not None:
-            df_source = st.session_state.edited_df_cache
-        elif st.session_state.get("reconciliation_results") is not None:
-            df_source = st.session_state.reconciliation_results
-
-        if df_source is not None and "Description" in df_source.columns:
-            # Build pairs of (index, description) and join descriptions with double-newline for readability
-            for idx, desc in df_source["Description"].dropna().astype(str).iloc[:10].items():
-                prefilled_pairs.append((idx, desc))
-            descs = [d for (_i, d) in prefilled_pairs]
-            descriptions_text = "\n\n".join(descs)  # limit already applied above
-        else:
-            st.info("No transaction descriptions available in the current session.")
-    except Exception as e:
-        st.error(f"Error reading descriptions from session: {e}")
-
-    try:
-        import ollama
-        models = [m.model for m in ollama.list().models]
-        if not models:
-            st.warning("No models found. Run 'ollama pull llama3' in your terminal.")
-            return
-
-        selected = st.selectbox("Select local engine:", models)
-
-        # Classify all rows in the current session dataframe and write into GL Account
-        if st.button("Classify All Rows in Session"):
-            st.session_state.selected_model = selected
-            try:
-                if df_source is None or "Description" not in df_source.columns:
-                    st.error("No descriptions available to classify in the current session.")
-                else:
-                    target_df = st.session_state.edited_df_cache if st.session_state.get("edited_df_cache") is not None else st.session_state.reconciliation_results
-
-                    # Ensure GL Account column exists
-                    if "GL Account" not in target_df.columns:
-                        target_df["GL Account"] = ""
-                    if "GST Category" not in target_df.columns:
-                        target_df["GST Category"] = "Unknown"
-                    if "Who" not in target_df.columns:
-                        target_df["Who"] = "Other/Unknown"
-
-                    rows = list(df_source.index)
-                    progress = st.progress(0)
-                    status = st.empty()
-                    results = []
-
-                    desc_by_idx = {}
-                    for idx in rows:
-                        desc = str(df_source.at[idx, "Description"]) if pd.notnull(df_source.at[idx, "Description"]) else ""
-                        if desc.strip():
-                            desc_by_idx[idx] = desc
-
-                    unique_descs = [d for d in pd.unique(pd.Series(list(desc_by_idx.values()))) if str(d).strip()]
-
-                    gl_mapping = {}
-                    gst_mapping = {}
-                    cache_hits = 0
-                    cache_misses = 0
-                    disk_cache = classify_category.load_disk_cache()
-                    mem_cache = {}
-
-                    for i, desc in enumerate(unique_descs):
-                        status.text(f"Classifying unique {i+1}/{len(unique_descs)}")
-                        dnorm = classify_category.normalize_desc(desc)
-                        k = classify_category.cache_key(selected, dnorm, classify_category._DEFAULT_TXN_PROMPT)
-
-                        if k in mem_cache:
-                            gl_mapping[desc] = mem_cache[k].get("gl_account", mem_cache[k].get("category", ""))
-                            cache_hits += 1
-                        elif k in disk_cache:
-                            gl_mapping[desc] = disk_cache[k].get("gl_account", disk_cache[k].get("category", ""))
-                            mem_cache[k] = disk_cache[k]
-                            cache_hits += 1
-                        else:
-                            cache_misses += 1
-                            gl_mapping[desc] = classify_category.ollama_classify_gl_account_cached(
-                                model=selected,
-                                prompt=f"{classify_category._DEFAULT_TXN_PROMPT}\n{dnorm}",
-                                base_url=classify_category.OLLAMA_CHAT_URL_DEFAULT,
-                                temperature=0.0,
-                                top_p=1.0,
-                                cache_version=classify_category.CACHE_VERSION,
-                            )["category"]
-                            mem_cache[k] = {"gl_account": gl_mapping[desc], "category": gl_mapping[desc]}
-                            disk_cache[k] = {"gl_account": gl_mapping[desc], "category": gl_mapping[desc]}
-
-                        gst_k = classify_category.cache_key(selected, f"{dnorm}||{gl_mapping[desc]}", classify_category._DEFAULT_GST_PROMPT)
-                        if gst_k in mem_cache:
-                            gst_mapping[desc] = mem_cache[gst_k].get("gst_category", "")
-                            cache_hits += 1
-                        elif gst_k in disk_cache:
-                            gst_mapping[desc] = disk_cache[gst_k].get("gst_category", "")
-                            mem_cache[gst_k] = disk_cache[gst_k]
-                            cache_hits += 1
-                        else:
-                            cache_misses += 1
-                            gst_mapping[desc] = classify_category.ollama_predict_gst_cached(
-                                model=selected,
-                                prompt=f"{classify_category._DEFAULT_GST_PROMPT}\nCategory: {gl_mapping[desc]}\nDescription: {dnorm}",
-                                base_url=classify_category.OLLAMA_CHAT_URL_DEFAULT,
-                                temperature=0.0,
-                                top_p=1.0,
-                                cache_version=classify_category.CACHE_VERSION,
-                            )["gst_category"]
-                            mem_cache[gst_k] = {"gst_category": gst_mapping[desc]}
-                            disk_cache[gst_k] = {"gst_category": gst_mapping[desc]}
-
-                        progress.progress((i + 1) / max(1, len(unique_descs)))
-
-                    classify_category.save_disk_cache(disk_cache)
-
-                    for idx in rows:
-                        desc = desc_by_idx.get(idx, "")
-                        if not desc:
-                            continue
-
-                        current_gl = target_df.at[idx, "GL Account"] if pd.notnull(target_df.at[idx, "GL Account"]) else ""
-
-                        should_update_gl = not current_gl or current_gl not in GL_ACCOUNT_OPTIONS
-
-                        predicted_gl = normalize_gl_account(gl_mapping.get(desc, ""))
-                        predicted_gst = gst_mapping.get(desc, "")
-
-                        if should_update_gl:
-                            target_df.at[idx, "GL Account"] = predicted_gl
-                        target_df.at[idx, "GST Category"] = predicted_gst
-                        target_df.at[idx, "Who"] = classify_category.extract_who_bank(desc)
-
-                        results.append(
-                            {
-                                "Index": idx,
-                                "Description": desc,
-                                "Predicted_GL_Account": predicted_gl,
-                                "Predicted_GST_Category": predicted_gst,
-                                "Predicted_Who": classify_category.extract_who_bank(desc),
-                            }
-                        )
-
-                    # Persist updates back to session state
-                    st.session_state.edited_df_cache = target_df.copy()
-                    st.session_state.reconciliation_results = target_df.copy()
-                    res_df = pd.DataFrame(results)
-                    st.session_state.last_classification_results = res_df
-
-                    # Save to session storage if available
-                    if st.session_state.get("current_session_id"):
-                        session_manager.save_output_data(
-                            st.session_state.get("username", ""),
-                            st.session_state.current_session_id,
-                            st.session_state.reconciliation_results,
-                            st.session_state.pending_changes,
-                            st.session_state.updated_pages,
-                            st.session_state.page_number,
-                        )
-
-                    st.success(
-                        f"Applied GL+GST prediction to {len(results)} row(s). "
-                        f"Cache: {len(disk_cache)} entries, {cache_hits} hits, {cache_misses} misses."
-                    )
-                    st.dataframe(res_df)
-                    st.session_state.force_refresh = True
-                    st.rerun()
-
-            except Exception as e:
-                st.error(f"Failed to classify rows: {e}")
-
-    except Exception as e:
-        st.error(f"Could not connect to Ollama: {e}")
-
 def render_output_ui(username, save_current_session):
     """Render the output UI including results, monthly summary, transaction details, and export."""
-    
-    # Ensure session state keys for local model selection exist
-    if "selected_model" not in st.session_state:
-        st.session_state.selected_model = None
-    if "run_inference" not in st.session_state:
-        st.session_state.run_inference = False
 
     # --- Display Results ---
     if st.session_state.reconciliation_results is not None:
@@ -434,20 +242,12 @@ def render_output_ui(username, save_current_session):
         with header_col2:
             # Placeholder for download button (will be populated after data is processed)
             download_placeholder = st.empty()
-            # Configure local LLM dialog button
-            if st.button("⚙️ Configure Local Classifier", key="open_model_dialog_header"):
-                select_model_dialog()
         
         # Use cached edited dataframe
         if st.session_state.edited_df_cache is not None:
             df_total = st.session_state.edited_df_cache.copy()
         else:
             df_total = st.session_state.reconciliation_results.copy()
-
-        # Force refresh after classification by copying fresh from session state
-        if st.session_state.get("force_refresh"):
-            df_total = st.session_state.edited_df_cache.copy()
-            st.session_state.force_refresh = False
 
         if not st.session_state.show_gst and "GST" in df_total.columns:
             df_total = df_total.drop(columns=["GST"])
@@ -521,9 +321,6 @@ def render_output_ui(username, save_current_session):
                         }
                     </style>
                 """, unsafe_allow_html=True)
-                # Button to open local model dialog
-                if st.button("⚙️ Configure Local Classifier", key="open_model_dialog_summary"):
-                    select_model_dialog()
                 st.dataframe(summary_df.style.apply(highlight_total, axis=1))
 
         # --- Detailed Table ---

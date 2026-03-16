@@ -10,7 +10,6 @@ def render_navbar():
             "Open Banking",
             "Trading",
             "Invoice",
-            "Classify Transactions",
             "RDR Rules Editor",
             "Upload CSV To DB",
         ],
