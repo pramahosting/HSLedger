@@ -35,17 +35,20 @@ def login(email: str, password: str):
     except httpx.ConnectError as e:
         raise ConnectionError(f"Cannot connect to the backend server.\nAn error occurred while connecting to the authentication service: {e}")
     
-def register(username, email, password, phone, address):
+def register(username, email, password, phone, address, role=None):
     try:
+        payload = {
+            "username": username,
+            "email": email,
+            "password": password,
+            "phone": phone,
+            "address": address
+        }
+        if role:
+            payload["role"] = role
         response = httpx.post(
             f'{FASTAPI_BASE_URL}/auth/register',
-            json={
-                "username": username,
-                "email": email,
-                "password": password,
-                "phone": phone,
-                "address": address
-            },
+            json=payload,
             timeout=10.0
         )
 

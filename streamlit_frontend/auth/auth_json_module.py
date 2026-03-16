@@ -64,6 +64,8 @@ def login_tab(cookie_manager):
                 return
             
             if user:
+                role_names = [str(r).strip().lower() for r in user.get("roles", [])]
+                user["is_admin"] = "admin" in role_names
                 st.session_state.logged_in = True
                 st.session_state.user = user
                 if remember_me:
@@ -121,15 +123,49 @@ def signup_tab():
     company = st.text_input("Company", key="signup_company")
     phone = st.text_input("Phone", key="signup_phone")
 
+    # Role selection: only allow admin for first user, else user only
+    import sqlite3
+    roles = []
+    try:
+        conn = sqlite3.connect("../reconciliation.db")
+        cur = conn.cursor()
+        cur.execute("SELECT name FROM roles ORDER BY name;")
+        roles = [row[0] for row in cur.fetchall()]
+        conn.close()
+    except Exception:
+        roles = ["user", "admin"]
+
+    # Only allow admin if no users exist
+    is_first_user = False
+    try:
+        conn = sqlite3.connect("../reconciliation.db")
+        cur = conn.cursor()
+        cur.execute("SELECT COUNT(*) FROM users;")
+        is_first_user = cur.fetchone()[0] == 0
+        conn.close()
+    except Exception:
+        pass
+
+    allowed_roles = roles if is_first_user else [r for r in roles if r != "admin"]
+    selected_role = st.selectbox("Role", allowed_roles, key="signup_role")
+
     if st.button("Sign Up", key="signup_btn"):
-        if get_user(email):
-            st.error("Email already registered.")
+        username = name.strip()
+
+        if not username or not email or not password:
+            st.warning("Please enter name, email, and password.")
+            return
+
+        try:
+            user = register(username, email.strip(), password, phone, address, selected_role)
+        except ConnectionError as e:
+            st.error(str(e))
+            return
+
+        if user:
+            st.success("Account created! Please log in.")
         else:
-            add_user(name, email, password, address, company, phone)
-            if get_user_count() == 1:
-                st.success("Account created! You are the admin. Please log in.")
-            else:
-                st.success("Account created! Please log in.")
+            st.error("Signup failed. Email or username may already be registered.")
 
 
 # ===== ADMIN PANEL =====

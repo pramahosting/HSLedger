@@ -18,6 +18,7 @@ class RegisterRequest(BaseModel):
     password: str
     phone: str | None = None
     address: str | None = None
+    role: str | None = None  # Optional, only honored for first user or by admin
 
 class UserResponse(BaseModel):
     id: int
@@ -25,6 +26,30 @@ class UserResponse(BaseModel):
     name: str
     email: str
     roles: list[str]
+    permissions: list[str]
+
+
+def build_user_response(user: User) -> UserResponse:
+    roles = [role.name.strip() for role in user.roles]
+
+    # Flatten role permissions and remove duplicates.
+    permissions = sorted(
+        {
+            perm.name.strip()
+            for role in user.roles
+            for perm in role.permissions
+            if perm.name
+        }
+    )
+
+    return UserResponse(
+        id=user.id,
+        username=user.username,
+        name=user.username,
+        email=user.email,
+        roles=roles,
+        permissions=permissions,
+    )
 
 
 # login endpoint
@@ -43,15 +68,7 @@ def authenticate_user(email: str, password: str, db: Session) -> UserResponse:
     if not bcrypt.checkpw(password.encode(), user.password.encode()):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid email or password")
     
-    roles = [role.name.strip() for role in user.roles]
-    
-    return UserResponse(
-        id=user.id,
-        username=user.username,
-        name=user.username,
-        email=user.email,
-        roles=roles
-    )
+    return build_user_response(user)
 
 
 @router.post("/login", response_model=UserResponse)
@@ -83,19 +100,26 @@ def register(
 ):
     if db.query(User).filter(User.email == request.email).first():
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Email already registered")
-    
     if db.query(User).filter(User.username == request.username).first():
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Username already taken")
-    
-    hashed = bcrypt.hashpw(request.password.encode(), bcrypt.gensalt()).decode()
 
+    hashed = bcrypt.hashpw(request.password.encode(), bcrypt.gensalt()).decode()
     is_first_user = db.query(User).count() == 0
-    role_name = "admin" if is_first_user else "user"
+
+    # Only allow role selection for first user or if admin is registering
+    allowed_roles = {r.name for r in db.query(Role).all()}
+    requested_role = (request.role or "user").strip().lower()
+    if is_first_user:
+        role_name = requested_role if requested_role in allowed_roles else "admin"
+    else:
+        # Check if current user is admin (future: use auth context)
+        # For now, only allow 'user' role for non-first-user signups
+        role_name = "user"
 
     role = db.query(Role).filter(Role.name == role_name).first()
     if not role:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Role not found in database")
-    
+
     new_user = User(
         username=request.username,
         email=request.email,
@@ -103,16 +127,8 @@ def register(
         phone=request.phone or "",
         address=request.address or "",
     )
-
     new_user.roles.append(role)
     db.add(new_user)
     db.commit()
     db.refresh(new_user)
-
-    return UserResponse(
-        id=new_user.id,
-        username=new_user.username,
-        name=new_user.username,
-        email=new_user.email,
-        roles=[role.name for role in new_user.roles]
-    )
+    return build_user_response(new_user)
