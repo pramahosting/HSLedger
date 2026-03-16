@@ -131,6 +131,23 @@ def _create_transaction_in_db(user_id: int, transaction: dict) -> dict:
         raise RuntimeError(f"Connection error: {exc}") from exc
 
 
+def _delete_transaction_in_db(user_id: int, transaction_id: int) -> dict:
+    """Delete a single transaction row in DB by ID."""
+    req = request.Request(
+        url=f"{API_BASE_URL.rstrip('/')}/transactions/{transaction_id}?user_id={user_id}",
+        method="DELETE",
+    )
+
+    try:
+        with request.urlopen(req, timeout=30) as resp:
+            return json.loads(resp.read().decode("utf-8"))
+    except error.HTTPError as exc:
+        detail = exc.read().decode("utf-8", errors="replace")
+        raise RuntimeError(f"API error {exc.code}: {detail}") from exc
+    except error.URLError as exc:
+        raise RuntimeError(f"Connection error: {exc}") from exc
+
+
 def _load_transactions_from_db(user_id: int) -> list[dict]:
     """Fetch all persisted transactions for a user from FastAPI."""
     req = request.Request(
@@ -936,15 +953,39 @@ def render_output_ui(username, save_current_session):
                 selected_count = len(st.session_state.selected_rows)
                 button_label = f"🗑️ Delete Selected Row(s)" if selected_count == 0 else f"🗑️ Delete {selected_count} Selected Row(s)"
                 if st.button(button_label, type="primary", disabled=selected_count == 0, key="delete_selected_rows"):
-                    # Remove selected rows
-                    df_display = df_display[~df_display.index.isin(st.session_state.selected_rows)]
-                    
-                    # Update main dataframes
-                    st.session_state.edited_df_cache = df_display.drop(columns=["Select"])
-                    st.session_state.reconciliation_results = df_display.drop(columns=["Select"])
-                    
-                    # Clear selection
-                    rows_deleted = len(st.session_state.selected_rows)
+                    selected_indices = set(st.session_state.selected_rows)
+                    rows_deleted = len(selected_indices)
+
+                    db_deleted = 0
+                    db_delete_errors = []
+                    user_id = _get_logged_in_user_id()
+
+                    if user_id is not None and "DB ID" in st.session_state.edited_df_cache.columns:
+                        for idx in selected_indices:
+                            if idx not in st.session_state.edited_df_cache.index:
+                                continue
+
+                            raw_db_id = st.session_state.edited_df_cache.at[idx, "DB ID"]
+                            if pd.isna(raw_db_id) or str(raw_db_id).strip() == "":
+                                continue
+
+                            try:
+                                _delete_transaction_in_db(user_id, int(raw_db_id))
+                                db_deleted += 1
+                            except Exception as exc:
+                                db_delete_errors.append(f"{raw_db_id}: {exc}")
+
+                    # Remove selected rows from session dataframes while preserving hidden columns like DB ID.
+                    remaining_df = st.session_state.edited_df_cache.drop(index=list(selected_indices), errors="ignore").copy()
+                    st.session_state.edited_df_cache = remaining_df
+                    st.session_state.reconciliation_results = remaining_df.copy()
+                    st.session_state.pending_changes = {
+                        idx: val
+                        for idx, val in st.session_state.pending_changes.items()
+                        if idx not in selected_indices
+                    }
+                    st.session_state.updated_pages.add(st.session_state.page_number)
+
                     st.session_state.selected_rows = set()
                     
                     # Save to session
@@ -957,8 +998,17 @@ def render_output_ui(username, save_current_session):
                             st.session_state.updated_pages,
                             st.session_state.page_number
                         )
-                    
-                    st.success(f"Deleted {rows_deleted} row(s)")
+
+                    if db_delete_errors:
+                        st.warning(
+                            f"Deleted {rows_deleted} row(s) from session. "
+                            f"Deleted {db_deleted} row(s) from DB. "
+                            f"DB delete errors: {len(db_delete_errors)}"
+                        )
+                    elif db_deleted > 0:
+                        st.success(f"Deleted {rows_deleted} row(s) from session and {db_deleted} row(s) from DB.")
+                    else:
+                        st.success(f"Deleted {rows_deleted} row(s) from session.")
                     st.rerun()
             
             # Add CSS for table styling
@@ -1266,8 +1316,9 @@ def render_output_ui(username, save_current_session):
                                 )
 
                             st.toast(
-                                f"Saved {result.get('saved', 0)} transaction(s). "
-                                f"Skipped {result.get('skipped', 0)} duplicate(s). "
+                                f"Saved {result.get('saved', 0)} new, "
+                                f"updated {result.get('updated', 0)}, "
+                                f"skipped {result.get('skipped', 0)} unchanged. "
                                 f"Reloaded {len(db_rows)} row(s) from DB.",
                                 icon="✅"
                             )

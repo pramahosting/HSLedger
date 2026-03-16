@@ -33,6 +33,7 @@ class SaveRequest(BaseModel):
 
 class SaveResponse(BaseModel):
     saved: int
+    updated: int
     skipped: int
     total: int
 
@@ -56,6 +57,11 @@ class TransactionOut(BaseModel):
     gst: float = 0.0
     gst_category: str | None = None
     who: str | None = None
+
+
+class DeleteResponse(BaseModel):
+    deleted: bool
+    id: int
 
 
 def _to_datetime(value: Any) -> datetime | None:
@@ -109,6 +115,7 @@ def save_transactions(
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
 
     saved = 0
+    updated = 0
     skipped = 0
     seen_in_request: set[tuple] = set()
 
@@ -151,7 +158,25 @@ def save_transactions(
         ).first()
 
         if exists:
-            skipped += 1
+            # Upsert: update non-key fields so GL Account, GST, etc. reflect latest UI edits.
+            needs_update = (
+                exists.classification != tx.classification
+                or exists.pair_id != tx.pair_id
+                or exists.gl_account != tx.gl_account
+                or exists.gst != _to_float(tx.gst, 0.0)
+                or exists.gst_category != tx.gst_category
+                or exists.who != tx.who
+            )
+            if needs_update:
+                exists.classification = tx.classification
+                exists.pair_id = tx.pair_id
+                exists.gl_account = tx.gl_account
+                exists.gst = _to_float(tx.gst, 0.0)
+                exists.gst_category = tx.gst_category
+                exists.who = tx.who
+                updated += 1
+            else:
+                skipped += 1
             continue
 
         db.add(Transaction(
@@ -172,8 +197,8 @@ def save_transactions(
         saved += 1
 
     db.commit()
-    logger.info("/transactions/save completed: saved=%s skipped=%s total=%s", saved, skipped, len(request.transactions))
-    return SaveResponse(saved=saved, skipped=skipped, total=len(request.transactions))
+    logger.info("/transactions/save completed: saved=%s updated=%s skipped=%s total=%s", saved, updated, skipped, len(request.transactions))
+    return SaveResponse(saved=saved, updated=updated, skipped=skipped, total=len(request.transactions))
 
 
 @router.post("", response_model=TransactionOut)
@@ -380,3 +405,29 @@ def update_transaction(
         gst_category=row.gst_category,
         who=row.who,
     )
+
+
+@router.delete("/{transaction_id}", response_model=DeleteResponse)
+def delete_transaction(
+    transaction_id: int,
+    user_id: int,
+    db: Session = Depends(get_db),
+):
+    logger.info("/transactions/%s DELETE called: user_id=%s", transaction_id, user_id)
+
+    user = db.query(User).filter(User.id == user_id).first()
+    if not user:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
+
+    row = (
+        db.query(Transaction)
+        .filter(Transaction.id == transaction_id, Transaction.user_id == user_id)
+        .first()
+    )
+    if not row:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Transaction not found")
+
+    db.delete(row)
+    db.commit()
+
+    return DeleteResponse(deleted=True, id=transaction_id)
