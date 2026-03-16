@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Body, Depends, HTTPException, Query, status
-from sqlalchemy.orm import Session, sessionmaker
-from app.models import User
+from sqlalchemy import or_
+from sqlalchemy.orm import Session
+from app.models import Role, User
 import bcrypt
 from pydantic import BaseModel
 from app.database import get_db
@@ -28,7 +29,13 @@ class UserResponse(BaseModel):
 
 # login endpoint
 def authenticate_user(email: str, password: str, db: Session) -> UserResponse:
-    user = db.query(User).filter(User.email == email).first()
+    # Keep request schema stable but allow email or username in this field.
+    login_value = email.strip()
+    user = (
+        db.query(User)
+        .filter(or_(User.email == login_value, User.username == login_value))
+        .first()
+    )
 
     if not user:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid email or password")
@@ -36,7 +43,7 @@ def authenticate_user(email: str, password: str, db: Session) -> UserResponse:
     if not bcrypt.checkpw(password.encode(), user.password.encode()):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid email or password")
     
-    roles = [role.name for role in user.roles]
+    roles = [role.name.strip() for role in user.roles]
     
     return UserResponse(
         id=user.id,
