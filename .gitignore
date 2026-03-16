@@ -135,3 +135,5 @@ Thumbs.db
 # Project specific
 unsloth_compiled_cache/
 backups/
+
+*.db
