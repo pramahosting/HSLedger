@@ -75,6 +75,111 @@ def _save_transactions_to_db(user_id: int, transactions: list[dict]) -> dict:
     except error.URLError as exc:
         raise RuntimeError(f"Connection error: {exc}") from exc
 
+
+def _update_transaction_in_db(user_id: int, transaction_id: int, transaction: dict) -> dict:
+    """Update a single persisted transaction by ID."""
+    payload = {
+        "user_id": user_id,
+        "transaction": transaction,
+    }
+    body = json.dumps(payload).encode("utf-8")
+
+    req = request.Request(
+        url=f"{API_BASE_URL.rstrip('/')}/transactions/{transaction_id}",
+        data=body,
+        headers={"Content-Type": "application/json"},
+        method="PUT",
+    )
+
+    try:
+        with request.urlopen(req, timeout=30) as resp:
+            return json.loads(resp.read().decode("utf-8"))
+    except error.HTTPError as exc:
+        detail = exc.read().decode("utf-8", errors="replace")
+        raise RuntimeError(f"API error {exc.code}: {detail}") from exc
+    except error.URLError as exc:
+        raise RuntimeError(f"Connection error: {exc}") from exc
+
+
+def _create_transaction_in_db(user_id: int, transaction: dict) -> dict:
+    """Create a single transaction row in DB and return the created payload."""
+    payload = {
+        "user_id": user_id,
+        "transaction": transaction,
+    }
+    body = json.dumps(payload).encode("utf-8")
+
+    req = request.Request(
+        url=f"{API_BASE_URL.rstrip('/')}/transactions",
+        data=body,
+        headers={"Content-Type": "application/json"},
+        method="POST",
+    )
+
+    try:
+        with request.urlopen(req, timeout=30) as resp:
+            return json.loads(resp.read().decode("utf-8"))
+    except error.HTTPError as exc:
+        detail = exc.read().decode("utf-8", errors="replace")
+        raise RuntimeError(f"API error {exc.code}: {detail}") from exc
+    except error.URLError as exc:
+        raise RuntimeError(f"Connection error: {exc}") from exc
+
+
+def _load_transactions_from_db(user_id: int) -> list[dict]:
+    """Fetch all persisted transactions for a user from FastAPI."""
+    req = request.Request(
+        url=f"{API_BASE_URL.rstrip('/')}/transactions/user/{user_id}",
+        method="GET",
+    )
+
+    try:
+        with request.urlopen(req, timeout=30) as resp:
+            data = json.loads(resp.read().decode("utf-8"))
+            return data if isinstance(data, list) else []
+    except error.HTTPError as exc:
+        detail = exc.read().decode("utf-8", errors="replace")
+        raise RuntimeError(f"API error {exc.code}: {detail}") from exc
+    except error.URLError as exc:
+        raise RuntimeError(f"Connection error: {exc}") from exc
+
+
+def _db_transactions_to_display_df(rows: list[dict]) -> pd.DataFrame:
+    """Convert DB transaction rows to the output grid dataframe format."""
+    columns = [
+        "DB ID",
+        "Date", "Bank", "Account", "Description", "Debit", "Credit",
+        "Classification", "PairID", "GL Account", "GST", "GST Category", "Who"
+    ]
+    if not rows:
+        return pd.DataFrame(columns=columns)
+
+    records = []
+    for row in rows:
+        raw_date = row.get("date")
+        parsed_date = pd.to_datetime(raw_date, errors="coerce") if raw_date is not None else pd.NaT
+        date_text = parsed_date.strftime("%d/%m/%Y") if pd.notnull(parsed_date) else (str(raw_date) if raw_date else "")
+
+        records.append(
+            {
+                "DB ID": row.get("id"),
+                "Date": date_text,
+                "Bank": row.get("bank", ""),
+                "Account": row.get("account", ""),
+                "Description": row.get("description", ""),
+                "Debit": float(row.get("debit", 0) or 0),
+                "Credit": float(row.get("credit", 0) or 0),
+                "Classification": row.get("classification", ""),
+                "PairID": row.get("pair_id", ""),
+                "GL Account": row.get("gl_account", ""),
+                "GST": float(row.get("gst", 0) or 0),
+                "GST Category": row.get("gst_category", ""),
+                "Who": row.get("who", ""),
+            }
+        )
+
+    return pd.DataFrame(records, columns=columns)
+
 # GL Account options for dropdown (keep in sync with classifier enums)
 GL_ACCOUNT_OPTIONS = list(dict.fromkeys(classify_category.CATEGORY_ENUM + [""]))
 GST_ENUM = [
@@ -493,6 +598,34 @@ def render_output_ui(username, save_current_session):
                             }
                         )
 
+                        user_id = _get_logged_in_user_id()
+                        created_db_id = None
+                        if user_id is not None:
+                            try:
+                                payload_tx = {
+                                    "date": new_date,
+                                    "bank": new_bank,
+                                    "account": new_account,
+                                    "description": new_description,
+                                    "debit": float(new_debit),
+                                    "credit": float(new_credit),
+                                    "classification": new_classification,
+                                    "pair_id": new_pairid,
+                                    "gl_account": normalize_gl_account(new_gl_account),
+                                    "gst": float(new_gst_value),
+                                    "gst_category": new_gst_category,
+                                    "who": new_who.strip() if new_who.strip() else inferred_who,
+                                }
+                                created = _create_transaction_in_db(user_id, payload_tx)
+                                created_db_id = created.get("id")
+                            except Exception as exc:
+                                st.toast(f"DB insert failed, kept in session only: {exc}", icon="❌")
+
+                        if created_db_id is not None:
+                            if "DB ID" not in st.session_state.edited_df_cache.columns:
+                                st.session_state.edited_df_cache["DB ID"] = pd.NA
+                            new_row["DB ID"] = created_db_id
+
                         st.session_state.edited_df_cache.loc[new_index] = new_row
                         st.session_state.reconciliation_results = st.session_state.edited_df_cache.copy()
                         st.session_state.updated_pages.add(st.session_state.page_number)
@@ -507,7 +640,10 @@ def render_output_ui(username, save_current_session):
                                 st.session_state.page_number,
                             )
 
-                        st.success("Transaction added and saved to session.")
+                        if created_db_id is not None:
+                            st.success(f"Transaction added to session and DB (ID {created_db_id}).")
+                        else:
+                            st.success("Transaction added and saved to session.")
                         st.rerun()
 
             with st.expander("✏️ Edit Transaction", expanded=False):
@@ -653,6 +789,37 @@ def render_output_ui(username, save_current_session):
                                     if col in st.session_state.edited_df_cache.columns:
                                         st.session_state.edited_df_cache.at[selected_edit_idx, col] = val
 
+                                user_id = _get_logged_in_user_id()
+                                db_id = None
+                                if "DB ID" in st.session_state.edited_df_cache.columns:
+                                    raw_db_id = st.session_state.edited_df_cache.at[selected_edit_idx, "DB ID"]
+                                    if pd.notnull(raw_db_id):
+                                        try:
+                                            db_id = int(raw_db_id)
+                                        except (TypeError, ValueError):
+                                            db_id = None
+
+                                if user_id is not None and db_id is not None:
+                                    try:
+                                        payload_tx = {
+                                            "date": updates["Date"],
+                                            "bank": updates["Bank"],
+                                            "account": updates["Account"],
+                                            "description": updates["Description"],
+                                            "debit": updates["Debit"],
+                                            "credit": updates["Credit"],
+                                            "classification": updates["Classification"],
+                                            "pair_id": updates["PairID"],
+                                            "gl_account": updates["GL Account"],
+                                            "gst": updates["GST"],
+                                            "gst_category": updates["GST Category"],
+                                            "who": updates["Who"],
+                                        }
+                                        _update_transaction_in_db(user_id, db_id, payload_tx)
+                                        st.toast(f"Updated DB row ID {db_id}", icon="✅")
+                                    except Exception as exc:
+                                        st.toast(f"DB update failed: {exc}", icon="❌")
+
                                 st.session_state.reconciliation_results = st.session_state.edited_df_cache.copy()
                                 st.session_state.updated_pages.add(st.session_state.page_number)
 
@@ -666,7 +833,10 @@ def render_output_ui(username, save_current_session):
                                         st.session_state.page_number,
                                     )
 
-                                st.success("Transaction updated and saved to session.")
+                                if db_id is not None:
+                                    st.success("Transaction updated in session and DB.")
+                                else:
+                                    st.success("Transaction updated and saved to session. Use Save to DB for new rows.")
                                 st.rerun()
 
             # Status bar and filters in same row
@@ -1071,7 +1241,32 @@ def render_output_ui(username, save_current_session):
                         transactions = _build_transactions_payload_from_display(df_for_db)
                         try:
                             result = _save_transactions_to_db(user_id, transactions)
-                            st.toast(f"Saved {result.get('saved', 0)} transaction(s) to database. Skipped {result.get('skipped', 0)} duplicate(s).", icon="✅")
+                            db_rows = _load_transactions_from_db(user_id)
+                            db_df = _db_transactions_to_display_df(db_rows)
+
+                            st.session_state.reconciliation_results = db_df.copy()
+                            st.session_state.edited_df_cache = db_df.copy()
+                            st.session_state.pending_changes = {}
+                            st.session_state.selected_rows = set()
+                            st.session_state.page_number = 1
+
+                            if st.session_state.get("current_session_id"):
+                                session_manager.save_output_data(
+                                    username,
+                                    st.session_state.current_session_id,
+                                    st.session_state.reconciliation_results,
+                                    st.session_state.pending_changes,
+                                    st.session_state.updated_pages,
+                                    st.session_state.page_number,
+                                )
+
+                            st.toast(
+                                f"Saved {result.get('saved', 0)} transaction(s). "
+                                f"Skipped {result.get('skipped', 0)} duplicate(s). "
+                                f"Reloaded {len(db_rows)} row(s) from DB.",
+                                icon="✅"
+                            )
+                            st.rerun()
                         except Exception as exc:
                             st.toast(f"Failed to save to DB: {exc}", icon="❌")
 
