@@ -135,6 +135,7 @@ Thumbs.db
 # Project specific
 unsloth_compiled_cache/
 backups/
+streamlit_frontend/data/
 session_state.json
 **/session_state.json
 
