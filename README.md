@@ -5,7 +5,7 @@
 Install all Python dependencies:
 
 ```bash
-pip install -r full_requirements.txt
+pip install -r requirements.txt
 ```
 
 ## Database Setup
