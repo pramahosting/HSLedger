@@ -199,7 +199,7 @@ def _format_display_date(value):
 	return str(value)
 
 
-def _build_invoice_preview_html(inv_number, inv_date, inv_due, inv_ref, inv_terms, notes, business, bill_to, line_items):
+def _build_invoice_preview_html(inv_number, inv_date, inv_due, inv_ref, inv_terms, notes, business, bill_to, line_items, gst_rate=0.0):
 	rows_html = ""
 	for item in line_items:
 		amount = float(item["quantity"]) * float(item["unit_price"])
@@ -213,7 +213,9 @@ def _build_invoice_preview_html(inv_number, inv_date, inv_due, inv_ref, inv_term
 		  <td class='mono'>Rs. {amount:,.2f}</td>
 		</tr>"""
 
-	grand_total = sum(float(item["quantity"]) * float(item["unit_price"]) for item in line_items)
+	subtotal = sum(float(item["quantity"]) * float(item["unit_price"]) for item in line_items)
+	gst_amount = subtotal * (gst_rate / 100.0) if gst_rate else 0.0
+	grand_total = subtotal + gst_amount
 	inv_date_text = _format_display_date(inv_date)
 	due_text = _format_display_date(inv_due)
 	due_row = f"<tr><td class='lbl'>Due Date</td><td>{due_text}</td></tr>" if due_text else ""
@@ -328,6 +330,11 @@ def _build_invoice_preview_html(inv_number, inv_date, inv_due, inv_ref, inv_term
     </thead>
     <tbody>
       {rows_html}
+      <tr style='border-top:2px solid #e2e0d8'>
+        <td colspan='3' style='text-align:right;font-size:12.5px;color:#6b6b6b'>Subtotal</td>
+        <td class='mono' style='font-size:12.5px'>Rs. {subtotal:,.2f}</td>
+      </tr>
+      {f"<tr><td colspan='3' style='text-align:right;font-size:12.5px;color:#6b6b6b'>GST ({gst_rate:.0f}%)</td><td class='mono' style='font-size:12.5px'>Rs. {gst_amount:,.2f}</td></tr>" if gst_rate else ""}
       <tr class='total-row'>
         <td colspan='3' style='text-align:right'>Total</td>
         <td>Rs. {grand_total:,.2f}</td>
@@ -340,7 +347,7 @@ def _build_invoice_preview_html(inv_number, inv_date, inv_due, inv_ref, inv_term
 </html>"""
 
 
-def _render_invoice_preview(inv_number, inv_date, inv_due, inv_ref, inv_terms, notes, business, bill_to):
+def _render_invoice_preview(inv_number, inv_date, inv_due, inv_ref, inv_terms, notes, business, bill_to, apply_gst=False):
 	html = _build_invoice_preview_html(
 		inv_number=inv_number,
 		inv_date=inv_date,
@@ -351,6 +358,7 @@ def _render_invoice_preview(inv_number, inv_date, inv_due, inv_ref, inv_terms, n
 		business=business,
 		bill_to=bill_to,
 		line_items=st.session_state.invoice_line_items,
+		gst_rate=10.0 if apply_gst else 0.0,
 	)
 
 	components.html(html, height=720, scrolling=True)
@@ -427,7 +435,7 @@ def _render_business_settings_tab():
 								"logo_url": _encode_logo_file(logo_file),
 							}
 						)
-						st.success(f"Business '{name}' created successfully.")
+						st.toast(f"✅ Business '{name}' created successfully!", icon="✅")
 						st.rerun()
 					except Exception as exc:
 						st.error(f"Failed to create business: {exc}")
@@ -565,6 +573,7 @@ def _render_invoice_tab():
 			business=pending_print.get("business") or {},
 			bill_to=pending_print.get("bill_to") or {},
 			line_items=pending_print.get("line_items") or [],
+			gst_rate=10.0 if pending_print.get("apply_gst") else 0.0,
 		)
 		_open_print_dialog(print_html)
 		st.info("Print dialog opened for the saved invoice.")
@@ -644,9 +653,18 @@ def _render_invoice_tab():
 				st.session_state.invoice_line_items.append({"description": "", "quantity": 1, "unit_price": 0.0})
 				st.rerun()
 
-			total = sum(item["quantity"] * item["unit_price"] for item in st.session_state.invoice_line_items)
+			subtotal = sum(item["quantity"] * item["unit_price"] for item in st.session_state.invoice_line_items)
+			apply_gst = st.checkbox("Apply GST (10%)", value=True, key="invoice_apply_gst")
+			gst_amount = subtotal * 0.10 if apply_gst else 0.0
+			total = subtotal + gst_amount
+			if apply_gst:
+				st.markdown(
+					f'<div style="text-align:right;margin-top:6px;font-size:13px;color:#555">'
+					f'Subtotal: <b>Rs. {subtotal:,.2f}</b> &nbsp;+&nbsp; GST (10%): <b>Rs. {gst_amount:,.2f}</b></div>',
+					unsafe_allow_html=True,
+				)
 			st.markdown(
-				f'<div style="text-align:right;margin-top:6px">TOTAL &nbsp;<span class="badge-total">Rs. {total:,.2f}</span></div>',
+				f'<div style="text-align:right;margin-top:4px">TOTAL &nbsp;<span class="badge-total">Rs. {total:,.2f}</span></div>',
 				unsafe_allow_html=True,
 			)
 
@@ -680,7 +698,7 @@ def _render_invoice_tab():
 							"items": current_line_items,
 							"notes": notes,
 							"payment_terms": inv_terms or None,
-							"tax_percent": 0.0,
+						"tax_percent": 10.0 if apply_gst else 0.0,
 							"bill_to_name": bill_name or None,
 							"bill_to_address": bill_address or None,
 							"bill_to_phone": bill_phone or None,
@@ -704,6 +722,7 @@ def _render_invoice_tab():
 							"email": bill_email,
 						},
 						"line_items": current_line_items,
+						"apply_gst": apply_gst,
 					}
 					st.success(f"Invoice '{saved_number}' saved successfully.")
 					st.balloons()
@@ -729,6 +748,7 @@ def _render_invoice_tab():
 				"phone": st.session_state.get("invoice_bill_phone", ""),
 				"email": st.session_state.get("invoice_bill_email", ""),
 			},
+			apply_gst=st.session_state.get("invoice_apply_gst", True),
 		)
 
 

@@ -304,13 +304,14 @@ def render():
 
         cond = build_condition(direction, keywords, regexes)
 
-        # Basic validation: must have at least keyword or regex
-        errs = []
+        # Fatal errors block saving (invalid label, bad regex syntax)
+        fatal_errs = []
         if then not in ALLOWED:
-            errs.append("Invalid label.")
-        if not keywords and not regexes:
-            errs.append("Add at least one keyword or regex.")
-        errs.extend(regex_errs)
+            fatal_errs.append("Invalid GL account label selected.")
+        fatal_errs.extend(regex_errs)
+
+        # Guidance: must have at least one keyword or regex to form a valid rule
+        missing_match = not keywords and not regexes
 
         # Auto priority: new rules win
         auto_priority = (max([get_priority(r) for r in rules], default=999) + 1)
@@ -324,21 +325,26 @@ def render():
         if then_gst:
             built_rule["then_gst_category"] = then_gst
 
-        if errs:
+        # Status feedback
+        if fatal_errs:
             st.error("Fix these issues:")
-            for e in errs:
+            for e in fatal_errs:
                 st.write(f"- {e}")
+        elif missing_match:
+            st.info("Add at least one keyword or regex to save this rule.")
         else:
             st.success("Ready to save this rule.")
 
+        # Buttons are only disabled for fatal errors or the wrong mode (add vs update)
+        can_save = not fatal_errs and not missing_match
         b1, b2, b3 = st.columns(3)
         with b1:
-            if st.button("Add rule", disabled=bool(errs) or editing):
+            if st.button("Add rule", disabled=not can_save or editing):
                 rules.append(built_rule)
                 st.session_state["rules"] = rules
                 st.success(f"Added {built_rule['id']}. Click Save to write JSON.")
         with b2:
-            if st.button("Update rule", disabled=bool(errs) or not editing):
+            if st.button("Update rule", disabled=not can_save or not editing):
                 rules[edit_idx] = built_rule
                 st.session_state["rules"] = rules
                 st.session_state.pop("edit_idx", None)
