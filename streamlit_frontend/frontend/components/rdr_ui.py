@@ -7,6 +7,15 @@ from typing import Any, Dict, List, Optional
 import streamlit as st
 
 ALLOWED = ["Inventory", "Fixed_Asset", "Transfer", "Revenue", "Expense", "Other"]
+GST_ALLOWED = [
+    "",
+    "GST on Expenses",
+    "GST on Capital",
+    "GST on Income",
+    "GST Free Expenses",
+    "GST Free Income",
+    "BAS Excluded",
+]
 
 
 # -----------------------------
@@ -133,8 +142,8 @@ def ensure_priorities(rules: List[Dict[str, Any]]) -> None:
 
 
 def render():
-    st.set_page_config(page_title="Easy RDR Rules Editor", layout="wide")
-    st.title("Easy RDR Rules Editor (JSON)")
+    st.set_page_config(page_title="RDR Rules Editor", layout="wide")
+    st.title("RDR Rules Editor (JSON)")
 
     with st.sidebar:
         st.subheader("Storage")
@@ -240,9 +249,22 @@ def render():
         st.text_input("Rule ID (auto)", value=auto_id, disabled=True)
 
         then = st.selectbox(
-            "Label (then)",
+            "GL_ACCOUNT (then)",
             options=ALLOWED,
             index=ALLOWED.index(base.get("then", "Other")) if base.get("then", "Other") in ALLOWED else ALLOWED.index("Other"),
+        )
+
+        existing_gst = str(
+            base.get("then_gst_category", base.get("then_gst", base.get("gst_category", "")))
+        ).strip()
+        if existing_gst not in GST_ALLOWED:
+            existing_gst = ""
+
+        then_gst = st.selectbox(
+            "GST CATEGORY",
+            options=GST_ALLOWED,
+            index=GST_ALLOWED.index(existing_gst),
+            help="Leave blank to keep model GST prediction. Choose a value to force GST category when this rule matches.",
         )
 
         direction_default = "Either (ignore debit/credit)"
@@ -299,6 +321,8 @@ def render():
             "then": then,
             "if": cond,
         }
+        if then_gst:
+            built_rule["then_gst_category"] = then_gst
 
         if errs:
             st.error("Fix these issues:")
@@ -333,7 +357,13 @@ def render():
         if st.button("Run match"):
             match = rdr_apply(tdesc, float(tdebit), float(tcredit), rules)
             if match:
-                st.success(f"Matched: {match.get('id')} → {match.get('then')}")
+                forced_gst = str(
+                    match.get("then_gst_category", match.get("then_gst", match.get("gst_category", "")))
+                ).strip()
+                if forced_gst:
+                    st.success(f"Matched: {match.get('id')} -> {match.get('then')} (GST: {forced_gst})")
+                else:
+                    st.success(f"Matched: {match.get('id')} -> {match.get('then')}")
                 st.json(match)
             else:
                 st.warning("No rule matched.")

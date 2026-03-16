@@ -11,6 +11,7 @@ from backend.reconciliation import exporter
 from backend.reconciliation.session_manager import session_manager
 from backend.reconciliation.gst_calculator import GST_CATEGORY_OPTIONS, calculate_gst_value
 from backend.ai_model import classify_category
+from backend.transaction_classifier import transaction_classify
 
 # Load environment variables from the nearest .env in current/parent directories.
 load_dotenv(find_dotenv(), override=False)
@@ -227,6 +228,126 @@ def normalize_gl_account(value):
 
     return ""
 
+
+def normalize_gst_category(value):
+    text = "" if pd.isna(value) else str(value).strip()
+    if not text:
+        return "Unknown"
+
+    for option in GST_CLASSIFY_OPTIONS:
+        if str(option).lower() == text.lower():
+            return option
+
+    gst_aliases = {
+        "gst on income": "GST on Sale",
+        "gst on expenses": "GST on Purchase",
+        "gst on capital": "GST on Purchase",
+        "gst free income": "GST Free Sale",
+        "gst free expenses": "Unknown",
+    }
+    return gst_aliases.get(text.lower(), "Unknown")
+
+
+def calculate_classified_gst_value(debit, credit, gst_category):
+    normalized_category = normalize_gst_category(gst_category)
+    return calculate_gst_value(debit, credit, normalized_category)
+
+
+def classify_gl_and_gst_for_session(username):
+    target_df = (
+        st.session_state.edited_df_cache.copy()
+        if st.session_state.edited_df_cache is not None
+        else st.session_state.reconciliation_results.copy()
+    )
+
+    if target_df is None or target_df.empty or "Description" not in target_df.columns:
+        st.error("No transaction descriptions available to classify in the current session.")
+        return
+
+    if "GL Account" not in target_df.columns:
+        target_df["GL Account"] = ""
+    if "GST Category" not in target_df.columns:
+        target_df["GST Category"] = "Unknown"
+    if "GST" not in target_df.columns:
+        target_df["GST"] = 0.0
+    if "Who" not in target_df.columns:
+        target_df["Who"] = "Other/Unknown"
+
+    prediction_keys = []
+    seen_keys = set()
+    for idx in target_df.index:
+        desc = str(target_df.at[idx, "Description"]) if pd.notnull(target_df.at[idx, "Description"]) else ""
+        if not desc.strip():
+            continue
+        debit_val = target_df.at[idx, "Debit"] if "Debit" in target_df.columns else 0
+        credit_val = target_df.at[idx, "Credit"] if "Credit" in target_df.columns else 0
+        debit = float(debit_val or 0)
+        credit = float(credit_val or 0)
+        key = (desc, debit, credit)
+        if key not in seen_keys:
+            seen_keys.add(key)
+            prediction_keys.append(key)
+
+    if not prediction_keys:
+        st.error("No non-empty descriptions available to classify.")
+        return
+
+    progress = st.progress(0.0, text="Classifying GL Account and GST Category...")
+    prediction_by_key = {}
+
+    try:
+        for index, (desc, debit, credit) in enumerate(prediction_keys, start=1):
+            prediction_by_key[(desc, debit, credit)] = transaction_classify.classify_transaction(
+                desc,
+                debit=debit,
+                credit=credit,
+            )
+            progress.progress(
+                index / max(1, len(prediction_keys)),
+                text=f"Classifying GL Account and GST Category... {index}/{len(prediction_keys)}",
+            )
+
+        updated_rows = 0
+        for idx in target_df.index:
+            desc = str(target_df.at[idx, "Description"]) if pd.notnull(target_df.at[idx, "Description"]) else ""
+            if not desc.strip():
+                continue
+
+            debit = target_df.at[idx, "Debit"] if "Debit" in target_df.columns else 0
+            credit = target_df.at[idx, "Credit"] if "Credit" in target_df.columns else 0
+            key = (desc, float(debit or 0), float(credit or 0))
+            prediction = prediction_by_key.get(key, {})
+            normalized_gl = normalize_gl_account(prediction.get("gl_account", ""))
+            normalized_gst = normalize_gst_category(prediction.get("gst_category", "Unknown"))
+
+            target_df.at[idx, "GL Account"] = normalized_gl
+            target_df.at[idx, "GST Category"] = normalized_gst
+            target_df.at[idx, "GST"] = float(calculate_classified_gst_value(debit, credit, normalized_gst))
+            target_df.at[idx, "Who"] = classify_category.extract_who_bank(desc)
+            st.session_state.pending_changes.pop(idx, None)
+            updated_rows += 1
+
+        st.session_state.edited_df_cache = target_df.copy()
+        st.session_state.reconciliation_results = target_df.copy()
+        st.session_state.updated_pages.add(st.session_state.page_number)
+
+        if st.session_state.get("current_session_id"):
+            session_manager.save_output_data(
+                username,
+                st.session_state.current_session_id,
+                st.session_state.reconciliation_results,
+                st.session_state.pending_changes,
+                st.session_state.updated_pages,
+                st.session_state.page_number,
+            )
+
+        st.success(f"Classified GL Account and GST Category for {updated_rows} row(s).")
+        st.rerun()
+    except Exception as exc:
+        st.error(f"Failed to classify GL Account and GST Category: {exc}")
+    finally:
+        progress.empty()
+
 def get_excel_bytes(df_total, monthly_summary):
     return exporter.export_excel_bytes(df_total, monthly_summary)
 
@@ -242,6 +363,8 @@ def render_output_ui(username, save_current_session):
         with header_col2:
             # Placeholder for download button (will be populated after data is processed)
             download_placeholder = st.empty()
+            if st.button("Classify Transaction", key="classify_gl_gst_button", use_container_width=True):
+                classify_gl_and_gst_for_session(username)
         
         # Use cached edited dataframe
         if st.session_state.edited_df_cache is not None:

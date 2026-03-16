@@ -19,7 +19,7 @@ if auth_dir not in sys.path:
 
 # --- Import components ---
 from auth.auth_json_module import auth_ui
-from frontend.components import navbar, reconciliation_ui, trading_ui, rdr_ui, openbanking_ui, upload_csv_to_db_ui, invoice_ui
+from frontend.components import navbar, reconciliation_ui, trading_ui, rdr_ui, openbanking_ui, invoice_ui, train_model_ui
 
 # --- Streamlit config ---
 st.set_page_config(page_title="HSLedger", layout="wide")
@@ -117,10 +117,12 @@ elif tab == "Trading":
     trading_ui.render()
 elif tab == "Invoice":
     invoice_ui.render()
-elif tab == "RDR Rules Editor":
-    rdr_ui.render()
-elif tab == "Upload CSV To DB":
-    upload_csv_to_db_ui.render()
+elif tab == "ML_Classifier":
+    ml_tab1, ml_tab2 = st.tabs(["Train Mode", "RDR Rule Editor"])
+    with ml_tab1:
+        train_model_ui.render()
+    with ml_tab2:
+        rdr_ui.render()
 else:
     st.markdown(
         """

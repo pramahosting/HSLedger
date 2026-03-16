@@ -2,11 +2,15 @@
   {
     "id": "r001",
     "priority": 1000,
-    "then": "Inventory",
+    "then": "Fixed_Asset",
     "if": {
       "contains_any": [
-        "test"
+        "sd"
+      ],
+      "regex_any": [
+        "sd"
       ]
-    }
+    },
+    "then_gst_category": "GST on Capital"
   }
 ]
