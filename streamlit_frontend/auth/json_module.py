@@ -217,8 +217,8 @@ def send_reset_email(email: str, token: str):
         context = ssl.create_default_context()
         with smtplib.SMTP(SMTP_SERVER, SMTP_PORT) as server:
             server.starttls(context=context)
-            if EMAIL_USER and EMAIL_PASSWORD:
-                server.login(EMAIL_USER, EMAIL_PASSWORD)
+            if EMAIL_USER and EMAIL_PASS:
+                server.login(EMAIL_USER, EMAIL_PASS)
             server.sendmail(EMAIL_USER or "no-reply", email, msg.as_string())
         st.success("Password reset link sent to your email.")
     except Exception as e:
