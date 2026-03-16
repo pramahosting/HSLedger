@@ -33,6 +33,16 @@ def load_session(session_id: str):
     session_data = session_manager.load_session_data(username, session_id)
     
     if session_data:
+        # Always reset output-related state first to avoid leaking rows
+        # from a previously loaded session.
+        st.session_state.reconciliation_results = None
+        st.session_state.edited_df_cache = None
+        st.session_state.gst_calculated = False
+        st.session_state.pending_changes = {}
+        st.session_state.updated_pages = set()
+        st.session_state.page_number = 1
+        st.session_state.selected_rows = set()
+
         st.session_state.accounts_metadata = session_data.get("accounts", [])
         st.session_state.accounts = []
         st.session_state.loaded_files_data = session_data.get("files_data", {})
@@ -46,7 +56,6 @@ def load_session(session_id: str):
         st.session_state.updated_pages = session_data.get("updated_pages", set())
         st.session_state.page_number = session_data.get("page_number", 1)
         st.session_state.current_session_id = session_id
-        st.session_state.selected_rows = set()
         
         return True
     return False

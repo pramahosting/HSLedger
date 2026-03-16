@@ -93,8 +93,13 @@ class SessionManager:
         output_dir = session_dir / "output" / "results"
         output_dir.mkdir(parents=True, exist_ok=True)
         
-        # Save results DataFrame
-        df_results.to_pickle(output_dir / "results.pkl")
+        # Save results DataFrame without DB-only metadata columns.
+        # Session files should remain session-scoped and independent of DB rows.
+        df_to_save = df_results.copy()
+        for col in ["DB ID"]:
+            if col in df_to_save.columns:
+                df_to_save = df_to_save.drop(columns=[col])
+        df_to_save.to_pickle(output_dir / "results.pkl")
         
         # Save session state
         session_state = {
@@ -145,7 +150,13 @@ class SessionManager:
         # Load results
         results_file = session_dir / "output" / "results" / "results.pkl"
         if results_file.exists():
-            data["results"] = pd.read_pickle(results_file)
+            loaded_df = pd.read_pickle(results_file)
+            # Defensive cleanup for older sessions that may still contain DB-only columns.
+            if isinstance(loaded_df, pd.DataFrame):
+                for col in ["DB ID"]:
+                    if col in loaded_df.columns:
+                        loaded_df = loaded_df.drop(columns=[col])
+            data["results"] = loaded_df
         
         # Load session state
         state_file = session_dir / "output" / "results" / "session_state.json"

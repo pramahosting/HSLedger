@@ -1216,11 +1216,10 @@ def render_output_ui(username, save_current_session):
                         transactions = _build_transactions_payload_from_display(df_for_db)
                         try:
                             result = _save_transactions_to_db(user_id, transactions)
-                            db_rows = _load_transactions_from_db(user_id)
-                            db_df = _db_transactions_to_display_df(db_rows)
-
-                            st.session_state.reconciliation_results = db_df.copy()
-                            st.session_state.edited_df_cache = db_df.copy()
+                            # Keep the current session-scoped dataframe in memory.
+                            # Reloading all user DB rows here causes cross-session data bleed.
+                            st.session_state.reconciliation_results = df_for_db.copy()
+                            st.session_state.edited_df_cache = df_for_db.copy()
                             st.session_state.pending_changes = {}
                             st.session_state.selected_rows = set()
                             st.session_state.page_number = 1
@@ -1238,8 +1237,7 @@ def render_output_ui(username, save_current_session):
                             st.toast(
                                 f"Saved {result.get('saved', 0)} new, "
                                 f"updated {result.get('updated', 0)}, "
-                                f"skipped {result.get('skipped', 0)} unchanged. "
-                                f"Reloaded {len(db_rows)} row(s) from DB.",
+                                f"skipped {result.get('skipped', 0)} unchanged.",
                                 icon="✅"
                             )
                             st.rerun()
