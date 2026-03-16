@@ -20,10 +20,10 @@ python app/init_db.py
 
 Once the database is set up, a default admin account will be created:
 
-| Field    | Value        |
-| -------- | ------------ |
-| Email    | admin@ex.com |
-| Password | 1            |
+| Field                 | Value        |
+| --------              | ------------ |
+| Email or Username     | admin@ex.com or admin|
+| Password              | 1            |
 
 Use these credentials to log in.
 
