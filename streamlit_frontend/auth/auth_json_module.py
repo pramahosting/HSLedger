@@ -31,7 +31,7 @@ def login_tab(cookie_manager):
         pass
 
 
-    email = st.text_input("Email", key="login_email")
+    email = st.text_input("Email or Username", key="login_email")
     password = st.text_input("Password", type="password", key="login_password")
     remember_me = st.checkbox("Remember me", key="login_remember")
 
