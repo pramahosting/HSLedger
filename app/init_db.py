@@ -93,6 +93,7 @@ def init_db():
 
         admin_user = User(
             username="admin",
+            full_name="Administrator",
             email="admin@ex.com",
             password=hashed_password,
         )

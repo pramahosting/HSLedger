@@ -20,14 +20,27 @@ python app/init_db.py
 
 Once the database is set up, a default admin account will be created:
 
-| Field                 | Value        |
-| --------              | ------------ |
-| Email or Username     | admin@ex.com or admin|
-| Password              | 1            |
+| Field             | Value                 |
+| ----------------- | --------------------- |
+| Email or Username | admin@ex.com or admin |
+| Password          | 1                     |
 
 Use these credentials to log in.
 
 ## Running the Application
+
+### One-command start (Windows)
+
+From the project root, run:
+
+```bash
+start_project.cmd
+```
+
+This opens two terminal windows automatically:
+
+- FastAPI backend
+- Streamlit frontend
 
 **Step 1 — Start the FastAPI backend** (Terminal 1):
 

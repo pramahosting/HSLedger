@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Body, Depends, HTTPException, Query, status
 from sqlalchemy import or_
+from sqlalchemy import text
 from sqlalchemy.orm import Session
 from app.models import Role, User
 import bcrypt
@@ -14,6 +15,7 @@ class LoginRequest(BaseModel):
 
 class RegisterRequest(BaseModel):
     username: str
+    full_name: str | None = None
     email: str
     password: str
     phone: str | None = None
@@ -45,15 +47,36 @@ def build_user_response(user: User) -> UserResponse:
     return UserResponse(
         id=user.id,
         username=user.username,
-        name=user.username,
+        name=user.full_name or user.username,
         email=user.email,
         roles=roles,
         permissions=permissions,
     )
 
 
+def ensure_users_full_name_column(db: Session):
+    # Lightweight schema backfill for existing SQLite DBs created before full_name existed.
+    engine_name = db.bind.dialect.name if db.bind else ""
+    if engine_name != "sqlite":
+        return
+
+    users_table = db.execute(
+        text("SELECT name FROM sqlite_master WHERE type='table' AND name='users'")
+    ).fetchone()
+    if not users_table:
+        return
+
+    columns = db.execute(text("PRAGMA table_info(users)")).fetchall()
+    column_names = {row[1] for row in columns}
+    if "full_name" not in column_names:
+        db.execute(text("ALTER TABLE users ADD COLUMN full_name VARCHAR(200)"))
+        db.commit()
+
+
 # login endpoint
 def authenticate_user(email: str, password: str, db: Session) -> UserResponse:
+    ensure_users_full_name_column(db)
+
     # Keep request schema stable but allow email or username in this field.
     login_value = email.strip()
     user = (
@@ -98,6 +121,8 @@ def register(
     request: RegisterRequest = Body(...),
     db: Session = Depends(get_db),
 ):
+    ensure_users_full_name_column(db)
+
     if db.query(User).filter(User.email == request.email).first():
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Email already registered")
     if db.query(User).filter(User.username == request.username).first():
@@ -122,6 +147,7 @@ def register(
 
     new_user = User(
         username=request.username,
+        full_name=(request.full_name or request.username),
         email=request.email,
         password=hashed,
         phone=request.phone or "",

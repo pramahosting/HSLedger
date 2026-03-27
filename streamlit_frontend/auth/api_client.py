@@ -35,10 +35,11 @@ def login(email: str, password: str):
     except httpx.ConnectError as e:
         raise ConnectionError(f"Cannot connect to the backend server.\nAn error occurred while connecting to the authentication service: {e}")
     
-def register(username, email, password, phone, address, role=None):
+def register(username, full_name, email, password, phone, address, role=None):
     try:
         payload = {
             "username": username,
+            "full_name": full_name,
             "email": email,
             "password": password,
             "phone": phone,

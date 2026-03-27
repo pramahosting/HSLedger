@@ -107,7 +107,10 @@ with st.sidebar:
 # ==================================================
 
 # --- Navigation ---
-tab = navbar.render_navbar()
+current_user = st.session_state.get("user", {}) or {}
+role_names = [str(r).strip().lower() for r in current_user.get("roles", [])]
+is_admin = bool(current_user.get("is_admin", False) or ("admin" in role_names))
+tab = navbar.render_navbar(is_admin=is_admin)
 
 if tab == "Reconciliation":
     reconciliation_ui.render()
@@ -118,11 +121,14 @@ elif tab == "Trading":
 elif tab == "Invoice":
     invoice_ui.render()
 elif tab == "ML_Classifier":
-    ml_tab1, ml_tab2 = st.tabs(["Train Mode", "RDR Rule Editor"])
-    with ml_tab1:
-        train_model_ui.render()
-    with ml_tab2:
-        rdr_ui.render()
+    if not is_admin:
+        st.error("Access denied. Admin users only.")
+    else:
+        ml_tab1, ml_tab2 = st.tabs(["Train Mode", "RDR Rule Editor"])
+        with ml_tab1:
+            train_model_ui.render()
+        with ml_tab2:
+            rdr_ui.render()
 else:
     st.markdown(
         """

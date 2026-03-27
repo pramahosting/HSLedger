@@ -387,6 +387,13 @@ def _open_print_dialog(html_content):
 
 
 def _render_business_settings_tab():
+	current_user = st.session_state.get("user", {}) or {}
+	role_names = [str(r).strip().lower() for r in current_user.get("roles", [])]
+	is_admin = bool(current_user.get("is_admin", False) or ("admin" in role_names))
+	if not is_admin:
+		st.error("Access denied. Admin users only.")
+		return
+
 	try:
 		businesses = _list_businesses()
 	except Exception as exc:
@@ -956,13 +963,21 @@ def render():
 
 	st.markdown("<h3 style='margin-top:0rem;margin-bottom:0.8rem'>Invoice Management</h3>", unsafe_allow_html=True)
 
-	tab_invoice, tab_business, tab_history = st.tabs(["Invoice", "Business Settings", "Invoice History"])
+	current_user = st.session_state.get("user", {}) or {}
+	role_names = [str(r).strip().lower() for r in current_user.get("roles", [])]
+	is_admin = bool(current_user.get("is_admin", False) or ("admin" in role_names))
+
+	if is_admin:
+		tab_invoice, tab_business, tab_history = st.tabs(["Invoice", "Business Settings", "Invoice History"])
+	else:
+		tab_invoice, tab_history = st.tabs(["Invoice", "Invoice History"])
 
 	with tab_invoice:
 		_render_invoice_tab()
 
-	with tab_business:
-		_render_business_settings_tab()
+	if is_admin:
+		with tab_business:
+			_render_business_settings_tab()
 
 	with tab_history:
 		_render_invoice_history_tab()

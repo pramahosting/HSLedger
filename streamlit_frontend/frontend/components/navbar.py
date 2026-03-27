@@ -1,16 +1,20 @@
 # frontend/components/navbar.py
 import streamlit as st
 
-def render_navbar():
+def render_navbar(is_admin=False):
     st.sidebar.title("HSLedger")
+    modules = [
+        "Reconciliation",
+        "Open Banking",
+        "Trading",
+        "Invoice",
+    ]
+
+    if is_admin:
+        modules.append("ML_Classifier")
+
     tab = st.sidebar.radio(
         "Choose module",
-        [
-            "Reconciliation",
-            "Open Banking",
-            "Trading",
-            "Invoice",
-            "ML_Classifier",
-        ],
+        modules,
     )
     return tab

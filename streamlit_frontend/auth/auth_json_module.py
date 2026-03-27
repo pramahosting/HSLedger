@@ -117,6 +117,7 @@ def reset_password_ui(token):
 def signup_tab():
     st.subheader("Sign Up")
     name = st.text_input("Full Name", key="signup_name")
+    username = st.text_input("Username", key="signup_username")
     email = st.text_input("Email", key="signup_email")
     password = st.text_input("Password", type="password", key="signup_password")
     address = st.text_area("Address", key="signup_address")
@@ -150,14 +151,15 @@ def signup_tab():
     selected_role = st.selectbox("Role", allowed_roles, key="signup_role")
 
     if st.button("Sign Up", key="signup_btn"):
-        username = name.strip()
+        username = username.strip()
+        full_name = name.strip()
 
-        if not username or not email or not password:
-            st.warning("Please enter name, email, and password.")
+        if not username or not full_name or not email or not password:
+            st.warning("Please enter full name, username, email, and password.")
             return
 
         try:
-            user = register(username, email.strip(), password, phone, address, selected_role)
+            user = register(username, full_name, email.strip(), password, phone, address, selected_role)
         except ConnectionError as e:
             st.error(str(e))
             return
