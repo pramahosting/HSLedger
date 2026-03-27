@@ -138,6 +138,7 @@ backups/
 streamlit_frontend/data/
 session_state.json
 **/session_state.json
+New folder/
 
 *.db
 reconciliation.db
