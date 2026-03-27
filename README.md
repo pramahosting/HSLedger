@@ -1,56 +1,65 @@
-# HSLedger — Fullstack Setup Guide
+# HSLedger
+
+Full-stack bookkeeping and reconciliation app with:
+
+- FastAPI backend
+- Streamlit frontend
+- SQLite database
 
 ## Prerequisites
 
-Install all Python dependencies:
+Install dependencies from the project root:
 
 ```bash
 pip install -r requirements.txt
 ```
 
-## Database Setup
+## Quick Start (Windows)
 
-This project uses **SQLite**.
-
-Initialize the database by running:
+Run this from the project root:
 
 ```bash
-python app/init_db.py
+start_project.cmd
 ```
 
-Once the database is set up, a default admin account will be created:
+What this script does:
+
+1. Activates local virtual environment (if available)
+2. Checks for `reconciliation.db`
+3. Runs `python app/init_db.py` automatically if DB is missing (first run)
+4. Starts backend and frontend in separate terminal windows
+
+## Default Login (First Run)
+
+When the database is initialized for the first time, a default admin account is created:
 
 | Field             | Value                 |
 | ----------------- | --------------------- |
 | Email or Username | admin@ex.com or admin |
 | Password          | 1                     |
 
-Use these credentials to log in.
+## Manual Run (Without Script)
 
-## Running the Application
-
-### One-command start (Windows)
-
-From the project root, run:
+### 1. Initialize database (only if needed)
 
 ```bash
-start_project.cmd
+python app/init_db.py
 ```
 
-This opens two terminal windows automatically:
-
-- FastAPI backend
-- Streamlit frontend
-
-**Step 1 — Start the FastAPI backend** (Terminal 1):
+### 2. Start backend (Terminal 1)
 
 ```bash
 uvicorn main:app --reload
 ```
 
-**Step 2 — Start the Streamlit frontend** (Terminal 2):
+### 3. Start frontend (Terminal 2)
 
 ```bash
 cd streamlit_frontend
 streamlit run app.py
 ```
+
+## Notes
+
+- The app uses SQLite file `reconciliation.db` in the project root.
+- If you delete the DB file, running `start_project.cmd` will recreate it.
