@@ -205,16 +205,9 @@ def _db_transactions_to_display_df(rows: list[dict]) -> pd.DataFrame:
 
 # GL Account options for dropdown (keep in sync with classifier enums)
 GL_ACCOUNT_OPTIONS = list(dict.fromkeys(classify_category.CATEGORY_ENUM + [""]))
-GST_ENUM = [
-    "GST on Expenses",
-    "GST on Capital",
-    "GST on Income",
-    "GST Free Expenses",
-    "GST Free Income",
-    "BAS Excluded",
-]
 
-GST_CLASSIFY_OPTIONS = list(dict.fromkeys(GST_CATEGORY_OPTIONS + classify_category.GST_ENUM))
+# Only canonical ATO categories in the dropdown. AI labels are normalised via gst_aliases below.
+GST_CLASSIFY_OPTIONS = list(GST_CATEGORY_OPTIONS)
 
 
 def normalize_gl_account(value):
@@ -243,7 +236,7 @@ def normalize_gst_category(value):
         "gst on expenses": "GST on Purchase",
         "gst on capital": "GST on Purchase",
         "gst free income": "GST Free Sale",
-        "gst free expenses": "Unknown",
+        "gst free expenses": "GST Free Sale",
     }
     return gst_aliases.get(text.lower(), "Unknown")
 
@@ -273,6 +266,10 @@ def classify_gl_and_gst_for_session(username):
     if "Who" not in target_df.columns:
         target_df["Who"] = "Other/Unknown"
 
+    def _to_float(value):
+        parsed = pd.to_numeric(value, errors="coerce")
+        return float(parsed) if pd.notnull(parsed) else 0.0
+
     prediction_keys = []
     seen_keys = set()
     for idx in target_df.index:
@@ -281,8 +278,8 @@ def classify_gl_and_gst_for_session(username):
             continue
         debit_val = target_df.at[idx, "Debit"] if "Debit" in target_df.columns else 0
         credit_val = target_df.at[idx, "Credit"] if "Credit" in target_df.columns else 0
-        debit = float(debit_val or 0)
-        credit = float(credit_val or 0)
+        debit = _to_float(debit_val)
+        credit = _to_float(credit_val)
         key = (desc, debit, credit)
         if key not in seen_keys:
             seen_keys.add(key)
@@ -315,17 +312,32 @@ def classify_gl_and_gst_for_session(username):
 
             debit = target_df.at[idx, "Debit"] if "Debit" in target_df.columns else 0
             credit = target_df.at[idx, "Credit"] if "Credit" in target_df.columns else 0
-            key = (desc, float(debit or 0), float(credit or 0))
+            debit_num = _to_float(debit)
+            credit_num = _to_float(credit)
+            key = (desc, debit_num, credit_num)
             prediction = prediction_by_key.get(key, {})
             normalized_gl = normalize_gl_account(prediction.get("gl_account", ""))
             normalized_gst = normalize_gst_category(prediction.get("gst_category", "Unknown"))
 
-            target_df.at[idx, "GL Account"] = normalized_gl
-            target_df.at[idx, "GST Category"] = normalized_gst
-            target_df.at[idx, "GST"] = float(calculate_classified_gst_value(debit, credit, normalized_gst))
+            existing_gl = normalize_gl_account(target_df.at[idx, "GL Account"])
+            existing_gst_category = normalize_gst_category(target_df.at[idx, "GST Category"])
+            has_pending_manual_gst = idx in st.session_state.pending_changes
+
+            # Preserve manually set GST values/categories. Only fill GST when unknown and no pending manual change.
+            should_update_gl = existing_gl == ""
+            should_update_gst = (existing_gst_category == "Unknown") and (not has_pending_manual_gst)
+
+            if should_update_gl:
+                target_df.at[idx, "GL Account"] = normalized_gl
+
+            if should_update_gst:
+                target_df.at[idx, "GST Category"] = normalized_gst
+                target_df.at[idx, "GST"] = float(calculate_classified_gst_value(debit_num, credit_num, normalized_gst))
+                st.session_state.pending_changes.pop(idx, None)
+
             target_df.at[idx, "Who"] = classify_category.extract_who_bank(desc)
-            st.session_state.pending_changes.pop(idx, None)
-            updated_rows += 1
+            if should_update_gl or should_update_gst:
+                updated_rows += 1
 
         st.session_state.edited_df_cache = target_df.copy()
         st.session_state.reconciliation_results = target_df.copy()
@@ -371,6 +383,40 @@ def render_output_ui(username, save_current_session):
             df_total = st.session_state.edited_df_cache.copy()
         else:
             df_total = st.session_state.reconciliation_results.copy()
+
+        # Backward compatibility: older sessions may store lower-case GST columns.
+        legacy_col_map = {
+            "gst": "GST",
+            "gst_category": "GST Category",
+            "gl_account": "GL Account",
+            "pair_id": "PairID",
+        }
+        df_total = df_total.rename(columns={k: v for k, v in legacy_col_map.items() if k in df_total.columns})
+
+        if "GST Category" not in df_total.columns:
+            df_total["GST Category"] = "Unknown"
+
+        if "GST" not in df_total.columns:
+            if "Debit" in df_total.columns and "Credit" in df_total.columns:
+                df_total["GST"] = df_total.apply(
+                    lambda row: calculate_gst_value(
+                        row.get("Debit", 0),
+                        row.get("Credit", 0),
+                        row.get("GST Category", "Unknown"),
+                    ),
+                    axis=1,
+                )
+            else:
+                df_total["GST"] = 0.0
+
+        if "Who" not in df_total.columns:
+            df_total["Who"] = ""
+
+        # Persist normalized schema back to session state so downstream row edits
+        # can safely access canonical column names.
+        st.session_state.reconciliation_results = df_total.copy()
+        if st.session_state.edited_df_cache is not None:
+            st.session_state.edited_df_cache = df_total.copy()
 
         if not st.session_state.show_gst and "GST" in df_total.columns:
             df_total = df_total.drop(columns=["GST"])
@@ -839,7 +885,11 @@ def render_output_ui(username, save_current_session):
             # Apply ALL pending changes to the current page BEFORE displaying
             for idx in df_page.index:
                 if idx in st.session_state.pending_changes:
-                    df_page.at[idx, "GST Category"] = st.session_state.pending_changes[idx]
+                    pending_category = st.session_state.pending_changes[idx]
+                    df_page.at[idx, "GST Category"] = pending_category
+                    debit_val = df_page.at[idx, "Debit"] if "Debit" in df_page.columns else 0
+                    credit_val = df_page.at[idx, "Credit"] if "Credit" in df_page.columns else 0
+                    df_page.at[idx, "GST"] = calculate_classified_gst_value(debit_val, credit_val, pending_category)
             
             # Sync GL Account values from latest edited_df_cache for current page rows
             if "GL Account" in df_page.columns and "GL Account" in st.session_state.edited_df_cache.columns:
@@ -1114,19 +1164,47 @@ def render_output_ui(username, save_current_session):
                     original_from_cache = st.session_state.edited_df_cache.at[original_idx, "GST Category"]
                     original_from_cache = "" if pd.isna(original_from_cache) else str(original_from_cache)
                     if new_category != original_from_cache:
-                        st.session_state.pending_changes[original_idx] = new_category
+                        debit_val = st.session_state.edited_df_cache.at[original_idx, "Debit"] if "Debit" in st.session_state.edited_df_cache.columns else 0
+                        credit_val = st.session_state.edited_df_cache.at[original_idx, "Credit"] if "Credit" in st.session_state.edited_df_cache.columns else 0
+
+                        # Keep the same validation rules but apply updates immediately.
+                        if new_category == "GST on Sale" and float(credit_val or 0) == 0:
+                            st.warning(f"Row index {original_idx}: GST on Sale requires non-zero Credit value")
+                            st.session_state.pending_changes[original_idx] = new_category
+                        elif new_category == "GST on Purchase" and float(debit_val or 0) == 0:
+                            st.warning(f"Row index {original_idx}: GST on Purchase requires non-zero Debit value")
+                            st.session_state.pending_changes[original_idx] = new_category
+                        else:
+                            live_gst = calculate_classified_gst_value(debit_val, credit_val, new_category)
+                            st.session_state.edited_df_cache.at[original_idx, "GST Category"] = new_category
+                            st.session_state.edited_df_cache.at[original_idx, "GST"] = float(live_gst)
+                            st.session_state.reconciliation_results.at[original_idx, "GST Category"] = new_category
+                            st.session_state.reconciliation_results.at[original_idx, "GST"] = float(live_gst)
+                            st.session_state.updated_pages.add(st.session_state.page_number)
+                            if original_idx in st.session_state.pending_changes:
+                                del st.session_state.pending_changes[original_idx]
                     elif original_idx in st.session_state.pending_changes:
                         del st.session_state.pending_changes[original_idx]
 
                     # Save GST pending changes to session immediately (same behavior as GL edits)
                     if st.session_state.get("current_session_id"):
-                        session_manager.save_pending_changes_only(
-                            username,
-                            st.session_state.current_session_id,
-                            st.session_state.pending_changes,
-                            st.session_state.updated_pages,
-                            st.session_state.page_number
-                        )
+                        if original_idx in st.session_state.pending_changes:
+                            session_manager.save_pending_changes_only(
+                                username,
+                                st.session_state.current_session_id,
+                                st.session_state.pending_changes,
+                                st.session_state.updated_pages,
+                                st.session_state.page_number
+                            )
+                        else:
+                            session_manager.save_output_data(
+                                username,
+                                st.session_state.current_session_id,
+                                st.session_state.reconciliation_results,
+                                st.session_state.pending_changes,
+                                st.session_state.updated_pages,
+                                st.session_state.page_number,
+                            )
                 
                 # Who column
                 with cols[12]:
