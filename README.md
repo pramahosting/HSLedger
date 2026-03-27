@@ -38,6 +38,12 @@ When the database is initialized for the first time, a default admin account is 
 | Email or Username | admin@ex.com or admin |
 | Password          | 1                     |
 
+## Role-Based Access
+
+- `ML_Classifier` is visible only to admin users.
+- `Business Settings` inside the Invoice module is visible only to admin users.
+- Non-admin users cannot see these sections in the sidebar/tabs.
+
 ## Manual Run (Without Script)
 
 ### 1. Initialize database (only if needed)
