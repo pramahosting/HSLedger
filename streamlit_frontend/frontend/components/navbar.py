@@ -8,6 +8,7 @@ def render_navbar(is_admin=False):
         "Open Banking",
         "Trading",
         "Invoice",
+        "Invoice Extractor",
     ]
 
     if is_admin:
