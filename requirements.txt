@@ -1,4 +1,5 @@
 # Invoice Extractor dependencies
+matplotlib==3.10.3
 opencv-python==4.11.0.86
 pdf2image==1.17.0
 pdfplumber==0.11.6
