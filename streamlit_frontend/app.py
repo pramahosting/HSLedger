@@ -19,7 +19,7 @@ if auth_dir not in sys.path:
 
 # --- Import components ---
 from auth.auth_json_module import auth_ui
-from frontend.components import navbar, reconciliation_ui, trading_ui, rdr_ui, openbanking_ui, invoice_ui, invoice_extractor_ui, train_model_ui
+from frontend.components import navbar, reconciliation_ui, trading_ui, rdr_ui, openbanking_ui, invoice_ui, train_model_ui, cash_flow_ui
 
 # --- Streamlit config ---
 st.set_page_config(page_title="HSLedger", layout="wide")
@@ -120,8 +120,8 @@ elif tab == "Trading":
     trading_ui.render()
 elif tab == "Invoice":
     invoice_ui.render()
-elif tab == "Invoice Extractor":
-    invoice_extractor_ui.render()
+elif tab == "Cash Flow":
+    cash_flow_ui.render()
 elif tab == "ML_Classifier":
     if not is_admin:
         st.error("Access denied. Admin users only.")

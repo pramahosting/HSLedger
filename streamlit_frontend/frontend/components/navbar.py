@@ -9,6 +9,7 @@ def render_navbar(is_admin=False):
         "Trading",
         "Invoice",
         "Invoice Extractor",
+        "Cash Flow",
     ]
 
     if is_admin:
