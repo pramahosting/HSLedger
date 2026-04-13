@@ -986,9 +986,10 @@ def render_output_ui(username, save_current_session):
                 <style>
                     .table-header {
                         font-weight: bold;
-                        background-color: #f0f2f6;
+                        background-color: #4a6fa5;
+                        color: #ffffff;
                         padding: 1px 4px;
-                        border-bottom: 2px solid #ddd;
+                        border-bottom: 2px solid #2d4a7a;
                         font-size: 12px;
                         text-align: center;
                     }
