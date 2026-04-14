@@ -58,22 +58,54 @@ def calculate_gst_value(debit: float, credit: float, gst_category: str) -> float
     return 0.0
 
 
-def determine_gst_category(description: str) -> str:
+def determine_gst_category(description: str, classification: str = "") -> str:
     """
-    Determine GST category based on description keywords.
-    
+    Determine GST category based on transaction classification and description keywords.
+
+    Classification takes priority for the default assignment:
+      🟢Internal  → BAS Excluded
+      🔵Incoming  → GST on Sale
+      🟡Outgoing  → GST on Purchase
+
+    Description keywords can override the default when a specific exempt / special
+    category is detected (e.g. "interest", "grant", "gst free").
+
     Args:
         description: Transaction description
-        
+        classification: Transaction classification string (e.g. "🔵Incoming")
+
     Returns:
-        Matched GST category or "Unknown"
+        Matched GST category string
     """
     description_lower = str(description).lower()
-    
+
+    # Check exempt / special keyword overrides first (apply regardless of classification)
+    exempt_categories = {
+        "GST Free Sale",
+        "Input Taxed Sales",
+        "BAS Excluded",
+        "Interest Income",
+        "Other Exempt Income",
+    }
+    for category in exempt_categories:
+        keywords = GST_CATEGORY_KEYWORDS.get(category, [])
+        if any(keyword.lower() in description_lower for keyword in keywords):
+            return category
+
+    # Use classification to derive the default GST category
+    classification_str = str(classification).strip()
+    if "Internal" in classification_str:
+        return "BAS Excluded"
+    if "Incoming" in classification_str:
+        return "GST on Sale"
+    if "Outgoing" in classification_str:
+        return "GST on Purchase"
+
+    # Fall back to full keyword scan if classification is absent
     for category, keywords in GST_CATEGORY_KEYWORDS.items():
         if any(keyword.lower() in description_lower for keyword in keywords):
             return category
-    
+
     return "Unknown"
 
 
@@ -95,13 +127,14 @@ def calculate_gst(df: pd.DataFrame) -> pd.DataFrame:
         description = row.get("Description", row.get("description", ""))
         debit = row.get("Debit", row.get("debit", 0))
         credit = row.get("Credit", row.get("credit", 0))
-        
-        # Determine category
-        gst_category = determine_gst_category(description)
-        
+        classification = row.get("Classification", row.get("classification", ""))
+
+        # Determine category using classification + description keywords
+        gst_category = determine_gst_category(description, classification)
+
         # Calculate GST value
         gst_value = calculate_gst_value(debit, credit, gst_category)
-        
+
         return pd.Series([gst_value, gst_category])
     
     df[["GST", "GST Category"]] = df.apply(gst_row, axis=1)
