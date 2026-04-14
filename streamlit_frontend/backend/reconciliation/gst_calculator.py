@@ -92,16 +92,21 @@ def calculate_gst(df: pd.DataFrame) -> pd.DataFrame:
         DataFrame with GST and GST Category columns added
     """
     def gst_row(row):
+        # Internal transfers are not subject to GST
+        classification = row.get("classification", "")
+        if isinstance(classification, str) and "Internal" in classification:
+            return pd.Series([0.0, "BAS Excluded"])
+
         description = row.get("Description", row.get("description", ""))
         debit = row.get("Debit", row.get("debit", 0))
         credit = row.get("Credit", row.get("credit", 0))
-        
+
         # Determine category
         gst_category = determine_gst_category(description)
-        
+
         # Calculate GST value
         gst_value = calculate_gst_value(debit, credit, gst_category)
-        
+
         return pd.Series([gst_value, gst_category])
     
     df[["GST", "GST Category"]] = df.apply(gst_row, axis=1)
