@@ -158,23 +158,50 @@ def render():
 
     tesseract_cmd, poppler_bin = _settings_expander()
 
+    # Session state: file store and results
+    if "ie_files" not in st.session_state:
+        st.session_state["ie_files"] = {}  # name -> {size, data}
+    if "ie_uploader_key" not in st.session_state:
+        st.session_state["ie_uploader_key"] = 0
+    if "ie_results" not in st.session_state:
+        st.session_state["ie_results"] = None
+
+    uploader_key = f"ie_uploader_{st.session_state['ie_uploader_key']}"
+
     uploaded = st.file_uploader(
         "Upload files (PDF, JPG, PNG, TIFF…)",
         type=ACCEPTED_TYPES,
         accept_multiple_files=True,
-        key="ie_uploader",
+        key=uploader_key,
     )
 
-    if not uploaded:
+    # Merge new uploads into session state, then reset the uploader widget
+    if uploaded:
+        for f in uploaded:
+            if f.name not in st.session_state["ie_files"]:
+                st.session_state["ie_files"][f.name] = {"size": f.size, "data": f.read()}
+        st.session_state["ie_uploader_key"] += 1
+        st.rerun()
+
+    files = st.session_state["ie_files"]
+
+    if not files:
         st.info("Upload one or more files to get started.")
         return
 
-    st.write(f"**{len(uploaded)} file(s) selected:**")
-    for f in uploaded:
-        st.write(f"  - {f.name} ({f.size:,} bytes)")
+    # Uploaded files list with per-file delete
+    st.write(f"**Uploaded Files ({len(files)}):**")
+    for name, info in list(files.items()):
+        col_name, col_size, col_del = st.columns([5, 2, 1])
+        col_name.write(name)
+        col_size.caption(f"{info['size']:,} bytes")
+        if col_del.button("✕", key=f"ie_del_{name}", help=f"Remove {name}"):
+            del st.session_state["ie_files"][name]
+            st.session_state["ie_results"] = None
+            st.rerun()
 
     if st.button("Process Files", type="primary", key="ie_process_btn"):
-        file_list = [(f.name, f.read()) for f in uploaded]
+        file_list = [(name, info["data"]) for name, info in files.items()]
 
         progress_bar = st.progress(0, text="Starting…")
 
@@ -191,7 +218,11 @@ def render():
             )
 
         progress_bar.progress(100, text="Done")
+        st.session_state["ie_results"] = result
 
+    # Persist results across reruns
+    if st.session_state["ie_results"] is not None:
+        result = st.session_state["ie_results"]
         summary = result["summary"]
 
         st.success(
@@ -202,9 +233,6 @@ def render():
             + (f", {summary['errors']} error(s)" if summary["errors"] else "")
         )
 
-        with st.expander("Processing log", expanded=False):
-            st.text("\n".join(summary["log"]))
-
         tab_bank, tab_inv = st.tabs(["Bank Statements", "Invoices & Receipts"])
         with tab_bank:
             _render_bank_results(result["bank_results"], result["bank_excel"])
@@ -212,3 +240,10 @@ def render():
             _render_inv_rec_results(
                 result["inv_rec_df"], result["inv_rec_excel"], result["inv_rec_csv"]
             )
+
+    st.divider()
+    if st.button("Delete All", key="ie_clear_btn"):
+        st.session_state["ie_files"] = {}
+        st.session_state["ie_results"] = None
+        st.session_state["ie_uploader_key"] += 1
+        st.rerun()
