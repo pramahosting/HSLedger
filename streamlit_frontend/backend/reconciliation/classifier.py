@@ -73,6 +73,13 @@ def classify_transactions(df: pd.DataFrame, show_progress=True) -> pd.DataFrame:
         if account_debit == account_credit:
             continue  # skip internal transfer within same account
 
+        date_debit = pd.to_datetime(getattr(row, "date_debit", None), dayfirst=True, errors="coerce")
+        date_credit = pd.to_datetime(getattr(row, "date_credit", None), dayfirst=True, errors="coerce")
+        if pd.isna(date_debit) or pd.isna(date_credit):
+            continue
+        if abs((date_debit - date_credit).days) > 3:
+            continue
+
         pid = f"PAIR{next(pair_id_counter):05d}"
         df.loc[int(d_idx), ["classification", "pairid"]] = ["🟢Internal", pid]
         df.loc[int(c_idx), ["classification", "pairid"]] = ["🟢Internal", pid]
