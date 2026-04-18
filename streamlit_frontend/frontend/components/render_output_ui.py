@@ -310,6 +310,24 @@ def classify_gl_and_gst_for_session(username):
             if not desc.strip():
                 continue
 
+            # Internal transfers must always be BAS Excluded with zero GST — never run through ML
+            classification = str(target_df.at[idx, "Classification"]) if "Classification" in target_df.columns and pd.notnull(target_df.at[idx, "Classification"]) else ""
+            if "Internal" in classification:
+                existing_gl = normalize_gl_account(target_df.at[idx, "GL Account"])
+                did_update = False
+                if existing_gl == "":
+                    target_df.at[idx, "GL Account"] = "Transfer"
+                    did_update = True
+                if normalize_gst_category(target_df.at[idx, "GST Category"]) != "BAS Excluded":
+                    target_df.at[idx, "GST Category"] = "BAS Excluded"
+                    target_df.at[idx, "GST"] = 0.0
+                    st.session_state.pending_changes.pop(idx, None)
+                    did_update = True
+                target_df.at[idx, "Who"] = classify_category.extract_who_bank(desc)
+                if did_update:
+                    updated_rows += 1
+                continue
+
             debit = target_df.at[idx, "Debit"] if "Debit" in target_df.columns else 0
             credit = target_df.at[idx, "Credit"] if "Credit" in target_df.columns else 0
             debit_num = _to_float(debit)
@@ -375,8 +393,11 @@ def render_output_ui(username, save_current_session):
         with header_col2:
             # Placeholder for download button (will be populated after data is processed)
             download_placeholder = st.empty()
-            if st.button("Classify Transaction", key="classify_gl_gst_button", use_container_width=True):
-                classify_gl_and_gst_for_session(username)
+
+        # Auto-classify when a fresh session has just been processed
+        if st.session_state.get("needs_classification", False):
+            st.session_state.needs_classification = False
+            classify_gl_and_gst_for_session(username)
         
         # Use cached edited dataframe
         if st.session_state.edited_df_cache is not None:

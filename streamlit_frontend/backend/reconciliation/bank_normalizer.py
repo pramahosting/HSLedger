@@ -139,14 +139,22 @@ def normalize_transactions(df: pd.DataFrame, bank_name: str, account_number: str
         date_col = _find_column(df_local, ["date", "txn_date", "value_date"])
     if not desc_col:
         desc_col = _find_column(df_local, ["description", "details", "narrative", "memo"])
+
+    # Detect balance column by keyword before debit/credit detection so it can be excluded
+    if not balance_col:
+        balance_col = _find_column(df_local, ["balance", "running balance", "closing balance"])
+
     if not debit_col or not credit_col:
-        detected_debit, detected_credit = detect_debit_credit(df_local, balance_col)
-        debit_col = debit_col or detected_debit
-        credit_col = credit_col or detected_credit
+        # Try keyword-based detection first to avoid mistaking Balance for Credit
         if not debit_col:
             debit_col = _find_column(df_local, ["debit", "withdrawal", "money out"])
         if not credit_col:
             credit_col = _find_column(df_local, ["credit", "deposit", "money in"])
+        # Fall back to numeric-pattern detection only when keyword search failed
+        if not debit_col or not credit_col:
+            detected_debit, detected_credit = detect_debit_credit(df_local, balance_col)
+            debit_col = debit_col or detected_debit
+            credit_col = credit_col or detected_credit
     if not amount_col and not (debit_col and credit_col):
         amount_col = _find_column(df_local, ["amount", "transaction amount", "value"])
 

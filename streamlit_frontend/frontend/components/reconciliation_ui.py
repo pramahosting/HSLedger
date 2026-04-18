@@ -42,6 +42,7 @@ def load_session(session_id: str):
         st.session_state.updated_pages = set()
         st.session_state.page_number = 1
         st.session_state.selected_rows = set()
+        st.session_state.needs_classification = False  # Loaded sessions are already classified
 
         st.session_state.accounts_metadata = session_data.get("accounts", [])
         st.session_state.accounts = []
@@ -111,6 +112,7 @@ def run_agent_callback(username):
         st.session_state.pending_changes = {}
         st.session_state.updated_pages = set()
         st.session_state.selected_rows = set()
+        st.session_state.needs_classification = True  # Trigger auto-classification on output tab
         
         session_manager.save_output_data(
             username, session_id, result_df,
@@ -160,6 +162,8 @@ def render():
             st.session_state.current_session_id = None
     if "selected_rows" not in st.session_state:
         st.session_state.selected_rows = set()
+    if "needs_classification" not in st.session_state:
+        st.session_state.needs_classification = False
     if "filter_internal" not in st.session_state:
         st.session_state.filter_internal = True
     if "filter_incoming" not in st.session_state:
