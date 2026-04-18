@@ -80,6 +80,19 @@ def classify_transactions(df: pd.DataFrame, show_progress=True) -> pd.DataFrame:
         if abs((date_debit - date_credit).days) > 3:
             continue
 
+        transfer_keywords = [
+            "transfer", "trf", "tfr", "internet transfer",
+            "inter-bank", "interbank", "funds transfer",
+            "bank transfer", "direct transfer", "telegraphic",
+            "wire", "remittance", "remit", "bpay transfer",
+            "online transfer", "account transfer",
+        ]
+        desc_debit = str(df.at[int(d_idx), "description"]).lower() if "description" in df.columns else ""
+        desc_credit = str(df.at[int(c_idx), "description"]).lower() if "description" in df.columns else ""
+        if not (any(k in desc_debit for k in transfer_keywords) or
+                any(k in desc_credit for k in transfer_keywords)):
+            continue
+
         pid = f"PAIR{next(pair_id_counter):05d}"
         df.loc[int(d_idx), ["classification", "pairid"]] = ["🟢Internal", pid]
         df.loc[int(c_idx), ["classification", "pairid"]] = ["🟢Internal", pid]
