@@ -1,0 +1,196 @@
+[
+  {
+    "id": "r001",
+    "priority": 1001,
+    "then": "CGT_BUY",
+    "if": {
+      "transaction_in": [
+        "B"
+      ],
+      "qty_gt": 0,
+      "any_field_contains_any": [
+        "long-term buy",
+        "buy"
+      ]
+    }
+  },
+  {
+    "id": "r002",
+    "priority": 1002,
+    "then": "CGT_SELL",
+    "if": {
+      "transaction_in": [
+        "S"
+      ],
+      "any_field_contains_any": [
+        "long-term sell",
+        "sell"
+      ]
+    }
+  },
+  {
+    "id": "r003",
+    "priority": 1003,
+    "then": "TRADE_BUY",
+    "if": {
+      "transaction_in": [
+        "TXN"
+      ],
+      "qty_gt": 0,
+      "any_field_contains_any": [
+        "day trade buy"
+      ]
+    }
+  },
+  {
+    "id": "r004",
+    "priority": 1004,
+    "then": "TRADE_SELL",
+    "if": {
+      "transaction_in": [
+        "TXN"
+      ],
+      "qty_lt": 0,
+      "any_field_contains_any": [
+        "day trade sell"
+      ]
+    }
+  },
+  {
+    "id": "r005",
+    "priority": 1005,
+    "then": "DIVIDEND",
+    "if": {
+      "transaction_in": [
+        "DIV"
+      ],
+      "any_field_contains_any": [
+        "dividend"
+      ]
+    }
+  },
+  {
+    "id": "r006",
+    "priority": 1006,
+    "then": "INTEREST",
+    "if": {
+      "transaction_in": [
+        "INT"
+      ],
+      "any_field_contains_any": [
+        "interest income"
+      ]
+    }
+  },
+  {
+    "id": "r007",
+    "priority": 1007,
+    "then": "LENDING_INCOME",
+    "if": {
+      "transaction_in": [
+        "LND"
+      ],
+      "any_field_contains_any": [
+        "share lending income",
+        "lending fee received"
+      ]
+    }
+  },
+  {
+    "id": "r008",
+    "priority": 1008,
+    "then": "CASH_DEPOSIT",
+    "if": {
+      "transaction_in": [
+        "DEP"
+      ],
+      "any_field_contains_any": [
+        "cash deposit"
+      ]
+    }
+  },
+  {
+    "id": "r009",
+    "priority": 1009,
+    "then": "CASH_WITHDRAWAL",
+    "if": {
+      "transaction_in": [
+        "WD"
+      ],
+      "any_field_contains_any": [
+        "cash withdrawal"
+      ]
+    }
+  },
+  {
+    "id": "r010",
+    "priority": 1010,
+    "then": "OPTION_BUY",
+    "if": {
+      "transaction_in": [
+        "OB"
+      ],
+      "qty_gt": 0,
+      "any_field_contains_any": [
+        "option buy"
+      ]
+    }
+  },
+  {
+    "id": "r011",
+    "priority": 1011,
+    "then": "OPTION_SELL",
+    "if": {
+      "transaction_in": [
+        "OS"
+      ],
+      "qty_gt": 0,
+      "any_field_contains_any": [
+        "option sell"
+      ]
+    }
+  },
+  {
+    "id": "r012",
+    "priority": 1012,
+    "then": "OPTION_BUY",
+    "if": {
+      "transaction_in": [
+        "OPT"
+      ],
+      "qty_gt": 0,
+      "any_field_contains_any": [
+        "options trade (long)",
+        "hedging position"
+      ]
+    }
+  },
+  {
+    "id": "r013",
+    "priority": 1013,
+    "then": "OPTION_SELL",
+    "if": {
+      "transaction_in": [
+        "OPT"
+      ],
+      "qty_lt": 0,
+      "any_field_contains_any": [
+        "options trade (short)",
+        "hedging position"
+      ]
+    }
+  },
+  {
+    "id": "r014",
+    "priority": 1014,
+    "then": "DIVIDEND",
+    "if": {
+      "transaction_in": [
+        "INC"
+      ],
+      "any_field_contains_any": [
+        "dividend"
+      ]
+    }
+  }
+]
