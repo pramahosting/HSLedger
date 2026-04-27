@@ -66,3 +66,4 @@ tzdata==2025.3
 urllib3==2.6.3
 uvicorn==0.42.0
 watchdog==6.0.0
+pytest>=7.0.0
