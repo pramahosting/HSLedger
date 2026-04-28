@@ -1,0 +1,21 @@
+row_index,trade_date,fy_end_year,symbol,event_type,amount_aud,description
+110,2024-09-03,2025,CBA,DIVIDEND,4500.0,Dividend – Commonwealth Bank of Australia | Franked distribution
+111,2024-09-03,2025,TLS,DIVIDEND,27.0,Dividend – Telstra Group Limited | Franked distribution
+112,2024-09-03,2025,MQG,DIVIDEND,760.0,Dividend – Macquarie Group Limited | Franked distribution
+118,2024-09-05,2025,ANZ,DIVIDEND,830.0,Dividend – ANZ Banking Group Limited | Franked distribution
+126,2024-09-10,2025,BHP,DIVIDEND,1850.0,Dividend – BHP Group Limited | Franked distribution
+140,2024-09-17,2025,NAB,DIVIDEND,297.0,Dividend – National Australia Bank Limited | Franked distribution
+147,2024-09-19,2025,WBC,DIVIDEND,760.0,Dividend – Westpac Banking Corporation | Franked distribution
+150,2024-09-20,2025,CSL,DIVIDEND,480.0,Dividend – CSL Limited | Franked distribution
+158,2024-09-25,2025,RIO,DIVIDEND,780.0,Dividend – Rio Tinto Limited | Franked distribution
+161,2024-09-26,2025,WES,DIVIDEND,236.0,Dividend – Wesfarmers Limited | Franked distribution
+424,2025-03-03,2025,BHP,DIVIDEND,1850.0,Dividend – BHP Group Limited | Franked distribution
+425,2025-03-03,2025,RIO,DIVIDEND,1170.0,Dividend – Rio Tinto Limited | Franked distribution
+429,2025-03-04,2025,MQG,DIVIDEND,1140.0,Dividend – Macquarie Group Limited | Franked distribution
+435,2025-03-06,2025,ANZ,DIVIDEND,415.0,Dividend – ANZ Banking Group Limited | Franked distribution
+447,2025-03-12,2025,TLS,DIVIDEND,18.0,Dividend – Telstra Group Limited | Franked distribution
+448,2025-03-12,2025,WES,DIVIDEND,1180.0,Dividend – Wesfarmers Limited | Franked distribution
+455,2025-03-14,2025,CSL,DIVIDEND,320.0,Dividend – CSL Limited | Franked distribution
+458,2025-03-17,2025,NAB,DIVIDEND,990.0,Dividend – National Australia Bank Limited | Franked distribution
+463,2025-03-19,2025,CBA,DIVIDEND,1350.0,Dividend – Commonwealth Bank of Australia | Franked distribution
+477,2025-03-26,2025,WBC,DIVIDEND,228.0,Dividend – Westpac Banking Corporation | Franked distribution

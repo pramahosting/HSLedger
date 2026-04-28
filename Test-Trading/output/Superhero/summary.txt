@@ -1,0 +1,54 @@
+=== Superhero ===
+=== Australian Stock Tax Engine Prototype ===
+Mode: investor
+Rows processed: 635
+Equity disposals processed: 187
+Income rows processed: 20
+Option rows flagged for review: 0
+
+Financial year summary:
+  FY2025: taxable_amount=360238.32, ordinary_income=19181.00, net_capital_gain=341057.32, capital_losses_cf=0.00
+
+Warnings:
+ - Row 3: sold 200.00000000 RIO, but only 0.00000000 was available in lots.
+ - Row 4: sold 200.00000000 CBA, but only 0.00000000 was available in lots.
+ - Row 8: sold 200.00000000 CSL, but only 0.00000000 was available in lots.
+ - Row 14: sold 200.00000000 CSL, but only 150.00000000 was available in lots.
+ - Row 23: sold 50.00000000 CSL, but only 0.00000000 was available in lots.
+ - Row 29: sold 100.00000000 WBC, but only 50.00000000 was available in lots.
+ - Row 33: sold 200.00000000 CBA, but only 0.00000000 was available in lots.
+ - Row 38: sold 200.00000000 MQG, but only 0.00000000 was available in lots.
+ - Row 79: sold 200.00000000 TLS, but only 150.00000000 was available in lots.
+ - Row 110: dividend marked franked, but no franking-credit field exists in the source file. Cash dividend included only; franking credit requires a separate source.
+ - Row 111: dividend marked franked, but no franking-credit field exists in the source file. Cash dividend included only; franking credit requires a separate source.
+ - Row 112: dividend marked franked, but no franking-credit field exists in the source file. Cash dividend included only; franking credit requires a separate source.
+ - Row 113: sold 200.00000000 TLS, but only 150.00000000 was available in lots.
+ - Row 118: dividend marked franked, but no franking-credit field exists in the source file. Cash dividend included only; franking credit requires a separate source.
+ - Row 119: sold 150.00000000 XRO, but only 50.00000000 was available in lots.
+ - Row 124: sold 200.00000000 XRO, but only 0.00000000 was available in lots.
+ - Row 126: dividend marked franked, but no franking-credit field exists in the source file. Cash dividend included only; franking credit requires a separate source.
+ - Row 131: sold 200.00000000 TLS, but only 0.00000000 was available in lots.
+ - Row 140: dividend marked franked, but no franking-credit field exists in the source file. Cash dividend included only; franking credit requires a separate source.
+ - Row 145: sold 100.00000000 XRO, but only 0.00000000 was available in lots.
+ - Row 147: dividend marked franked, but no franking-credit field exists in the source file. Cash dividend included only; franking credit requires a separate source.
+ - Row 150: dividend marked franked, but no franking-credit field exists in the source file. Cash dividend included only; franking credit requires a separate source.
+ - Row 158: dividend marked franked, but no franking-credit field exists in the source file. Cash dividend included only; franking credit requires a separate source.
+ - Row 160: sold 100.00000000 XRO, but only 0.00000000 was available in lots.
+ - Row 161: dividend marked franked, but no franking-credit field exists in the source file. Cash dividend included only; franking credit requires a separate source.
+ - Row 170: sold 200.00000000 TLS, but only 150.00000000 was available in lots.
+ - Row 171: sold 150.00000000 TLS, but only 0.00000000 was available in lots.
+ - Row 187: sold 200.00000000 XRO, but only 150.00000000 was available in lots.
+ - Row 229: sold 200.00000000 XRO, but only 150.00000000 was available in lots.
+ - Row 232: sold 50.00000000 XRO, but only 0.00000000 was available in lots.
+ - Row 251: sold 200.00000000 XRO, but only 150.00000000 was available in lots.
+ - Row 276: sold 100.00000000 MQG, but only 50.00000000 was available in lots.
+ - Row 424: dividend marked franked, but no franking-credit field exists in the source file. Cash dividend included only; franking credit requires a separate source.
+ - Row 425: dividend marked franked, but no franking-credit field exists in the source file. Cash dividend included only; franking credit requires a separate source.
+ - Row 429: dividend marked franked, but no franking-credit field exists in the source file. Cash dividend included only; franking credit requires a separate source.
+ - Row 435: dividend marked franked, but no franking-credit field exists in the source file. Cash dividend included only; franking credit requires a separate source.
+ - Row 447: dividend marked franked, but no franking-credit field exists in the source file. Cash dividend included only; franking credit requires a separate source.
+ - Row 448: dividend marked franked, but no franking-credit field exists in the source file. Cash dividend included only; franking credit requires a separate source.
+ - Row 455: dividend marked franked, but no franking-credit field exists in the source file. Cash dividend included only; franking credit requires a separate source.
+ - Row 458: dividend marked franked, but no franking-credit field exists in the source file. Cash dividend included only; franking credit requires a separate source.
+ - Row 463: dividend marked franked, but no franking-credit field exists in the source file. Cash dividend included only; franking credit requires a separate source.
+ - Row 477: dividend marked franked, but no franking-credit field exists in the source file. Cash dividend included only; franking credit requires a separate source.

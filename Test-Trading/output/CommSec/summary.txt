@@ -1,0 +1,123 @@
+=== CommSec ===
+=== Australian Stock Tax Engine Prototype ===
+Mode: investor
+Rows processed: 988
+Equity disposals processed: 256
+Income rows processed: 76
+Option rows flagged for review: 48
+
+Financial year summary:
+  FY2025: taxable_amount=310513.47, ordinary_income=22034.49, net_capital_gain=288478.98, capital_losses_cf=0.00
+
+Warnings:
+ - Row 13: sold 500.00000000 WES, but only 100.00000000 was available in lots.
+ - Row 17: sold 150.00000000 WBC, but only 0.00000000 was available in lots.
+ - Row 20: sold 100.00000000 FMG, but only 0.00000000 was available in lots.
+ - Row 35: sold 100.00000000 CSL, but only 0.00000000 was available in lots.
+ - Row 44: sold 500.00000000 WBC, but only 75.00000000 was available in lots.
+ - Row 48: sold 100.00000000 FMG, but only 0.00000000 was available in lots.
+ - Row 67: sold 100.00000000 ANZ, but only 70.00000000 was available in lots.
+ - Row 68: sold 30.00000000 FMG, but only 20.00000000 was available in lots.
+ - Row 72: sold 150.00000000 WES, but only 100.00000000 was available in lots.
+ - Row 76: option transaction detected (CBA). Kept in manual-review output, not included in taxable total.
+ - Row 87: sold 50.00000000 WES, but only 0.00000000 was available in lots.
+ - Row 90: option transaction detected (CBA). Kept in manual-review output, not included in taxable total.
+ - Row 92: sold 200.00000000 CBA, but only 160.00000000 was available in lots.
+ - Row 95: sold 150.00000000 CSL, but only 75.00000000 was available in lots.
+ - Row 99: option transaction detected (NAB). Kept in manual-review output, not included in taxable total.
+ - Row 108: sold 500.00000000 WBC, but only 120.00000000 was available in lots.
+ - Row 111: option transaction detected (NAB). Kept in manual-review output, not included in taxable total.
+ - Row 112: sold 500.00000000 CSL, but only 100.00000000 was available in lots.
+ - Row 114: sold 75.00000000 FMG, but only 30.00000000 was available in lots.
+ - Row 125: sold 100.00000000 CBA, but only 95.00000000 was available in lots.
+ - Row 134: sold 150.00000000 WBC, but only 100.00000000 was available in lots.
+ - Row 150: sold 100.00000000 WES, but only 30.00000000 was available in lots.
+ - Row 152: sold 250.00000000 WBC, but only 200.00000000 was available in lots.
+ - Row 157: option transaction detected (WES). Kept in manual-review output, not included in taxable total.
+ - Row 166: option transaction detected (WES). Kept in manual-review output, not included in taxable total.
+ - Row 170: option transaction detected (NAB). Kept in manual-review output, not included in taxable total.
+ - Row 180: dividend marked franked, but no franking-credit field exists in the source file. Cash dividend included only; franking credit requires a separate source.
+ - Row 181: sold 150.00000000 WBC, but only 20.00000000 was available in lots.
+ - Row 187: dividend marked franked, but no franking-credit field exists in the source file. Cash dividend included only; franking credit requires a separate source.
+ - Row 192: option transaction detected (MQG). Kept in manual-review output, not included in taxable total.
+ - Row 194: option transaction detected (CSL). Kept in manual-review output, not included in taxable total.
+ - Row 196: option transaction detected (WES). Kept in manual-review output, not included in taxable total.
+ - Row 210: dividend marked franked, but no franking-credit field exists in the source file. Cash dividend included only; franking credit requires a separate source.
+ - Row 215: option transaction detected (WES). Kept in manual-review output, not included in taxable total.
+ - Row 220: dividend marked franked, but no franking-credit field exists in the source file. Cash dividend included only; franking credit requires a separate source.
+ - Row 221: dividend marked franked, but no franking-credit field exists in the source file. Cash dividend included only; franking credit requires a separate source.
+ - Row 234: dividend marked franked, but no franking-credit field exists in the source file. Cash dividend included only; franking credit requires a separate source.
+ - Row 242: dividend marked franked, but no franking-credit field exists in the source file. Cash dividend included only; franking credit requires a separate source.
+ - Row 247: dividend marked franked, but no franking-credit field exists in the source file. Cash dividend included only; franking credit requires a separate source.
+ - Row 253: dividend marked franked, but no franking-credit field exists in the source file. Cash dividend included only; franking credit requires a separate source.
+ - Row 254: dividend marked franked, but no franking-credit field exists in the source file. Cash dividend included only; franking credit requires a separate source.
+ - Row 255: dividend marked franked, but no franking-credit field exists in the source file. Cash dividend included only; franking credit requires a separate source.
+ - Row 289: dividend marked franked, but no franking-credit field exists in the source file. Cash dividend included only; franking credit requires a separate source.
+ - Row 290: dividend marked franked, but no franking-credit field exists in the source file. Cash dividend included only; franking credit requires a separate source.
+ - Row 291: dividend marked franked, but no franking-credit field exists in the source file. Cash dividend included only; franking credit requires a separate source.
+ - Row 313: option transaction detected (CSL). Kept in manual-review output, not included in taxable total.
+ - Row 384: dividend marked franked, but no franking-credit field exists in the source file. Cash dividend included only; franking credit requires a separate source.
+ - Row 385: dividend marked franked, but no franking-credit field exists in the source file. Cash dividend included only; franking credit requires a separate source.
+ - Row 404: option transaction detected (NAB). Kept in manual-review output, not included in taxable total.
+ - Row 438: option transaction detected (CSL). Kept in manual-review output, not included in taxable total.
+ - Row 448: option transaction detected (MQG). Kept in manual-review output, not included in taxable total.
+ - Row 487: option transaction detected (WES). Kept in manual-review output, not included in taxable total.
+ - Row 488: option transaction detected (NAB). Kept in manual-review output, not included in taxable total.
+ - Row 506: option transaction detected (WES). Kept in manual-review output, not included in taxable total.
+ - Row 511: option transaction detected (NAB). Kept in manual-review output, not included in taxable total.
+ - Row 533: option transaction detected (CSL). Kept in manual-review output, not included in taxable total.
+ - Row 536: option transaction detected (BHP). Kept in manual-review output, not included in taxable total.
+ - Row 537: option transaction detected (CSL). Kept in manual-review output, not included in taxable total.
+ - Row 544: option transaction detected (BHP). Kept in manual-review output, not included in taxable total.
+ - Row 567: option transaction detected (BHP). Kept in manual-review output, not included in taxable total.
+ - Row 568: option transaction detected (BHP). Kept in manual-review output, not included in taxable total.
+ - Row 571: option transaction detected (NAB). Kept in manual-review output, not included in taxable total.
+ - Row 594: option transaction detected (CSL). Kept in manual-review output, not included in taxable total.
+ - Row 600: option transaction detected (CBA). Kept in manual-review output, not included in taxable total.
+ - Row 619: dividend marked franked, but no franking-crSedit field exists in the source file. Cash dividend included only; franking credit requires a separate source.
+ - Row 620: dividend marked franked, but no franking-credit field exists in the source file. Cash dividend included only; franking credit requires a separate source.
+ - Row 628: option transaction detected (WES). Kept in manual-review output, not included in taxable total.
+ - Row 642: sold 500.00000000 WBC, but only 380.00000000 was available in lots.
+ - Row 653: option transaction detected (BHP). Kept in manual-review output, not included in taxable total.
+ - Row 662: sold 100.00000000 WBC, but only 0.00000000 was available in lots.
+ - Row 663: sold 100.00000000 WBC, but only 0.00000000 was available in lots.
+ - Row 668: dividend marked franked, but no franking-credit field exists in the source file. Cash dividend included only; franking credit requires a separate source.
+ - Row 669: option transaction detected (CSL). Kept in manual-review output, not included in taxable total.
+ - Row 673: dividend marked franked, but no franking-credit field exists in the source file. Cash dividend included only; franking credit requires a separate source.
+ - Row 681: dividend marked franked, but no franking-credit field exists in the source file. Cash dividend included only; franking credit requires a separate source.
+ - Row 684: option transaction detected (CSL). Kept in manual-review output, not included in taxable total.
+ - Row 695: option transaction detected (BHP). Kept in manual-review output, not included in taxable total.
+ - Row 701: dividend marked franked, but no franking-credit field exists in the source file. Cash dividend included only; franking credit requires a separate source.
+ - Row 705: dividend marked franked, but no franking-credit field exists in the source file. Cash dividend included only; franking credit requires a separate source.
+ - Row 712: dividend marked franked, but no franking-credit field exists in the source file. Cash dividend included only; franking credit requires a separate source.
+ - Row 713: dividend marked franked, but no franking-credit field exists in the source file. Cash dividend included only; franking credit requires a separate source.
+ - Row 714: dividend marked franked, but no franking-credit field exists in the source file. Cash dividend included only; franking credit requires a separate source.
+ - Row 715: dividend marked franked, but no franking-credit field exists in the source file. Cash dividend included only; franking credit requires a separate source.
+ - Row 729: dividend marked franked, but no franking-credit field exists in the source file. Cash dividend included only; franking credit requires a separate source.
+ - Row 731: option transaction detected (MQG). Kept in manual-review output, not included in taxable total.
+ - Row 740: option transaction detected (WES). Kept in manual-review output, not included in taxable total.
+ - Row 743: dividend marked franked, but no franking-credit field exists in the source file. Cash dividend included only; franking credit requires a separate source.
+ - Row 747: option transaction detected (WES). Kept in manual-review output, not included in taxable total.
+ - Row 762: option transaction detected (WES). Kept in manual-review output, not included in taxable total.
+ - Row 775: dividend marked franked, but no franking-credit field exists in the source file. Cash dividend included only; franking credit requires a separate source.
+ - Row 776: option transaction detected (CBA). Kept in manual-review output, not included in taxable total.
+ - Row 783: option transaction detected (CSL). Kept in manual-review output, not included in taxable total.
+ - Row 812: option transaction detected (BHP). Kept in manual-review output, not included in taxable total.
+ - Row 840: option transaction detected (WES). Kept in manual-review output, not included in taxable total.
+ - Row 856: option transaction detected (BHP). Kept in manual-review output, not included in taxable total.
+ - Row 862: dividend marked franked, but no franking-credit field exists in the source file. Cash dividend included only; franking credit requires a separate source.
+ - Row 863: dividend marked franked, but no franking-credit field exists in the source file. Cash dividend included only; franking credit requires a separate source.
+ - Row 864: dividend marked franked, but no franking-credit field exists in the source file. Cash dividend included only; franking credit requires a separate source.
+ - Row 865: dividend marked franked, but no franking-credit field exists in the source file. Cash dividend included only; franking credit requires a separate source.
+ - Row 866: dividend marked franked, but no franking-credit field exists in the source file. Cash dividend included only; franking credit requires a separate source.
+ - Row 883: option transaction detected (WES). Kept in manual-review output, not included in taxable total.
+ - Row 885: option transaction detected (BHP). Kept in manual-review output, not included in taxable total.
+ - Row 923: option transaction detected (WES). Kept in manual-review output, not included in taxable total.
+ - Row 933: dividend marked franked, but no franking-credit field exists in the source file. Cash dividend included only; franking credit requires a separate source.
+ - Row 934: dividend marked franked, but no franking-credit field exists in the source file. Cash dividend included only; franking credit requires a separate source.
+ - Row 935: dividend marked franked, but no franking-credit field exists in the source file. Cash dividend included only; franking credit requires a separate source.
+ - Row 936: dividend marked franked, but no franking-credit field exists in the source file. Cash dividend included only; franking credit requires a separate source.
+ - Row 937: dividend marked franked, but no franking-credit field exists in the source file. Cash dividend included only; franking credit requires a separate source.
+ - Row 947: option transaction detected (CSL). Kept in manual-review output, not included in taxable total.
+ - Row 954: option transaction detected (BHP). Kept in manual-review output, not included in taxable total.
+ - Row 985: option transaction detected (CBA). Kept in manual-review output, not included in taxable total.

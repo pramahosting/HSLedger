@@ -1,0 +1,257 @@
+row_index,trade_date,fy_end_year,mode,event_type,symbol,qty_disposed,proceeds_aud,cost_base_aud,raw_gain_aud,discount_amount_aud,taxable_gain_aud,allocation_count,description
+11,2024-07-02,2025,investor,TRADE_SELL,TLS,50.0,182.8,181.55,1.25,0.62,0.62,1,Day Trade Sell – Telstra Group Limited | 50.0 units @ $3.876
+13,2024-07-02,2025,investor,CGT_SELL,WES,500.0,36056.32,4798.85,31257.47,1206.21,30051.26,1,Long-term Sell – Wesfarmers Limited | 500.0 units @ $72.200 | CGT disposal (held >12 months)
+17,2024-07-04,2025,investor,CGT_SELL,WBC,150.0,4052.05,0.0,4052.05,0.0,4052.05,0,Long-term Sell – Westpac Banking Corporation | 150.0 units @ $27.160 | CGT disposal (held >12 months)
+19,2024-07-04,2025,investor,TRADE_SELL,TCL,100.0,1301.55,1336.24,-34.69,0.0,-34.69,2,Day Trade Sell – Transurban Group | 100.0 units @ $13.180
+20,2024-07-04,2025,investor,TRADE_SELL,FMG,100.0,1619.45,0.0,1619.45,0.0,1619.45,0,Day Trade Sell – Fortescue Ltd | 100.0 units @ $16.359
+25,2024-07-07,2025,investor,CGT_SELL,ANZ,200.0,5718.05,4553.05,1165.0,582.5,582.5,1,Long-term Sell – ANZ Banking Group Limited | 200.0 units @ $28.700 | CGT disposal (held >12 months)
+30,2024-07-09,2025,investor,TRADE_SELL,TCL,50.0,648.9,665.23,-16.33,0.0,-16.33,1,Day Trade Sell – Transurban Group | 50.0 units @ $13.198
+35,2024-07-11,2025,investor,CGT_SELL,CSL,100.0,28589.36,0.0,28589.36,0.0,28589.36,0,Long-term Sell – CSL Limited | 100.0 units @ $286.240 | CGT disposal (held >12 months)
+39,2024-07-12,2025,investor,TRADE_SELL,MQG,75.0,17598.4,12565.31,5033.09,2516.54,2516.54,1,Day Trade Sell – Macquarie Group Limited | 75.0 units @ $234.938
+41,2024-07-12,2025,investor,TRADE_SELL,CBA,30.0,4689.35,2877.59,1811.76,905.88,905.88,1,Day Trade Sell – Commonwealth Bank of Australia | 30.0 units @ $156.860
+43,2024-07-14,2025,investor,CGT_SELL,TLS,250.0,981.5,946.12,35.38,22.12,13.25,3,Long-term Sell – Telstra Group Limited | 250.0 units @ $3.970 | CGT disposal (held >12 months)
+44,2024-07-15,2025,investor,CGT_SELL,WBC,500.0,13338.84,2480.2,10858.64,0.0,10858.64,1,Long-term Sell – Westpac Banking Corporation | 500.0 units @ $26.710 | CGT disposal (held >12 months)
+46,2024-07-15,2025,investor,TRADE_SELL,TLS,50.0,183.85,199.7,-15.85,0.0,-15.85,1,Day Trade Sell – Telstra Group Limited | 50.0 units @ $3.897
+47,2024-07-16,2025,investor,TRADE_SELL,TLS,30.0,105.19,120.03,-14.84,0.0,-14.84,2,Day Trade Sell – Telstra Group Limited | 30.0 units @ $3.873
+48,2024-07-16,2025,investor,TRADE_SELL,FMG,100.0,1623.65,0.0,1623.65,0.0,1623.65,0,Day Trade Sell – Fortescue Ltd | 100.0 units @ $16.401
+50,2024-07-17,2025,investor,TRADE_SELL,XRO,20.0,2922.63,1663.32,1259.31,629.65,629.65,1,Day Trade Sell – Xero Limited | 20.0 units @ $146.954
+59,2024-07-21,2025,investor,CGT_SELL,WDS,100.0,3153.05,2493.95,659.1,0.0,659.1,1,Long-term Sell – Woodside Energy Group Limited | 100.0 units @ $31.750 | CGT disposal (held >12 months)
+62,2024-07-22,2025,investor,TRADE_SELL,NAB,50.0,1949.8,1434.34,515.46,257.73,257.73,1,Day Trade Sell – National Australia Bank Limited | 50.0 units @ $39.325
+66,2024-07-23,2025,investor,TRADE_SELL,XRO,30.0,4396.1,2494.98,1901.12,950.56,950.56,1,Day Trade Sell – Xero Limited | 30.0 units @ $147.085
+67,2024-07-24,2025,investor,TRADE_SELL,ANZ,100.0,3049.95,2170.4,879.55,0.0,879.55,2,Day Trade Sell – ANZ Banking Group Limited | 100.0 units @ $30.664
+68,2024-07-24,2025,investor,TRADE_SELL,FMG,30.0,479.65,339.82,139.83,0.0,139.83,1,Day Trade Sell – Fortescue Ltd | 30.0 units @ $16.355
+69,2024-07-25,2025,investor,TRADE_SELL,TCL,75.0,976.68,998.79,-22.11,0.0,-22.11,2,Day Trade Sell – Transurban Group | 75.0 units @ $13.169
+70,2024-07-25,2025,investor,TRADE_SELL,NAB,75.0,2927.08,2151.51,775.57,387.78,387.78,1,Day Trade Sell – National Australia Bank Limited | 75.0 units @ $39.247
+72,2024-07-26,2025,investor,CGT_SELL,WES,150.0,10768.95,7467.25,3301.7,0.0,3301.7,1,Long-term Sell – Wesfarmers Limited | 150.0 units @ $71.880 | CGT disposal (held >12 months)
+75,2024-07-26,2025,investor,TRADE_SELL,WBC,100.0,3256.95,3310.45,-53.5,0.0,-53.5,1,Day Trade Sell – Westpac Banking Corporation | 100.0 units @ $32.734
+77,2024-07-27,2025,investor,CGT_SELL,TLS,150.0,586.0,612.32,-26.32,0.0,-26.32,3,Long-term Sell – Telstra Group Limited | 150.0 units @ $3.980 | CGT disposal (held >12 months)
+82,2024-07-30,2025,investor,TRADE_SELL,CBA,50.0,7781.0,4795.99,2985.01,1492.51,1492.51,1,Day Trade Sell – Commonwealth Bank of Australia | 50.0 units @ $155.949
+83,2024-07-30,2025,investor,TRADE_SELL,XRO,50.0,7359.1,4158.31,3200.79,1600.4,1600.4,1,Day Trade Sell – Xero Limited | 50.0 units @ $147.511
+87,2024-07-31,2025,investor,TRADE_SELL,WES,50.0,3705.8,0.0,3705.8,0.0,3705.8,0,Day Trade Sell – Wesfarmers Limited | 50.0 units @ $74.445
+88,2024-07-31,2025,investor,TRADE_SELL,WBC,30.0,966.13,818.67,147.46,0.0,147.46,1,Day Trade Sell – Westpac Banking Corporation | 30.0 units @ $32.571
+92,2024-08-01,2025,investor,CGT_SELL,CBA,200.0,31324.05,17809.87,13514.18,3642.03,9872.15,3,Long-term Sell – Commonwealth Bank of Australia | 200.0 units @ $156.730 | CGT disposal (held >12 months)
+94,2024-08-01,2025,investor,TRADE_SELL,XRO,30.0,4376.66,2494.98,1881.68,940.84,940.84,1,Day Trade Sell – Xero Limited | 30.0 units @ $146.437
+95,2024-08-02,2025,investor,CGT_SELL,CSL,150.0,43411.41,22060.25,21351.16,0.0,21351.16,1,Long-term Sell – CSL Limited | 150.0 units @ $289.760 | CGT disposal (held >12 months)
+98,2024-08-02,2025,investor,TRADE_SELL,ALL,30.0,1782.2,1165.85,616.36,308.18,308.18,1,Day Trade Sell – Aristocrat Leisure Limited | 30.0 units @ $59.955
+108,2024-08-07,2025,investor,CGT_SELL,WBC,500.0,13713.39,3843.43,9869.96,0.0,9869.96,2,Long-term Sell – Westpac Banking Corporation | 500.0 units @ $27.460 | CGT disposal (held >12 months)
+112,2024-08-08,2025,investor,CGT_SELL,CSL,500.0,145473.76,29500.35,115973.41,0.0,115973.41,1,Long-term Sell – CSL Limited | 500.0 units @ $291.300 | CGT disposal (held >12 months)
+114,2024-08-08,2025,investor,TRADE_SELL,FMG,75.0,1213.77,500.36,713.41,0.0,713.41,1,Day Trade Sell – Fortescue Ltd | 75.0 units @ $16.403
+116,2024-08-08,2025,investor,TRADE_SELL,ANZ,20.0,603.66,625.38,-21.72,0.0,-21.72,1,Day Trade Sell – ANZ Banking Group Limited | 20.0 units @ $30.733
+120,2024-08-09,2025,investor,TRADE_SELL,ALL,75.0,4493.53,3021.92,1471.61,736.83,734.79,2,Day Trade Sell – Aristocrat Leisure Limited | 75.0 units @ $60.133
+121,2024-08-09,2025,investor,TRADE_SELL,CBA,20.0,3087.09,3142.11,-55.02,0.0,-55.02,1,Day Trade Sell – Commonwealth Bank of Australia | 20.0 units @ $155.177
+125,2024-08-12,2025,investor,CGT_SELL,CBA,100.0,13762.32,14840.49,-1078.17,0.0,-1078.17,2,Long-term Sell – Commonwealth Bank of Australia | 100.0 units @ $137.790 | CGT disposal (held >12 months)
+134,2024-08-15,2025,investor,CGT_SELL,WBC,150.0,4065.55,2779.95,1285.6,0.0,1285.6,1,Long-term Sell – Westpac Banking Corporation | 150.0 units @ $27.250 | CGT disposal (held >12 months)
+148,2024-08-20,2025,investor,TRADE_SELL,TLS,75.0,282.85,305.7,-22.85,0.0,-22.85,2,Day Trade Sell – Telstra Group Limited | 75.0 units @ $3.918
+150,2024-08-21,2025,investor,TRADE_SELL,WES,100.0,7446.25,2248.96,5197.29,0.0,5197.29,1,Day Trade Sell – Wesfarmers Limited | 100.0 units @ $74.627
+152,2024-08-22,2025,investor,CGT_SELL,WBC,250.0,6905.55,6325.5,580.05,0.0,580.05,3,Long-term Sell – Westpac Banking Corporation | 250.0 units @ $27.710 | CGT disposal (held >12 months)
+158,2024-08-23,2025,investor,TRADE_SELL,CBA,75.0,11468.57,11548.63,-80.06,0.0,-80.06,3,Day Trade Sell – Commonwealth Bank of Australia | 75.0 units @ $153.207
+161,2024-08-26,2025,investor,TRADE_SELL,XRO,20.0,2911.17,1663.32,1247.85,623.92,623.92,1,Day Trade Sell – Xero Limited | 20.0 units @ $146.381
+162,2024-08-26,2025,investor,TRADE_SELL,MQG,20.0,4698.81,3350.75,1348.06,674.03,674.03,1,Day Trade Sell – Macquarie Group Limited | 20.0 units @ $235.763
+163,2024-08-26,2025,investor,TRADE_SELL,WDS,75.0,1861.1,1889.07,-27.97,0.0,-27.97,2,Day Trade Sell – Woodside Energy Group Limited | 75.0 units @ $25.034
+172,2024-08-29,2025,investor,TRADE_SELL,FMG,50.0,805.75,826.92,-21.17,0.0,-21.17,1,Day Trade Sell – Fortescue Ltd | 50.0 units @ $16.335
+175,2024-08-30,2025,investor,CGT_SELL,CSL,200.0,58131.58,57490.41,641.17,0.0,641.17,4,Long-term Sell – CSL Limited | 200.0 units @ $291.010 | CGT disposal (held >12 months)
+176,2024-08-30,2025,investor,TRADE_SELL,BHP,20.0,868.02,874.01,-5.99,0.0,-5.99,1,Day Trade Sell – BHP Group Limited | 20.0 units @ $43.951
+181,2024-09-02,2025,investor,CGT_SELL,WBC,150.0,4188.55,665.54,3523.01,0.0,3523.01,1,Long-term Sell – Westpac Banking Corporation | 150.0 units @ $28.070 | CGT disposal (held >12 months)
+184,2024-09-03,2025,investor,CGT_SELL,TLS,50.0,184.5,202.1,-17.6,0.0,-17.6,2,Long-term Sell – Telstra Group Limited | 50.0 units @ $3.910 | CGT disposal (held >12 months)
+185,2024-09-03,2025,investor,TRADE_SELL,MQG,100.0,23517.75,23219.35,298.4,169.1,129.3,2,Day Trade Sell – Macquarie Group Limited | 100.0 units @ $235.397
+190,2024-09-04,2025,investor,TRADE_SELL,WDS,50.0,1243.35,1262.33,-18.98,0.0,-18.98,2,Day Trade Sell – Woodside Energy Group Limited | 50.0 units @ $25.196
+203,2024-09-09,2025,investor,TRADE_SELL,RIO,75.0,8072.9,8190.98,-118.08,0.0,-118.08,3,Day Trade Sell – Rio Tinto Limited | 75.0 units @ $107.858
+206,2024-09-10,2025,investor,TRADE_SELL,MQG,30.0,7044.83,7074.22,-29.39,0.0,-29.39,2,Day Trade Sell – Macquarie Group Limited | 30.0 units @ $235.376
+208,2024-09-11,2025,investor,TRADE_SELL,TLS,30.0,107.56,120.12,-12.56,0.0,-12.56,1,Day Trade Sell – Telstra Group Limited | 30.0 units @ $3.952
+212,2024-09-12,2025,investor,TRADE_SELL,ANZ,20.0,606.64,618.68,-12.04,0.0,-12.04,1,Day Trade Sell – ANZ Banking Group Limited | 20.0 units @ $30.882
+216,2024-09-13,2025,investor,TRADE_SELL,FMG,75.0,1206.5,1247.04,-40.54,0.0,-40.54,3,Day Trade Sell – Fortescue Ltd | 75.0 units @ $16.306
+217,2024-09-13,2025,investor,TRADE_SELL,NAB,50.0,1964.75,1434.34,530.41,265.2,265.2,1,Day Trade Sell – National Australia Bank Limited | 50.0 units @ $39.624
+219,2024-09-15,2025,investor,CGT_SELL,WES,150.0,11416.17,11156.98,259.19,0.0,259.19,1,Long-term Sell – Wesfarmers Limited | 150.0 units @ $76.200 | CGT disposal (held >12 months)
+224,2024-09-16,2025,investor,TRADE_SELL,CSL,100.0,28952.35,30365.0,-1412.65,0.0,-1412.65,2,Day Trade Sell – CSL Limited | 100.0 units @ $289.743
+231,2024-09-19,2025,investor,CGT_SELL,BHP,250.0,10107.76,10842.83,-735.07,0.0,-735.07,3,Long-term Sell – BHP Group Limited | 250.0 units @ $40.480 | CGT disposal (held >12 months)
+238,2024-09-21,2025,investor,CGT_SELL,BHP,500.0,20270.45,21429.28,-1158.83,0.0,-1158.83,3,Long-term Sell – BHP Group Limited | 500.0 units @ $40.590 | CGT disposal (held >12 months)
+240,2024-09-22,2025,investor,CGT_SELL,BHP,50.0,2046.55,2135.58,-89.03,0.0,-89.03,1,Long-term Sell – BHP Group Limited | 50.0 units @ $41.370 | CGT disposal (held >12 months)
+246,2024-09-23,2025,investor,CGT_SELL,MQG,100.0,21209.3,22278.25,-1068.95,0.0,-1068.95,4,Long-term Sell – Macquarie Group Limited | 100.0 units @ $212.350 | CGT disposal (held >12 months)
+248,2024-09-24,2025,investor,TRADE_SELL,CBA,20.0,3049.83,2782.36,267.47,0.0,267.47,1,Day Trade Sell – Commonwealth Bank of Australia | 20.0 units @ $153.314
+249,2024-09-24,2025,investor,TRADE_SELL,MQG,20.0,4715.89,3962.99,752.9,0.0,752.9,1,Day Trade Sell – Macquarie Group Limited | 20.0 units @ $236.617
+250,2024-09-25,2025,investor,CGT_SELL,WES,100.0,7288.95,7437.99,-149.04,0.0,-149.04,1,Long-term Sell – Wesfarmers Limited | 100.0 units @ $73.054 | CGT disposal (held >12 months)
+252,2024-09-25,2025,investor,TRADE_SELL,TCL,50.0,653.7,665.79,-12.09,0.0,-12.09,1,Day Trade Sell – Transurban Group | 50.0 units @ $13.294
+260,2024-09-27,2025,investor,TRADE_SELL,NAB,30.0,1164.32,860.61,303.71,151.86,151.86,1,Day Trade Sell – National Australia Bank Limited | 30.0 units @ $39.359
+261,2024-09-27,2025,investor,TRADE_SELL,CBA,30.0,4555.85,4173.54,382.31,0.0,382.31,1,Day Trade Sell – Commonwealth Bank of Australia | 30.0 units @ $152.410
+264,2024-09-30,2025,investor,TRADE_SELL,ANZ,100.0,3050.55,2985.98,64.57,0.0,64.57,2,Day Trade Sell – ANZ Banking Group Limited | 100.0 units @ $30.670
+269,2024-10-01,2025,investor,TRADE_SELL,XRO,20.0,2895.99,1663.32,1232.67,616.33,616.33,1,Day Trade Sell – Xero Limited | 20.0 units @ $145.622
+271,2024-10-02,2025,investor,TRADE_SELL,CSL,100.0,29216.55,30666.32,-1449.77,0.0,-1449.77,1,Day Trade Sell – CSL Limited | 100.0 units @ $292.385
+274,2024-10-03,2025,investor,TRADE_SELL,WBC,30.0,965.47,994.61,-29.14,0.0,-29.14,1,Day Trade Sell – Westpac Banking Corporation | 30.0 units @ $32.549
+275,2024-10-03,2025,investor,TRADE_SELL,ALL,100.0,6027.75,6027.0,0.75,0.0,0.75,2,Day Trade Sell – Aristocrat Leisure Limited | 100.0 units @ $60.442
+287,2024-10-09,2025,investor,CGT_SELL,MQG,100.0,23476.85,21039.82,2437.03,0.0,2437.03,3,Long-term Sell – Macquarie Group Limited | 100.0 units @ $234.988 | CGT disposal (held >12 months)
+293,2024-10-10,2025,investor,TRADE_SELL,WDS,20.0,490.94,593.97,-103.03,0.0,-103.03,2,Day Trade Sell – Woodside Energy Group Limited | 20.0 units @ $25.097
+294,2024-10-10,2025,investor,TRADE_SELL,NAB,100.0,3921.25,2924.37,996.88,499.97,496.91,2,Day Trade Sell – National Australia Bank Limited | 100.0 units @ $39.377
+299,2024-10-14,2025,investor,TRADE_SELL,WES,100.0,7418.45,7545.95,-127.5,0.0,-127.5,3,Day Trade Sell – Wesfarmers Limited | 100.0 units @ $74.349
+301,2024-10-15,2025,investor,TRADE_SELL,RIO,100.0,10799.45,10838.14,-38.69,0.0,-38.69,2,Day Trade Sell – Rio Tinto Limited | 100.0 units @ $108.214
+302,2024-10-15,2025,investor,CGT_SELL,BHP,150.0,5925.55,6401.44,-475.89,0.0,-475.89,2,Long-term Sell – BHP Group Limited | 150.0 units @ $39.650 | CGT disposal (held >12 months)
+306,2024-10-17,2025,investor,CGT_SELL,WBC,150.0,4100.05,4214.92,-114.87,0.0,-114.87,2,Long-term Sell – Westpac Banking Corporation | 150.0 units @ $27.480 | CGT disposal (held >12 months)
+315,2024-10-19,2025,investor,CGT_SELL,CSL,150.0,42641.34,45384.63,-2743.29,0.0,-2743.29,3,Long-term Sell – CSL Limited | 150.0 units @ $284.620 | CGT disposal (held >12 months)
+319,2024-10-21,2025,investor,CGT_SELL,WDS,150.0,4356.55,4544.5,-187.95,0.0,-187.95,3,Long-term Sell – Woodside Energy Group Limited | 150.0 units @ $29.190 | CGT disposal (held >12 months)
+322,2024-10-22,2025,investor,TRADE_SELL,ANZ,50.0,1508.4,1506.1,2.3,0.0,2.3,2,Day Trade Sell – ANZ Banking Group Limited | 50.0 units @ $30.497
+325,2024-10-23,2025,investor,TRADE_SELL,MQG,30.0,7102.79,6028.59,1074.2,0.0,1074.2,1,Day Trade Sell – Macquarie Group Limited | 30.0 units @ $237.308
+328,2024-10-24,2025,investor,TRADE_SELL,WES,50.0,3704.25,3754.92,-50.67,0.0,-50.67,2,Day Trade Sell – Wesfarmers Limited | 50.0 units @ $74.414
+330,2024-10-25,2025,investor,CGT_SELL,NAB,150.0,5624.05,5913.1,-289.05,0.0,-289.05,3,Long-term Sell – National Australia Bank Limited | 150.0 units @ $37.640 | CGT disposal (held >12 months)
+337,2024-10-27,2025,investor,CGT_SELL,NAB,100.0,3715.05,3713.78,1.27,0.0,1.27,1,Long-term Sell – National Australia Bank Limited | 100.0 units @ $37.370 | CGT disposal (held >12 months)
+340,2024-10-29,2025,investor,TRADE_SELL,WBC,75.0,2434.33,2229.57,204.76,0.0,204.76,2,Day Trade Sell – Westpac Banking Corporation | 75.0 units @ $32.677
+352,2024-10-31,2025,investor,TRADE_SELL,CSL,20.0,5811.03,5568.33,242.7,0.0,242.7,1,Day Trade Sell – CSL Limited | 20.0 units @ $291.374
+354,2024-11-01,2025,investor,TRADE_SELL,RIO,100.0,10763.15,10809.7,-46.55,0.0,-46.55,3,Day Trade Sell – Rio Tinto Limited | 100.0 units @ $107.851
+357,2024-11-02,2025,investor,CGT_SELL,WBC,250.0,7258.05,8223.08,-965.03,0.0,-965.03,6,Long-term Sell – Westpac Banking Corporation | 250.0 units @ $29.120 | CGT disposal (held >12 months)
+360,2024-11-04,2025,investor,TRADE_SELL,XRO,30.0,4365.8,2494.98,1870.82,935.41,935.41,1,Day Trade Sell – Xero Limited | 30.0 units @ $146.075
+363,2024-11-05,2025,investor,TRADE_SELL,BHP,75.0,3303.5,3183.47,120.03,0.0,120.03,1,Day Trade Sell – BHP Group Limited | 75.0 units @ $44.266
+366,2024-11-06,2025,investor,TRADE_SELL,TCL,20.0,253.1,268.86,-15.76,0.0,-15.76,1,Day Trade Sell – Transurban Group | 20.0 units @ $13.205
+368,2024-11-07,2025,investor,CGT_SELL,MQG,200.0,42935.98,40190.57,2745.41,0.0,2745.41,1,Long-term Sell – Macquarie Group Limited | 200.0 units @ $214.940 | CGT disposal (held >12 months)
+369,2024-11-07,2025,investor,TRADE_SELL,CSL,75.0,21918.85,20881.24,1037.61,0.0,1037.61,1,Day Trade Sell – CSL Limited | 75.0 units @ $292.544
+375,2024-11-11,2025,investor,TRADE_SELL,MQG,50.0,11946.1,10047.64,1898.46,0.0,1898.46,1,Day Trade Sell – Macquarie Group Limited | 50.0 units @ $239.361
+378,2024-11-12,2025,investor,TRADE_SELL,RIO,20.0,2130.87,2165.7,-34.83,0.0,-34.83,1,Day Trade Sell – Rio Tinto Limited | 20.0 units @ $107.366
+379,2024-11-12,2025,investor,TRADE_SELL,ANZ,50.0,1501.1,1558.42,-57.32,0.0,-57.32,3,Day Trade Sell – ANZ Banking Group Limited | 50.0 units @ $30.351
+380,2024-11-13,2025,investor,CGT_SELL,CSL,500.0,148644.92,142848.57,5796.35,0.0,5796.35,6,Long-term Sell – CSL Limited | 500.0 units @ $297.650 | CGT disposal (held >12 months)
+382,2024-11-13,2025,investor,TRADE_SELL,ALL,20.0,1195.09,1205.05,-9.96,0.0,-9.96,1,Day Trade Sell – Aristocrat Leisure Limited | 20.0 units @ $60.577
+383,2024-11-13,2025,investor,TRADE_SELL,WES,50.0,3726.05,3749.71,-23.66,0.0,-23.66,1,Day Trade Sell – Wesfarmers Limited | 50.0 units @ $74.850
+386,2024-11-14,2025,investor,CGT_SELL,WES,50.0,3724.55,3797.59,-73.04,0.0,-73.04,1,Long-term Sell – Wesfarmers Limited | 50.0 units @ $74.930 | CGT disposal (held >12 months)
+389,2024-11-14,2025,investor,TRADE_SELL,TLS,20.0,68.1,80.08,-11.98,0.0,-11.98,1,Day Trade Sell – Telstra Group Limited | 20.0 units @ $3.955
+392,2024-11-15,2025,investor,TRADE_SELL,WES,50.0,3747.9,3797.59,-49.69,0.0,-49.69,1,Day Trade Sell – Wesfarmers Limited | 50.0 units @ $75.287
+393,2024-11-17,2025,investor,CGT_SELL,MQG,200.0,42508.5,40368.4,2140.1,0.0,2140.1,2,Long-term Sell – Macquarie Group Limited | 200.0 units @ $212.800 | CGT disposal (held >12 months)
+403,2024-11-20,2025,investor,TRADE_SELL,CBA,75.0,11393.95,10575.03,818.92,0.0,818.92,2,Day Trade Sell – Commonwealth Bank of Australia | 75.0 units @ $152.212
+413,2024-11-25,2025,investor,TRADE_SELL,BHP,75.0,3358.93,3213.48,145.45,0.0,145.45,2,Day Trade Sell – BHP Group Limited | 75.0 units @ $45.005
+418,2024-11-26,2025,investor,TRADE_SELL,NAB,100.0,3880.55,3713.78,166.77,0.0,166.77,1,Day Trade Sell – National Australia Bank Limited | 100.0 units @ $38.970
+422,2024-11-27,2025,investor,TRADE_SELL,NAB,20.0,766.14,742.76,23.38,0.0,23.38,1,Day Trade Sell – National Australia Bank Limited | 20.0 units @ $38.857
+423,2024-11-27,2025,investor,CGT_SELL,WBC,150.0,4251.55,4914.92,-663.37,0.0,-663.37,4,Long-term Sell – Westpac Banking Corporation | 150.0 units @ $28.490 | CGT disposal (held >12 months)
+424,2024-11-28,2025,investor,CGT_SELL,BHP,500.0,20405.28,21986.11,-1580.83,0.0,-1580.83,8,Long-term Sell – BHP Group Limited | 500.0 units @ $40.860 | CGT disposal (held >12 months)
+425,2024-11-28,2025,investor,TRADE_SELL,WDS,30.0,740.32,924.53,-184.21,0.0,-184.21,1,Day Trade Sell – Woodside Energy Group Limited | 30.0 units @ $25.044
+430,2024-11-29,2025,investor,TRADE_SELL,NAB,75.0,2895.05,2976.56,-81.51,0.0,-81.51,4,Day Trade Sell – National Australia Bank Limited | 75.0 units @ $38.820
+434,2024-12-02,2025,investor,TRADE_SELL,WDS,30.0,735.97,924.53,-188.56,0.0,-188.56,1,Day Trade Sell – Woodside Energy Group Limited | 30.0 units @ $24.899
+437,2024-12-03,2025,investor,TRADE_SELL,XRO,75.0,10928.57,6237.46,4691.11,2345.55,2345.55,1,Day Trade Sell – Xero Limited | 75.0 units @ $146.007
+439,2024-12-04,2025,investor,TRADE_SELL,WBC,50.0,1620.35,1462.99,157.36,0.0,157.36,1,Day Trade Sell – Westpac Banking Corporation | 50.0 units @ $32.736
+442,2024-12-05,2025,investor,CGT_SELL,WES,250.0,19406.49,18903.53,502.96,0.0,502.96,3,Long-term Sell – Wesfarmers Limited | 250.0 units @ $77.720 | CGT disposal (held >12 months)
+449,2024-12-06,2025,investor,TRADE_SELL,CBA,50.0,7550.15,7191.19,358.96,0.0,358.96,1,Day Trade Sell – Commonwealth Bank of Australia | 50.0 units @ $151.332
+450,2024-12-07,2025,investor,CGT_SELL,CBA,200.0,32073.15,28970.0,3103.15,0.0,3103.15,3,Long-term Sell – Commonwealth Bank of Australia | 200.0 units @ $160.560 | CGT disposal (held >12 months)
+455,2024-12-09,2025,investor,TRADE_SELL,NAB,30.0,1149.98,1194.7,-44.72,0.0,-44.72,2,Day Trade Sell – National Australia Bank Limited | 30.0 units @ $38.881
+457,2024-12-10,2025,investor,TRADE_SELL,TLS,30.0,106.21,120.12,-13.91,0.0,-13.91,1,Day Trade Sell – Telstra Group Limited | 30.0 units @ $3.907
+458,2024-12-10,2025,investor,TRADE_SELL,CBA,75.0,11339.12,10970.48,368.65,0.0,368.65,2,Day Trade Sell – Commonwealth Bank of Australia | 75.0 units @ $151.481
+462,2024-12-12,2025,investor,TRADE_SELL,FMG,75.0,1220.07,1243.66,-23.59,0.0,-23.59,3,Day Trade Sell – Fortescue Ltd | 75.0 units @ $16.487
+463,2024-12-12,2025,investor,TRADE_SELL,BHP,75.0,3347.98,3335.21,12.77,0.0,12.77,2,Day Trade Sell – BHP Group Limited | 75.0 units @ $44.859
+465,2024-12-13,2025,investor,CGT_SELL,NAB,50.0,1969.05,1985.33,-16.28,0.0,-16.28,1,Long-term Sell – National Australia Bank Limited | 50.0 units @ $39.820 | CGT disposal (held >12 months)
+467,2024-12-13,2025,investor,TRADE_SELL,WBC,75.0,2437.85,2194.48,243.37,0.0,243.37,1,Day Trade Sell – Westpac Banking Corporation | 75.0 units @ $32.724
+471,2024-12-15,2025,investor,CGT_SELL,WBC,200.0,5850.05,5967.7,-117.65,0.0,-117.65,4,Long-term Sell – Westpac Banking Corporation | 200.0 units @ $29.360 | CGT disposal (held >12 months)
+472,2024-12-16,2025,investor,TRADE_SELL,ALL,50.0,3030.4,3032.19,-1.79,0.0,-1.79,3,Day Trade Sell – Aristocrat Leisure Limited | 50.0 units @ $60.937
+476,2024-12-17,2025,investor,TRADE_SELL,WES,30.0,2231.54,2323.98,-92.44,0.0,-92.44,2,Day Trade Sell – Wesfarmers Limited | 30.0 units @ $74.933
+479,2024-12-17,2025,investor,CGT_SELL,ANZ,200.0,5993.15,5940.06,53.09,0.0,53.09,2,Long-term Sell – ANZ Banking Group Limited | 200.0 units @ $30.048 | CGT disposal (held >12 months)
+482,2024-12-19,2025,investor,TRADE_SELL,NAB,20.0,772.54,794.13,-21.59,0.0,-21.59,1,Day Trade Sell – National Australia Bank Limited | 20.0 units @ $39.177
+484,2024-12-20,2025,investor,CGT_SELL,MQG,150.0,32257.42,35472.43,-3215.01,0.0,-3215.01,4,Long-term Sell – Macquarie Group Limited | 150.0 units @ $215.310 | CGT disposal (held >12 months)
+489,2024-12-23,2025,investor,TRADE_SELL,ANZ,50.0,1469.4,1480.89,-11.49,0.0,-11.49,1,Day Trade Sell – ANZ Banking Group Limited | 50.0 units @ $29.717
+492,2024-12-24,2025,investor,CGT_SELL,TLS,500.0,1913.05,2049.87,-136.82,0.0,-136.82,9,Long-term Sell – Telstra Group Limited | 500.0 units @ $3.870 | CGT disposal (held >12 months)
+494,2024-12-24,2025,investor,TRADE_SELL,ALL,30.0,1804.82,1812.4,-7.58,0.0,-7.58,1,Day Trade Sell – Aristocrat Leisure Limited | 30.0 units @ $60.709
+495,2024-12-26,2025,investor,CGT_SELL,WBC,150.0,4391.05,4329.73,61.32,0.0,61.32,1,Long-term Sell – Westpac Banking Corporation | 150.0 units @ $29.420 | CGT disposal (held >12 months)
+499,2024-12-28,2025,investor,CGT_SELL,ANZ,150.0,4626.55,4610.6,15.95,0.0,15.95,4,Long-term Sell – ANZ Banking Group Limited | 150.0 units @ $30.990 | CGT disposal (held >12 months)
+503,2024-12-30,2025,investor,TRADE_SELL,FMG,50.0,811.9,824.57,-12.67,0.0,-12.67,2,Day Trade Sell – Fortescue Ltd | 50.0 units @ $16.458
+512,2025-01-02,2025,investor,CGT_SELL,MQG,200.0,44546.03,45878.76,-1332.73,0.0,-1332.73,3,Long-term Sell – Macquarie Group Limited | 200.0 units @ $223.000 | CGT disposal (held >12 months)
+518,2025-01-03,2025,investor,TRADE_SELL,TCL,100.0,1291.95,1345.75,-53.8,0.0,-53.8,3,Day Trade Sell – Transurban Group | 100.0 units @ $13.084
+519,2025-01-05,2025,investor,CGT_SELL,NAB,250.0,9903.05,9670.41,232.64,0.0,232.64,5,Long-term Sell – National Australia Bank Limited | 250.0 units @ $39.700 | CGT disposal (held >12 months)
+520,2025-01-06,2025,investor,TRADE_SELL,XRO,100.0,14536.75,13153.48,1383.27,777.52,605.75,3,Day Trade Sell – Xero Limited | 100.0 units @ $145.587
+539,2025-01-13,2025,investor,TRADE_SELL,WES,100.0,7462.25,7794.43,-332.18,0.0,-332.18,1,Day Trade Sell – Wesfarmers Limited | 100.0 units @ $74.787
+541,2025-01-14,2025,investor,TRADE_SELL,RIO,30.0,3229.76,3258.3,-28.54,0.0,-28.54,2,Day Trade Sell – Rio Tinto Limited | 30.0 units @ $108.207
+545,2025-01-15,2025,investor,TRADE_SELL,MQG,30.0,7206.68,6134.32,1072.36,0.0,1072.36,1,Day Trade Sell – Macquarie Group Limited | 30.0 units @ $240.771
+549,2025-01-16,2025,investor,TRADE_SELL,WBC,30.0,980.5,865.95,114.55,0.0,114.55,1,Day Trade Sell – Westpac Banking Corporation | 30.0 units @ $33.050
+551,2025-01-17,2025,investor,TRADE_SELL,ANZ,30.0,869.11,918.19,-49.08,0.0,-49.08,1,Day Trade Sell – ANZ Banking Group Limited | 30.0 units @ $29.337
+575,2025-01-29,2025,investor,CGT_SELL,WBC,200.0,5938.05,5772.98,165.07,0.0,165.07,1,Long-term Sell – Westpac Banking Corporation | 200.0 units @ $29.800 | CGT disposal (held >12 months)
+580,2025-01-31,2025,investor,CGT_SELL,MQG,500.0,111040.48,107933.18,3107.3,0.0,3107.3,5,Long-term Sell – Macquarie Group Limited | 500.0 units @ $222.350 | CGT disposal (held >12 months)
+582,2025-01-31,2025,investor,TRADE_SELL,CBA,20.0,3004.37,2999.89,4.48,0.0,4.48,2,Day Trade Sell – Commonwealth Bank of Australia | 20.0 units @ $151.041
+586,2025-02-03,2025,investor,CGT_SELL,CSL,100.0,26477.92,28891.27,-2413.35,0.0,-2413.35,3,Long-term Sell – CSL Limited | 100.0 units @ $265.100 | CGT disposal (held >12 months)
+589,2025-02-04,2025,investor,TRADE_SELL,TCL,75.0,974.58,1009.64,-35.06,0.0,-35.06,3,Day Trade Sell – Transurban Group | 75.0 units @ $13.141
+597,2025-02-06,2025,investor,TRADE_SELL,RIO,100.0,10810.15,10782.35,27.8,0.0,27.8,3,Day Trade Sell – Rio Tinto Limited | 100.0 units @ $108.321
+598,2025-02-07,2025,investor,TRADE_SELL,NAB,20.0,765.44,747.76,17.68,0.0,17.68,1,Day Trade Sell – National Australia Bank Limited | 20.0 units @ $38.822
+599,2025-02-07,2025,investor,TRADE_SELL,CSL,100.0,29359.95,29082.88,277.07,0.0,277.07,3,Day Trade Sell – CSL Limited | 100.0 units @ $293.819
+601,2025-02-08,2025,investor,CGT_SELL,WES,250.0,19386.51,19287.98,98.53,0.0,98.53,4,Long-term Sell – Wesfarmers Limited | 250.0 units @ $77.640 | CGT disposal (held >12 months)
+603,2025-02-09,2025,investor,CGT_SELL,WDS,200.0,5300.05,5846.8,-546.75,0.0,-546.75,2,Long-term Sell – Woodside Energy Group Limited | 200.0 units @ $26.610 | CGT disposal (held >12 months)
+604,2025-02-10,2025,investor,CGT_SELL,TLS,200.0,772.6,790.8,-18.2,0.0,-18.2,1,Long-term Sell – Telstra Group Limited | 200.0 units @ $3.918 | CGT disposal (held >12 months)
+608,2025-02-11,2025,investor,TRADE_SELL,TCL,100.0,1294.15,1336.24,-42.09,0.0,-42.09,2,Day Trade Sell – Transurban Group | 100.0 units @ $13.106
+609,2025-02-11,2025,investor,TRADE_SELL,RIO,30.0,3242.63,3239.14,3.49,0.0,3.49,1,Day Trade Sell – Rio Tinto Limited | 30.0 units @ $108.636
+610,2025-02-11,2025,investor,TRADE_SELL,CBA,75.0,11362.0,11498.36,-136.36,0.0,-136.36,1,Day Trade Sell – Commonwealth Bank of Australia | 75.0 units @ $151.786
+613,2025-02-12,2025,investor,TRADE_SELL,ANZ,30.0,866.29,918.2,-51.91,0.0,-51.91,1,Day Trade Sell – ANZ Banking Group Limited | 30.0 units @ $29.243
+614,2025-02-12,2025,investor,TRADE_SELL,WES,100.0,7488.65,7539.35,-50.7,0.0,-50.7,2,Day Trade Sell – Wesfarmers Limited | 100.0 units @ $75.051
+615,2025-02-12,2025,investor,CGT_SELL,WBC,250.0,7208.05,7772.46,-564.41,0.0,-564.41,4,Long-term Sell – Westpac Banking Corporation | 250.0 units @ $28.920 | CGT disposal (held >12 months)
+616,2025-02-13,2025,investor,TRADE_SELL,MQG,100.0,24399.95,20384.64,4015.31,0.0,4015.31,1,Day Trade Sell – Macquarie Group Limited | 100.0 units @ $244.219
+621,2025-02-14,2025,investor,TRADE_SELL,ALL,30.0,1814.21,1815.08,-0.87,0.0,-0.87,2,Day Trade Sell – Aristocrat Leisure Limited | 30.0 units @ $61.022
+625,2025-02-17,2025,investor,TRADE_SELL,BHP,75.0,3402.43,3335.66,66.77,0.0,66.77,1,Day Trade Sell – BHP Group Limited | 75.0 units @ $45.585
+630,2025-02-18,2025,investor,TRADE_SELL,XRO,30.0,4370.06,4406.21,-36.15,0.0,-36.15,2,Day Trade Sell – Xero Limited | 30.0 units @ $146.217
+640,2025-02-22,2025,investor,CGT_SELL,TLS,100.0,367.0,402.46,-35.46,0.0,-35.46,2,Long-term Sell – Telstra Group Limited | 100.0 units @ $3.780 | CGT disposal (held >12 months)
+642,2025-02-24,2025,investor,CGT_SELL,WBC,500.0,14502.43,12013.17,2489.26,0.0,2489.26,5,Long-term Sell – Westpac Banking Corporation | 500.0 units @ $29.040 | CGT disposal (held >12 months)
+649,2025-02-25,2025,investor,TRADE_SELL,TCL,20.0,251.14,268.92,-17.78,0.0,-17.78,1,Day Trade Sell – Transurban Group | 20.0 units @ $13.107
+652,2025-02-26,2025,investor,TRADE_SELL,TLS,75.0,287.57,308.88,-21.31,0.0,-21.31,3,Day Trade Sell – Telstra Group Limited | 75.0 units @ $3.981
+658,2025-02-28,2025,investor,TRADE_SELL,ALL,75.0,4575.35,4555.4,19.95,0.0,19.95,3,Day Trade Sell – Aristocrat Leisure Limited | 75.0 units @ $61.224
+659,2025-02-28,2025,investor,TRADE_SELL,WDS,100.0,2467.75,2522.95,-55.2,0.0,-55.2,2,Day Trade Sell – Woodside Energy Group Limited | 100.0 units @ $24.842
+660,2025-03-02,2025,investor,CGT_SELL,NAB,50.0,1915.55,1869.39,46.16,0.0,46.16,1,Long-term Sell – National Australia Bank Limited | 50.0 units @ $38.750 | CGT disposal (held >12 months)
+662,2025-03-03,2025,investor,CGT_SELL,WBC,100.0,3013.05,0.0,3013.05,0.0,3013.05,0,Long-term Sell – Westpac Banking Corporation | 100.0 units @ $30.350 | CGT disposal (held >12 months)
+663,2025-03-03,2025,investor,TRADE_SELL,WBC,100.0,3298.45,0.0,3298.45,0.0,3298.45,0,Day Trade Sell – Westpac Banking Corporation | 100.0 units @ $33.149
+665,2025-03-04,2025,investor,TRADE_SELL,CSL,20.0,5869.33,5848.67,20.66,0.0,20.66,1,Day Trade Sell – CSL Limited | 20.0 units @ $294.289
+672,2025-03-05,2025,investor,TRADE_SELL,WES,20.0,1459.11,1506.29,-47.18,0.0,-47.18,1,Day Trade Sell – Wesfarmers Limited | 20.0 units @ $73.778
+680,2025-03-08,2025,investor,CGT_SELL,MQG,100.0,21489.96,20384.64,1105.32,0.0,1105.32,1,Long-term Sell – Macquarie Group Limited | 100.0 units @ $215.160 | CGT disposal (held >12 months)
+682,2025-03-10,2025,investor,TRADE_SELL,RIO,50.0,5462.85,5398.57,64.28,0.0,64.28,1,Day Trade Sell – Rio Tinto Limited | 50.0 units @ $109.586
+685,2025-03-11,2025,investor,TRADE_SELL,TCL,50.0,641.95,670.28,-28.33,0.0,-28.33,2,Day Trade Sell – Transurban Group | 50.0 units @ $13.059
+686,2025-03-11,2025,investor,TRADE_SELL,MQG,100.0,24350.05,23696.92,653.13,0.0,653.13,2,Day Trade Sell – Macquarie Group Limited | 100.0 units @ $243.720
+708,2025-03-19,2025,investor,TRADE_SELL,CBA,30.0,4554.32,4649.74,-95.42,0.0,-95.42,2,Day Trade Sell – Commonwealth Bank of Australia | 30.0 units @ $152.359
+711,2025-03-20,2025,investor,TRADE_SELL,WES,50.0,3667.1,3765.71,-98.61,0.0,-98.61,1,Day Trade Sell – Wesfarmers Limited | 50.0 units @ $73.671
+716,2025-03-21,2025,investor,CGT_SELL,MQG,50.0,10831.38,10650.04,181.34,0.0,181.34,2,Long-term Sell – Macquarie Group Limited | 50.0 units @ $216.890 | CGT disposal (held >12 months)
+719,2025-03-21,2025,investor,TRADE_SELL,RIO,20.0,2163.13,2165.28,-2.15,0.0,-2.15,2,Day Trade Sell – Rio Tinto Limited | 20.0 units @ $108.979
+721,2025-03-22,2025,investor,CGT_SELL,CBA,50.0,8212.05,7917.57,294.48,0.0,294.48,1,Long-term Sell – Commonwealth Bank of Australia | 50.0 units @ $164.680 | CGT disposal (held >12 months)
+726,2025-03-24,2025,investor,TRADE_SELL,WES,30.0,2198.03,2261.8,-63.77,0.0,-63.77,2,Day Trade Sell – Wesfarmers Limited | 30.0 units @ $73.816
+727,2025-03-25,2025,investor,TRADE_SELL,CSL,20.0,5930.47,5848.67,81.8,0.0,81.8,1,Day Trade Sell – CSL Limited | 20.0 units @ $297.346
+728,2025-03-25,2025,investor,TRADE_SELL,TCL,30.0,380.2,401.86,-21.66,0.0,-21.66,1,Day Trade Sell – Transurban Group | 30.0 units @ $13.040
+730,2025-03-26,2025,investor,CGT_SELL,WDS,50.0,1337.05,1268.59,68.46,0.0,68.46,2,Long-term Sell – Woodside Energy Group Limited | 50.0 units @ $27.180 | CGT disposal (held >12 months)
+739,2025-03-28,2025,investor,TRADE_SELL,FMG,50.0,809.1,821.67,-12.57,0.0,-12.57,1,Day Trade Sell – Fortescue Ltd | 50.0 units @ $16.402
+745,2025-03-31,2025,investor,TRADE_SELL,TLS,50.0,187.35,198.0,-10.65,0.0,-10.65,1,Day Trade Sell – Telstra Group Limited | 50.0 units @ $3.967
+750,2025-04-01,2025,investor,CGT_SELL,BHP,500.0,20145.59,21198.47,-1052.88,0.0,-1052.88,5,Long-term Sell – BHP Group Limited | 500.0 units @ $40.340 | CGT disposal (held >12 months)
+757,2025-04-03,2025,investor,TRADE_SELL,NAB,20.0,763.12,747.76,15.36,0.0,15.36,1,Day Trade Sell – National Australia Bank Limited | 20.0 units @ $38.706
+758,2025-04-03,2025,investor,TRADE_SELL,WDS,30.0,737.08,761.77,-24.69,0.0,-24.69,1,Day Trade Sell – Woodside Energy Group Limited | 30.0 units @ $24.936
+763,2025-04-07,2025,investor,TRADE_SELL,RIO,20.0,2172.13,2167.2,4.93,0.0,4.93,2,Day Trade Sell – Rio Tinto Limited | 20.0 units @ $109.429
+767,2025-04-08,2025,investor,CGT_SELL,XRO,300.0,44861.05,43935.43,925.62,0.0,925.62,7,Long-term Sell – Xero Limited | 300.0 units @ $149.610 | CGT disposal (held >12 months)
+789,2025-04-15,2025,investor,TRADE_SELL,ANZ,75.0,2198.98,2229.48,-30.5,0.0,-30.5,2,Day Trade Sell – ANZ Banking Group Limited | 75.0 units @ $29.539
+793,2025-04-16,2025,investor,CGT_SELL,BHP,150.0,5999.05,6453.88,-454.83,0.0,-454.83,5,Long-term Sell – BHP Group Limited | 150.0 units @ $40.140 | CGT disposal (held >12 months)
+795,2025-04-17,2025,investor,TRADE_SELL,NAB,20.0,766.58,747.76,18.82,0.0,18.82,1,Day Trade Sell – National Australia Bank Limited | 20.0 units @ $38.879
+797,2025-04-18,2025,investor,CGT_SELL,NAB,250.0,10125.24,9613.7,511.54,0.0,511.54,4,Long-term Sell – National Australia Bank Limited | 250.0 units @ $40.550 | CGT disposal (held >12 months)
+811,2025-04-27,2025,investor,CGT_SELL,WDS,500.0,14272.71,14367.22,-94.51,0.0,-94.51,2,Long-term Sell – Woodside Energy Group Limited | 500.0 units @ $28.580 | CGT disposal (held >12 months)
+814,2025-04-28,2025,investor,TRADE_SELL,MQG,30.0,7324.43,6304.32,1020.11,0.0,1020.11,1,Day Trade Sell – Macquarie Group Limited | 30.0 units @ $244.696
+819,2025-04-30,2025,investor,TRADE_SELL,WBC,100.0,3336.65,3330.9,5.75,0.0,5.75,2,Day Trade Sell – Westpac Banking Corporation | 100.0 units @ $33.531
+826,2025-05-02,2025,investor,CGT_SELL,NAB,150.0,5832.55,5889.84,-57.29,0.0,-57.29,3,Long-term Sell – National Australia Bank Limited | 150.0 units @ $39.030 | CGT disposal (held >12 months)
+828,2025-05-02,2025,investor,TRADE_SELL,WDS,75.0,1848.05,2043.12,-195.07,0.0,-195.07,2,Day Trade Sell – Woodside Energy Group Limited | 75.0 units @ $24.860
+829,2025-05-02,2025,investor,TRADE_SELL,FMG,50.0,810.75,822.21,-11.46,0.0,-11.46,2,Day Trade Sell – Fortescue Ltd | 50.0 units @ $16.435
+830,2025-05-03,2025,investor,CGT_SELL,BHP,200.0,7512.05,8253.98,-741.93,0.0,-741.93,1,Long-term Sell – BHP Group Limited | 200.0 units @ $37.670 | CGT disposal (held >12 months)
+832,2025-05-05,2025,investor,TRADE_SELL,RIO,30.0,3233.66,3253.34,-19.68,0.0,-19.68,2,Day Trade Sell – Rio Tinto Limited | 30.0 units @ $108.337
+835,2025-05-06,2025,investor,TRADE_SELL,TCL,100.0,1297.05,1354.88,-57.84,0.0,-57.84,4,Day Trade Sell – Transurban Group | 100.0 units @ $13.135
+836,2025-05-06,2025,investor,CGT_SELL,ANZ,50.0,1516.55,1470.32,46.23,0.0,46.23,1,Long-term Sell – ANZ Banking Group Limited | 50.0 units @ $30.770 | CGT disposal (held >12 months)
+837,2025-05-07,2025,investor,TRADE_SELL,BHP,30.0,1347.53,1238.1,109.43,0.0,109.43,1,Day Trade Sell – BHP Group Limited | 30.0 units @ $45.466
+842,2025-05-08,2025,investor,CGT_SELL,ALL,100.0,5882.25,6035.11,-152.86,0.0,-152.86,2,Long-term Sell – Aristocrat Leisure Limited | 100.0 units @ $58.987 | CGT disposal (held >12 months)
+845,2025-05-09,2025,investor,TRADE_SELL,WBC,100.0,3337.65,3327.08,10.57,0.0,10.57,2,Day Trade Sell – Westpac Banking Corporation | 100.0 units @ $33.541
+849,2025-05-12,2025,investor,CGT_SELL,NAB,250.0,9768.05,9791.57,-23.52,0.0,-23.52,9,Long-term Sell – National Australia Bank Limited | 250.0 units @ $39.160 | CGT disposal (held >12 months)
+851,2025-05-12,2025,investor,TRADE_SELL,WES,20.0,1464.27,1508.19,-43.92,0.0,-43.92,1,Day Trade Sell – Wesfarmers Limited | 20.0 units @ $74.036
+855,2025-05-13,2025,investor,CGT_SELL,WDS,250.0,6820.55,6398.43,422.12,0.0,422.12,2,Long-term Sell – Woodside Energy Group Limited | 250.0 units @ $27.370 | CGT disposal (held >12 months)
+867,2025-05-16,2025,investor,TRADE_SELL,WBC,100.0,3345.45,3309.02,36.43,0.0,36.43,3,Day Trade Sell – Westpac Banking Corporation | 100.0 units @ $33.619
+868,2025-05-16,2025,investor,TRADE_SELL,RIO,20.0,2133.61,2177.81,-44.2,0.0,-44.2,1,Day Trade Sell – Rio Tinto Limited | 20.0 units @ $107.503
+882,2025-05-23,2025,investor,TRADE_SELL,ALL,50.0,3113.7,3024.16,89.54,0.0,89.54,2,Day Trade Sell – Aristocrat Leisure Limited | 50.0 units @ $62.603
+889,2025-05-27,2025,investor,CGT_SELL,WBC,200.0,6318.05,6349.67,-31.62,0.0,-31.62,1,Long-term Sell – Westpac Banking Corporation | 200.0 units @ $31.700 | CGT disposal (held >12 months)
+892,2025-05-28,2025,investor,TRADE_SELL,RIO,50.0,5396.5,5444.52,-48.02,0.0,-48.02,1,Day Trade Sell – Rio Tinto Limited | 50.0 units @ $108.259
+899,2025-05-30,2025,investor,CGT_SELL,TLS,150.0,557.5,614.05,-56.55,0.0,-56.55,4,Long-term Sell – Telstra Group Limited | 150.0 units @ $3.790 | CGT disposal (held >12 months)
+900,2025-05-30,2025,investor,CGT_SELL,BHP,50.0,1861.55,2063.49,-201.94,0.0,-201.94,1,Long-term Sell – BHP Group Limited | 50.0 units @ $37.670 | CGT disposal (held >12 months)
+910,2025-06-03,2025,investor,TRADE_SELL,BHP,30.0,1336.97,1238.1,98.87,0.0,98.87,1,Day Trade Sell – BHP Group Limited | 30.0 units @ $45.114
+911,2025-06-04,2025,investor,CGT_SELL,MQG,250.0,54396.6,53683.27,713.33,0.0,713.33,3,Long-term Sell – Macquarie Group Limited | 250.0 units @ $217.850 | CGT disposal (held >12 months)
+912,2025-06-04,2025,investor,TRADE_SELL,XRO,50.0,7181.45,7313.48,-132.03,0.0,-132.03,2,Day Trade Sell – Xero Limited | 50.0 units @ $143.958
+915,2025-06-05,2025,investor,CGT_SELL,NAB,200.0,7556.05,7862.92,-306.87,0.0,-306.87,2,Long-term Sell – National Australia Bank Limited | 200.0 units @ $37.890 | CGT disposal (held >12 months)
+916,2025-06-05,2025,investor,CGT_SELL,NAB,250.0,9553.05,9843.56,-290.51,0.0,-290.51,2,Long-term Sell – National Australia Bank Limited | 250.0 units @ $38.300 | CGT disposal (held >12 months)
+919,2025-06-05,2025,investor,TRADE_SELL,ANZ,30.0,874.6,882.19,-7.59,0.0,-7.59,1,Day Trade Sell – ANZ Banking Group Limited | 30.0 units @ $29.520
+921,2025-06-06,2025,investor,TRADE_SELL,TCL,30.0,386.08,405.79,-19.71,0.0,-19.71,2,Day Trade Sell – Transurban Group | 30.0 units @ $13.236
+922,2025-06-06,2025,investor,TRADE_SELL,NAB,75.0,2867.53,2931.73,-64.2,0.0,-64.2,1,Day Trade Sell – National Australia Bank Limited | 75.0 units @ $38.453
+926,2025-06-08,2025,investor,CGT_SELL,WBC,100.0,3181.05,3174.84,6.21,0.0,6.21,1,Long-term Sell – Westpac Banking Corporation | 100.0 units @ $32.030 | CGT disposal (held >12 months)
+927,2025-06-10,2025,investor,CGT_SELL,NAB,300.0,11845.45,11788.07,57.38,0.0,57.38,4,Long-term Sell – National Australia Bank Limited | 300.0 units @ $39.558 | CGT disposal (held >12 months)
+928,2025-06-10,2025,investor,TRADE_SELL,WES,100.0,7378.35,7791.96,-413.61,0.0,-413.61,2,Day Trade Sell – Wesfarmers Limited | 100.0 units @ $73.948
+931,2025-06-11,2025,investor,TRADE_SELL,NAB,100.0,3819.25,3974.98,-155.73,0.0,-155.73,1,Day Trade Sell – National Australia Bank Limited | 100.0 units @ $38.357
+941,2025-06-13,2025,investor,TRADE_SELL,ANZ,75.0,2188.77,2266.74,-77.97,0.0,-77.97,3,Day Trade Sell – ANZ Banking Group Limited | 75.0 units @ $29.403
+959,2025-06-20,2025,investor,TRADE_SELL,CBA,50.0,7384.95,7917.57,-532.62,0.0,-532.62,1,Day Trade Sell – Commonwealth Bank of Australia | 50.0 units @ $148.028
+964,2025-06-22,2025,investor,CGT_SELL,BHP,500.0,19031.94,20989.0,-1957.06,0.0,-1957.06,5,Long-term Sell – BHP Group Limited | 500.0 units @ $38.110 | CGT disposal (held >12 months)
+965,2025-06-22,2025,investor,CGT_SELL,WDS,250.0,6483.05,6659.99,-176.94,0.0,-176.94,4,Long-term Sell – Woodside Energy Group Limited | 250.0 units @ $26.020 | CGT disposal (held >12 months)
+969,2025-06-23,2025,investor,CGT_SELL,NAB,500.0,19126.82,19475.3,-348.48,0.0,-348.48,8,Long-term Sell – National Australia Bank Limited | 500.0 units @ $38.300 | CGT disposal (held >12 months)
+971,2025-06-24,2025,investor,TRADE_SELL,WBC,50.0,1653.55,1587.42,66.13,0.0,66.13,1,Day Trade Sell – Westpac Banking Corporation | 50.0 units @ $33.400
+972,2025-06-24,2025,investor,TRADE_SELL,RIO,100.0,10802.65,10820.85,-18.2,0.0,-18.2,3,Day Trade Sell – Rio Tinto Limited | 100.0 units @ $108.246
+975,2025-06-25,2025,investor,CGT_SELL,NAB,50.0,1888.55,1951.48,-62.93,0.0,-62.93,1,Long-term Sell – National Australia Bank Limited | 50.0 units @ $38.210 | CGT disposal (held >12 months)
+977,2025-06-26,2025,investor,TRADE_SELL,WBC,100.0,3316.75,3174.84,141.91,0.0,141.91,1,Day Trade Sell – Westpac Banking Corporation | 100.0 units @ $33.332
+980,2025-06-27,2025,investor,TRADE_SELL,CBA,75.0,11160.4,11876.35,-715.95,0.0,-715.95,1,Day Trade Sell – Commonwealth Bank of Australia | 75.0 units @ $149.098
+986,2025-06-30,2025,investor,TRADE_SELL,WES,20.0,1468.27,1579.91,-111.64,0.0,-111.64,1,Day Trade Sell – Wesfarmers Limited | 20.0 units @ $74.236

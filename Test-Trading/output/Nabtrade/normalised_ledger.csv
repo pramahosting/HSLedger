@@ -1,0 +1,652 @@
+trade_date,settlement_date,contract_note,symbol,Description,transaction,quantity,price,contract_value,brokerage,gst,net_proceeds,description,event_type,_rule_applied
+2024-07-01,2024-07-03,NT2719583,BHP,BHP Group Limited,TXN,-100.0,43.383,4338.3,16.45,1.5,4321.85,Day Trade Sell – BHP Group Limited | 100 units @ $43.383,TRADE_SELL,r004
+2024-07-01,2024-07-03,NT1533224,ALL,Aristocrat Leisure Limited,TXN,50.0,60.383,3019.15,16.45,1.5,-3035.6,Day Trade Buy – Aristocrat Leisure Limited | 50 units @ $60.383,TRADE_BUY,r003
+2024-07-02,2024-07-04,NT8038374,ANZ,ANZ Banking Group Limited,TXN,100.0,30.537,3053.7,16.45,1.5,-3070.15,Day Trade Buy – ANZ Banking Group Limited | 100 units @ $30.537,TRADE_BUY,r003
+2024-07-02,2024-07-04,NT3678638,MQG,Macquarie Group Limited,TXN,50.0,234.251,11712.55,21.95,2.0,-11734.5,Day Trade Buy – Macquarie Group Limited | 50 units @ $234.251,TRADE_BUY,r003
+2024-07-03,2024-07-05,NT7374122,NAB,National Australia Bank Limited,TXN,-150.0,39.817,5972.55,21.95,2.0,5950.6,Day Trade Sell – National Australia Bank Limited | 150 units @ $39.817,TRADE_SELL,r004
+2024-07-03,2024-07-05,NT8707870,WBC,Westpac Banking Corporation,TXN,150.0,32.937,4940.55,16.45,1.5,-4957.0,Day Trade Buy – Westpac Banking Corporation | 150 units @ $32.937,TRADE_BUY,r003
+2024-07-03,2024-07-05,NT5918715,ANZ,ANZ Banking Group Limited,TXN,-200.0,30.676,6135.2,21.95,2.0,6113.25,Day Trade Sell – ANZ Banking Group Limited | 200 units @ $30.676,TRADE_SELL,r004
+2024-07-04,2024-07-08,NT2338687,CSL,CSL Limited,TXN,100.0,293.476,29347.6,32.95,3.0,-29380.55,Day Trade Buy – CSL Limited | 100 units @ $293.476,TRADE_BUY,r003
+2024-07-04,2024-07-08,NT7120868,ANZ,ANZ Banking Group Limited,TXN,200.0,30.851,6170.2,21.95,2.0,-6192.15,Day Trade Buy – ANZ Banking Group Limited | 200 units @ $30.851,TRADE_BUY,r003
+2024-07-04,2024-07-08,NT2197935,ALL,Aristocrat Leisure Limited,TXN,150.0,60.164,9024.6,21.95,2.0,-9046.55,Day Trade Buy – Aristocrat Leisure Limited | 150 units @ $60.164,TRADE_BUY,r003
+2024-07-05,2024-07-09,NT4684531,MQG,Macquarie Group Limited,TXN,200.0,233.719,46743.8,32.95,3.0,-46776.75,Day Trade Buy – Macquarie Group Limited | 200 units @ $233.719,TRADE_BUY,r003
+2024-07-05,2024-07-09,NT1538552,ALL,Aristocrat Leisure Limited,TXN,-50.0,60.438,3021.9,16.45,1.5,3005.45,Day Trade Sell – Aristocrat Leisure Limited | 50 units @ $60.438,TRADE_SELL,r004
+2024-07-08,2024-07-10,NT9375710,NAB,National Australia Bank Limited,TXN,-150.0,39.95,5992.5,21.95,2.0,5970.55,Day Trade Sell – National Australia Bank Limited | 150 units @ $39.950,TRADE_SELL,r004
+2024-07-08,2024-07-10,NT3342608,CBA,Commonwealth Bank of Australia,TXN,-200.0,157.982,31596.4,32.95,3.0,31563.45,Day Trade Sell – Commonwealth Bank of Australia | 200 units @ $157.982,TRADE_SELL,r004
+2024-07-08,2024-07-10,NT8187926,ANZ,ANZ Banking Group Limited,TXN,150.0,30.832,4624.8,16.45,1.5,-4641.25,Day Trade Buy – ANZ Banking Group Limited | 150 units @ $30.832,TRADE_BUY,r003
+2024-07-09,2024-07-11,NT2839607,TLS,Telstra Group Limited,TXN,50.0,3.88,194.0,16.45,1.5,-210.45,Day Trade Buy – Telstra Group Limited | 50 units @ $3.880,TRADE_BUY,r003
+2024-07-09,2024-07-11,NT7455324,ANZ,ANZ Banking Group Limited,TXN,200.0,30.755,6151.0,21.95,2.0,-6172.95,Day Trade Buy – ANZ Banking Group Limited | 200 units @ $30.755,TRADE_BUY,r003
+2024-07-09,2024-07-11,NT1192619,WBC,Westpac Banking Corporation,TXN,150.0,33.138,4970.7,16.45,1.5,-4987.15,Day Trade Buy – Westpac Banking Corporation | 150 units @ $33.138,TRADE_BUY,r003
+2024-07-10,2024-07-12,NT8294150,FMG,Fortescue Ltd,TXN,-150.0,16.449,2467.35,16.45,1.5,2450.9,Day Trade Sell – Fortescue Ltd | 150 units @ $16.449,TRADE_SELL,r004
+2024-07-10,2024-07-12,NT3997281,MQG,Macquarie Group Limited,TXN,150.0,232.498,34874.7,32.95,3.0,-34907.65,Day Trade Buy – Macquarie Group Limited | 150 units @ $232.498,TRADE_BUY,r003
+2024-07-11,2024-07-15,NT3710343,XRO,Xero Limited,TXN,-100.0,146.644,14664.4,21.95,2.0,14642.45,Day Trade Sell – Xero Limited | 100 units @ $146.644,TRADE_SELL,r004
+2024-07-11,2024-07-15,NT9197443,FMG,Fortescue Ltd,TXN,50.0,16.482,824.1,16.45,1.5,-840.55,Day Trade Buy – Fortescue Ltd | 50 units @ $16.482,TRADE_BUY,r003
+2024-07-12,2024-07-16,NT2321324,WDS,Woodside Energy Group Ltd,TXN,-50.0,24.743,1237.15,16.45,1.5,1220.7,Day Trade Sell – Woodside Energy Group Ltd | 50 units @ $24.743,TRADE_SELL,r004
+2024-07-12,2024-07-16,NT9937326,XRO,Xero Limited,TXN,50.0,146.642,7332.1,21.95,2.0,-7354.05,Day Trade Buy – Xero Limited | 50 units @ $146.642,TRADE_BUY,r003
+2024-07-12,2024-07-16,NT3770370,TCL,Transurban Group,TXN,200.0,13.141,2628.2,16.45,1.5,-2644.65,Day Trade Buy – Transurban Group | 200 units @ $13.141,TRADE_BUY,r003
+2024-07-15,2024-07-17,NT7693979,ANZ,ANZ Banking Group Limited,TXN,100.0,30.825,3082.5,16.45,1.5,-3098.95,Day Trade Buy – ANZ Banking Group Limited | 100 units @ $30.825,TRADE_BUY,r003
+2024-07-15,2024-07-17,NT8574680,MQG,Macquarie Group Limited,TXN,200.0,232.923,46584.6,32.95,3.0,-46617.55,Day Trade Buy – Macquarie Group Limited | 200 units @ $232.923,TRADE_BUY,r003
+2024-07-15,2024-07-17,NT4860684,TCL,Transurban Group,TXN,-150.0,13.086,1962.9,16.45,1.5,1946.45,Day Trade Sell – Transurban Group | 150 units @ $13.086,TRADE_SELL,r004
+2024-07-16,2024-07-18,NT1527021,CBA,Commonwealth Bank of Australia,TXN,-100.0,158.07,15807.0,21.95,2.0,15785.05,Day Trade Sell – Commonwealth Bank of Australia | 100 units @ $158.070,TRADE_SELL,r004
+2024-07-16,2024-07-18,NT9143903,ALL,Aristocrat Leisure Limited,TXN,100.0,60.2,6020.0,21.95,2.0,-6041.95,Day Trade Buy – Aristocrat Leisure Limited | 100 units @ $60.200,TRADE_BUY,r003
+2024-07-17,2024-07-19,NT7829332,ALL,Aristocrat Leisure Limited,TXN,100.0,60.186,6018.6,21.95,2.0,-6040.55,Day Trade Buy – Aristocrat Leisure Limited | 100 units @ $60.186,TRADE_BUY,r003
+2024-07-17,2024-07-19,NT7897151,CSL,CSL Limited,TXN,200.0,292.471,58494.2,32.95,3.0,-58527.15,Day Trade Buy – CSL Limited | 200 units @ $292.471,TRADE_BUY,r003
+2024-07-18,2024-07-22,NT6692553,FMG,Fortescue Ltd,TXN,-50.0,16.546,827.3,16.45,1.5,810.85,Day Trade Sell – Fortescue Ltd | 50 units @ $16.546,TRADE_SELL,r004
+2024-07-18,2024-07-22,NT8526486,WDS,Woodside Energy Group Ltd,TXN,-100.0,24.586,2458.6,16.45,1.5,2442.15,Day Trade Sell – Woodside Energy Group Ltd | 100 units @ $24.586,TRADE_SELL,r004
+2024-07-19,2024-07-23,NT2642635,NAB,National Australia Bank Limited,TXN,50.0,39.813,1990.65,16.45,1.5,-2007.1,Day Trade Buy – National Australia Bank Limited | 50 units @ $39.813,TRADE_BUY,r003
+2024-07-19,2024-07-23,NT4965789,RIO,Rio Tinto Limited,TXN,50.0,110.156,5507.8,21.95,2.0,-5529.75,Day Trade Buy – Rio Tinto Limited | 50 units @ $110.156,TRADE_BUY,r003
+2024-07-22,2024-07-24,NT7550190,RIO,Rio Tinto Limited,TXN,100.0,110.54,11054.0,21.95,2.0,-11075.95,Day Trade Buy – Rio Tinto Limited | 100 units @ $110.540,TRADE_BUY,r003
+2024-07-22,2024-07-24,NT9164991,ANZ,ANZ Banking Group Limited,TXN,200.0,30.991,6198.2,21.95,2.0,-6220.15,Day Trade Buy – ANZ Banking Group Limited | 200 units @ $30.991,TRADE_BUY,r003
+2024-07-22,2024-07-24,NT2022698,WES,Wesfarmers Limited,TXN,50.0,74.119,3705.95,16.45,1.5,-3722.4,Day Trade Buy – Wesfarmers Limited | 50 units @ $74.119,TRADE_BUY,r003
+2024-07-23,2024-07-25,NT9519948,BHP,BHP Group Limited,TXN,-100.0,43.402,4340.2,16.45,1.5,4323.75,Day Trade Sell – BHP Group Limited | 100 units @ $43.402,TRADE_SELL,r004
+2024-07-23,2024-07-25,NT4946066,CSL,CSL Limited,TXN,50.0,291.33,14566.5,21.95,2.0,-14588.45,Day Trade Buy – CSL Limited | 50 units @ $291.330,TRADE_BUY,r003
+2024-07-24,2024-07-26,NT9770838,CSL,CSL Limited,TXN,50.0,289.61,14480.5,21.95,2.0,-14502.45,Day Trade Buy – CSL Limited | 50 units @ $289.610,TRADE_BUY,r003
+2024-07-24,2024-07-26,NT7640184,WDS,Woodside Energy Group Ltd,TXN,-150.0,24.481,3672.15,16.45,1.5,3655.7,Day Trade Sell – Woodside Energy Group Ltd | 150 units @ $24.481,TRADE_SELL,r004
+2024-07-25,2024-07-29,NT2677407,RIO,Rio Tinto Limited,TXN,50.0,111.013,5550.65,21.95,2.0,-5572.6,Day Trade Buy – Rio Tinto Limited | 50 units @ $111.013,TRADE_BUY,r003
+2024-07-25,2024-07-29,NT6855396,TLS,Telstra Group Limited,TXN,-150.0,3.862,579.3,16.45,1.5,562.85,Day Trade Sell – Telstra Group Limited | 150 units @ $3.862,TRADE_SELL,r004
+2024-07-25,2024-07-29,NT8351517,TCL,Transurban Group,TXN,150.0,13.151,1972.65,16.45,1.5,-1989.1,Day Trade Buy – Transurban Group | 150 units @ $13.151,TRADE_BUY,r003
+2024-07-26,2024-07-30,NT2737893,CSL,CSL Limited,TXN,150.0,289.498,43424.7,32.95,3.0,-43457.65,Day Trade Buy – CSL Limited | 150 units @ $289.498,TRADE_BUY,r003
+2024-07-26,2024-07-30,NT3607983,TCL,Transurban Group,TXN,50.0,13.111,655.55,16.45,1.5,-672.0,Day Trade Buy – Transurban Group | 50 units @ $13.111,TRADE_BUY,r003
+2024-07-26,2024-07-30,NT5428914,FMG,Fortescue Ltd,TXN,-150.0,16.587,2488.05,16.45,1.5,2471.6,Day Trade Sell – Fortescue Ltd | 150 units @ $16.587,TRADE_SELL,r004
+2024-07-29,2024-07-31,NT1739653,WDS,Woodside Energy Group Ltd,TXN,200.0,24.325,4865.0,16.45,1.5,-4881.45,Day Trade Buy – Woodside Energy Group Ltd | 200 units @ $24.325,TRADE_BUY,r003
+2024-07-29,2024-07-31,NT8412769,XRO,Xero Limited,TXN,-150.0,147.276,22091.4,32.95,3.0,22058.45,Day Trade Sell – Xero Limited | 150 units @ $147.276,TRADE_SELL,r004
+2024-07-29,2024-07-31,NT3500715,BHP,BHP Group Limited,TXN,-50.0,43.291,2164.55,16.45,1.5,2148.1,Day Trade Sell – BHP Group Limited | 50 units @ $43.291,TRADE_SELL,r004
+2024-07-30,2024-08-01,NT1669324,CSL,CSL Limited,TXN,50.0,289.762,14488.1,21.95,2.0,-14510.05,Day Trade Buy – CSL Limited | 50 units @ $289.762,TRADE_BUY,r003
+2024-07-30,2024-08-01,NT6933742,MQG,Macquarie Group Limited,TXN,100.0,231.761,23176.1,32.95,3.0,-23209.05,Day Trade Buy – Macquarie Group Limited | 100 units @ $231.761,TRADE_BUY,r003
+2024-07-30,2024-08-01,NT3592974,WBC,Westpac Banking Corporation,TXN,200.0,33.315,6663.0,21.95,2.0,-6684.95,Day Trade Buy – Westpac Banking Corporation | 200 units @ $33.315,TRADE_BUY,r003
+2024-07-31,2024-08-02,NT1415846,XRO,Xero Limited,TXN,100.0,148.148,14814.8,21.95,2.0,-14836.75,Day Trade Buy – Xero Limited | 100 units @ $148.148,TRADE_BUY,r003
+2024-07-31,2024-08-02,NT5163555,WBC,Westpac Banking Corporation,TXN,200.0,33.542,6708.4,21.95,2.0,-6730.35,Day Trade Buy – Westpac Banking Corporation | 200 units @ $33.542,TRADE_BUY,r003
+2024-08-01,2024-08-05,NT8722606,WES,Wesfarmers Limited,TXN,-200.0,73.782,14756.4,21.95,2.0,14734.45,Day Trade Sell – Wesfarmers Limited | 200 units @ $73.782,TRADE_SELL,r004
+2024-08-01,2024-08-05,NT4240180,XRO,Xero Limited,TXN,-100.0,148.527,14852.7,21.95,2.0,14830.75,Day Trade Sell – Xero Limited | 100 units @ $148.527,TRADE_SELL,r004
+2024-08-02,2024-08-06,NT9996207,XRO,Xero Limited,TXN,200.0,148.073,29614.6,32.95,3.0,-29647.55,Day Trade Buy – Xero Limited | 200 units @ $148.073,TRADE_BUY,r003
+2024-08-02,2024-08-06,NT5453786,CBA,Commonwealth Bank of Australia,TXN,-150.0,157.4,23610.0,32.95,3.0,23577.05,Day Trade Sell – Commonwealth Bank of Australia | 150 units @ $157.400,TRADE_SELL,r004
+2024-08-02,2024-08-06,NT6262632,TCL,Transurban Group,TXN,150.0,13.114,1967.1,16.45,1.5,-1983.55,Day Trade Buy – Transurban Group | 150 units @ $13.114,TRADE_BUY,r003
+2024-08-05,2024-08-07,NT1028374,WES,Wesfarmers Limited,TXN,50.0,73.464,3673.2,16.45,1.5,-3689.65,Day Trade Buy – Wesfarmers Limited | 50 units @ $73.464,TRADE_BUY,r003
+2024-08-05,2024-08-07,NT2173965,CSL,CSL Limited,TXN,100.0,291.291,29129.1,32.95,3.0,-29162.05,Day Trade Buy – CSL Limited | 100 units @ $291.291,TRADE_BUY,r003
+2024-08-06,2024-08-08,NT7851696,CSL,CSL Limited,TXN,150.0,293.033,43954.95,32.95,3.0,-43987.9,Day Trade Buy – CSL Limited | 150 units @ $293.033,TRADE_BUY,r003
+2024-08-06,2024-08-08,NT7361002,TLS,Telstra Group Limited,TXN,-100.0,3.877,387.7,16.45,1.5,371.25,Day Trade Sell – Telstra Group Limited | 100 units @ $3.877,TRADE_SELL,r004
+2024-08-06,2024-08-08,NT1006810,FMG,Fortescue Ltd,TXN,150.0,16.667,2500.05,16.45,1.5,-2516.5,Day Trade Buy – Fortescue Ltd | 150 units @ $16.667,TRADE_BUY,r003
+2024-08-07,2024-08-09,NT8418210,WES,Wesfarmers Limited,TXN,150.0,73.541,11031.15,21.95,2.0,-11053.1,Day Trade Buy – Wesfarmers Limited | 150 units @ $73.541,TRADE_BUY,r003
+2024-08-07,2024-08-09,NT5761145,TCL,Transurban Group,TXN,100.0,13.113,1311.3,16.45,1.5,-1327.75,Day Trade Buy – Transurban Group | 100 units @ $13.113,TRADE_BUY,r003
+2024-08-08,2024-08-12,NT4340845,CBA,Commonwealth Bank of Australia,TXN,-150.0,156.609,23491.35,32.95,3.0,23458.4,Day Trade Sell – Commonwealth Bank of Australia | 150 units @ $156.609,TRADE_SELL,r004
+2024-08-08,2024-08-12,NT2221854,XRO,Xero Limited,TXN,200.0,147.167,29433.4,32.95,3.0,-29466.35,Day Trade Buy – Xero Limited | 200 units @ $147.167,TRADE_BUY,r003
+2024-08-08,2024-08-12,NT7442089,TCL,Transurban Group,TXN,100.0,13.175,1317.5,16.45,1.5,-1333.95,Day Trade Buy – Transurban Group | 100 units @ $13.175,TRADE_BUY,r003
+2024-08-09,2024-08-13,NT4671545,WBC,Westpac Banking Corporation,TXN,50.0,33.586,1679.3,16.45,1.5,-1695.75,Day Trade Buy – Westpac Banking Corporation | 50 units @ $33.586,TRADE_BUY,r003
+2024-08-09,2024-08-13,NT5180853,FMG,Fortescue Ltd,TXN,-200.0,16.746,3349.2,16.45,1.5,3332.75,Day Trade Sell – Fortescue Ltd | 200 units @ $16.746,TRADE_SELL,r004
+2024-08-12,2024-08-14,NT8425149,RIO,Rio Tinto Limited,TXN,150.0,111.225,16683.75,21.95,2.0,-16705.7,Day Trade Buy – Rio Tinto Limited | 150 units @ $111.225,TRADE_BUY,r003
+2024-08-12,2024-08-14,NT8481188,WBC,Westpac Banking Corporation,TXN,200.0,33.63,6726.0,21.95,2.0,-6747.95,Day Trade Buy – Westpac Banking Corporation | 200 units @ $33.630,TRADE_BUY,r003
+2024-08-13,2024-08-15,NT9745959,RIO,Rio Tinto Limited,TXN,150.0,110.937,16640.55,21.95,2.0,-16662.5,Day Trade Buy – Rio Tinto Limited | 150 units @ $110.937,TRADE_BUY,r003
+2024-08-13,2024-08-15,NT5793722,NAB,National Australia Bank Limited,TXN,-200.0,39.617,7923.4,21.95,2.0,7901.45,Day Trade Sell – National Australia Bank Limited | 200 units @ $39.617,TRADE_SELL,r004
+2024-08-13,2024-08-15,NT4879923,TCL,Transurban Group,TXN,-50.0,13.149,657.45,16.45,1.5,641.0,Day Trade Sell – Transurban Group | 50 units @ $13.149,TRADE_SELL,r004
+2024-08-14,2024-08-16,NT8816912,ALL,Aristocrat Leisure Limited,TXN,200.0,59.797,11959.4,21.95,2.0,-11981.35,Day Trade Buy – Aristocrat Leisure Limited | 200 units @ $59.797,TRADE_BUY,r003
+2024-08-14,2024-08-16,NT1327691,ANZ,ANZ Banking Group Limited,TXN,200.0,30.839,6167.8,21.95,2.0,-6189.75,Day Trade Buy – ANZ Banking Group Limited | 200 units @ $30.839,TRADE_BUY,r003
+2024-08-15,2024-08-19,NT8030010,RIO,Rio Tinto Limited,TXN,200.0,110.662,22132.4,32.95,3.0,-22165.35,Day Trade Buy – Rio Tinto Limited | 200 units @ $110.662,TRADE_BUY,r003
+2024-08-15,2024-08-19,NT5579094,BHP,BHP Group Limited,TXN,100.0,43.421,4342.1,16.45,1.5,-4358.55,Day Trade Buy – BHP Group Limited | 100 units @ $43.421,TRADE_BUY,r003
+2024-08-15,2024-08-19,NT7783308,TLS,Telstra Group Limited,TXN,150.0,3.858,578.7,16.45,1.5,-595.15,Day Trade Buy – Telstra Group Limited | 150 units @ $3.858,TRADE_BUY,r003
+2024-08-16,2024-08-20,NT1454696,WDS,Woodside Energy Group Ltd,TXN,200.0,24.287,4857.4,16.45,1.5,-4873.85,Day Trade Buy – Woodside Energy Group Ltd | 200 units @ $24.287,TRADE_BUY,r003
+2024-08-16,2024-08-20,NT5364698,WBC,Westpac Banking Corporation,TXN,-200.0,33.654,6730.8,21.95,2.0,6708.85,Day Trade Sell – Westpac Banking Corporation | 200 units @ $33.654,TRADE_SELL,r004
+2024-08-16,2024-08-20,NT7360682,CSL,CSL Limited,TXN,150.0,291.816,43772.4,32.95,3.0,-43805.35,Day Trade Buy – CSL Limited | 150 units @ $291.816,TRADE_BUY,r003
+2024-08-19,2024-08-21,NT6871360,NAB,National Australia Bank Limited,TXN,50.0,39.561,1978.05,16.45,1.5,-1994.5,Day Trade Buy – National Australia Bank Limited | 50 units @ $39.561,TRADE_BUY,r003
+2024-08-19,2024-08-21,NT5148725,XRO,Xero Limited,TXN,50.0,146.379,7318.95,21.95,2.0,-7340.9,Day Trade Buy – Xero Limited | 50 units @ $146.379,TRADE_BUY,r003
+2024-08-19,2024-08-21,NT8945036,CBA,Commonwealth Bank of Australia,TXN,-100.0,155.488,15548.8,21.95,2.0,15526.85,Day Trade Sell – Commonwealth Bank of Australia | 100 units @ $155.488,TRADE_SELL,r004
+2024-08-20,2024-08-22,NT2921542,RIO,Rio Tinto Limited,TXN,-150.0,110.355,16553.25,21.95,2.0,16531.3,Day Trade Sell – Rio Tinto Limited | 150 units @ $110.355,TRADE_SELL,r004
+2024-08-20,2024-08-22,NT1430812,ALL,Aristocrat Leisure Limited,TXN,-150.0,59.536,8930.4,21.95,2.0,8908.45,Day Trade Sell – Aristocrat Leisure Limited | 150 units @ $59.536,TRADE_SELL,r004
+2024-08-21,2024-08-23,NT6059717,WES,Wesfarmers Limited,TXN,-100.0,73.219,7321.9,21.95,2.0,7299.95,Day Trade Sell – Wesfarmers Limited | 100 units @ $73.219,TRADE_SELL,r004
+2024-08-21,2024-08-23,NT1689025,ALL,Aristocrat Leisure Limited,TXN,50.0,59.71,2985.5,16.45,1.5,-3001.95,Day Trade Buy – Aristocrat Leisure Limited | 50 units @ $59.710,TRADE_BUY,r003
+2024-08-21,2024-08-23,NT6724909,ANZ,ANZ Banking Group Limited,TXN,-150.0,30.856,4628.4,16.45,1.5,4611.95,Day Trade Sell – ANZ Banking Group Limited | 150 units @ $30.856,TRADE_SELL,r004
+2024-08-22,2024-08-26,NT8713146,XRO,Xero Limited,TXN,150.0,146.086,21912.9,32.95,3.0,-21945.85,Day Trade Buy – Xero Limited | 150 units @ $146.086,TRADE_BUY,r003
+2024-08-22,2024-08-26,NT9111742,RIO,Rio Tinto Limited,TXN,150.0,110.392,16558.8,21.95,2.0,-16580.75,Day Trade Buy – Rio Tinto Limited | 150 units @ $110.392,TRADE_BUY,r003
+2024-08-22,2024-08-26,NT5118725,CBA,Commonwealth Bank of Australia,TXN,150.0,156.201,23430.15,32.95,3.0,-23463.1,Day Trade Buy – Commonwealth Bank of Australia | 150 units @ $156.201,TRADE_BUY,r003
+2024-08-23,2024-08-27,NT7358385,NAB,National Australia Bank Limited,TXN,200.0,39.396,7879.2,21.95,2.0,-7901.15,Day Trade Buy – National Australia Bank Limited | 200 units @ $39.396,TRADE_BUY,r003
+2024-08-23,2024-08-27,NT4558780,RIO,Rio Tinto Limited,TXN,-150.0,110.368,16555.2,21.95,2.0,16533.25,Day Trade Sell – Rio Tinto Limited | 150 units @ $110.368,TRADE_SELL,r004
+2024-08-26,2024-08-28,NT9667566,TLS,Telstra Group Limited,TXN,150.0,3.87,580.5,16.45,1.5,-596.95,Day Trade Buy – Telstra Group Limited | 150 units @ $3.870,TRADE_BUY,r003
+2024-08-26,2024-08-28,NT5031966,NAB,National Australia Bank Limited,TXN,200.0,39.174,7834.8,21.95,2.0,-7856.75,Day Trade Buy – National Australia Bank Limited | 200 units @ $39.174,TRADE_BUY,r003
+2024-08-26,2024-08-28,NT1289293,CSL,CSL Limited,TXN,200.0,292.067,58413.4,32.95,3.0,-58446.35,Day Trade Buy – CSL Limited | 200 units @ $292.067,TRADE_BUY,r003
+2024-08-27,2024-08-29,NT9907391,WES,Wesfarmers Limited,TXN,150.0,73.096,10964.4,21.95,2.0,-10986.35,Day Trade Buy – Wesfarmers Limited | 150 units @ $73.096,TRADE_BUY,r003
+2024-08-27,2024-08-29,NT8612582,ALL,Aristocrat Leisure Limited,TXN,150.0,60.03,9004.5,21.95,2.0,-9026.45,Day Trade Buy – Aristocrat Leisure Limited | 150 units @ $60.030,TRADE_BUY,r003
+2024-08-28,2024-08-30,NT4106298,ANZ,ANZ Banking Group Limited,TXN,50.0,30.682,1534.1,16.45,1.5,-1550.55,Day Trade Buy – ANZ Banking Group Limited | 50 units @ $30.682,TRADE_BUY,r003
+2024-08-28,2024-08-30,NT9801946,CBA,Commonwealth Bank of Australia,TXN,150.0,156.856,23528.4,32.95,3.0,-23561.35,Day Trade Buy – Commonwealth Bank of Australia | 150 units @ $156.856,TRADE_BUY,r003
+2024-08-28,2024-08-30,NT7054579,ALL,Aristocrat Leisure Limited,TXN,100.0,60.321,6032.1,21.95,2.0,-6054.05,Day Trade Buy – Aristocrat Leisure Limited | 100 units @ $60.321,TRADE_BUY,r003
+2024-08-29,2024-09-02,NT5901239,ALL,Aristocrat Leisure Limited,TXN,50.0,59.974,2998.7,16.45,1.5,-3015.15,Day Trade Buy – Aristocrat Leisure Limited | 50 units @ $59.974,TRADE_BUY,r003
+2024-08-29,2024-09-02,NT1205779,MQG,Macquarie Group Limited,TXN,-200.0,230.98,46196.0,32.95,3.0,46163.05,Day Trade Sell – Macquarie Group Limited | 200 units @ $230.980,TRADE_SELL,r004
+2024-08-30,2024-09-03,NT9014965,RIO,Rio Tinto Limited,TXN,50.0,109.886,5494.3,21.95,2.0,-5516.25,Day Trade Buy – Rio Tinto Limited | 50 units @ $109.886,TRADE_BUY,r003
+2024-08-30,2024-09-03,NT1899411,WDS,Woodside Energy Group Ltd,TXN,-200.0,24.121,4824.2,16.45,1.5,4807.75,Day Trade Sell – Woodside Energy Group Ltd | 200 units @ $24.121,TRADE_SELL,r004
+2024-08-30,2024-09-03,NT5163953,TLS,Telstra Group Limited,TXN,-150.0,3.891,583.65,16.45,1.5,567.2,Day Trade Sell – Telstra Group Limited | 150 units @ $3.891,TRADE_SELL,r004
+2024-09-02,2024-09-02,NT3622672,NAB,National Australia Bank Limited,INC,1000.0,0.99,990.0,0.0,0.0,990.0,Dividend – National Australia Bank Limited | Franked distribution,DIVIDEND,r014
+2024-09-02,2024-09-04,NT8427625,CSL,CSL Limited,TXN,200.0,292.006,58401.2,32.95,3.0,-58434.15,Day Trade Buy – CSL Limited | 200 units @ $292.006,TRADE_BUY,r003
+2024-09-02,2024-09-04,NT2010496,WDS,Woodside Energy Group Ltd,TXN,200.0,24.113,4822.6,16.45,1.5,-4839.05,Day Trade Buy – Woodside Energy Group Ltd | 200 units @ $24.113,TRADE_BUY,r003
+2024-09-02,2024-09-04,NT5440025,TCL,Transurban Group,TXN,100.0,13.181,1318.1,16.45,1.5,-1334.55,Day Trade Buy – Transurban Group | 100 units @ $13.181,TRADE_BUY,r003
+2024-09-03,2024-09-05,NT8558197,ANZ,ANZ Banking Group Limited,TXN,-100.0,30.663,3066.3,16.45,1.5,3049.85,Day Trade Sell – ANZ Banking Group Limited | 100 units @ $30.663,TRADE_SELL,r004
+2024-09-03,2024-09-05,NT5743227,WBC,Westpac Banking Corporation,TXN,-50.0,33.626,1681.3,16.45,1.5,1664.85,Day Trade Sell – Westpac Banking Corporation | 50 units @ $33.626,TRADE_SELL,r004
+2024-09-04,2024-09-06,NT4771676,CBA,Commonwealth Bank of Australia,TXN,100.0,157.715,15771.5,21.95,2.0,-15793.45,Day Trade Buy – Commonwealth Bank of Australia | 100 units @ $157.715,TRADE_BUY,r003
+2024-09-04,2024-09-06,NT3783722,FMG,Fortescue Ltd,TXN,-100.0,16.856,1685.6,16.45,1.5,1669.15,Day Trade Sell – Fortescue Ltd | 100 units @ $16.856,TRADE_SELL,r004
+2024-09-04,2024-09-06,NT8863447,ANZ,ANZ Banking Group Limited,TXN,150.0,30.721,4608.15,16.45,1.5,-4624.6,Day Trade Buy – ANZ Banking Group Limited | 150 units @ $30.721,TRADE_BUY,r003
+2024-09-05,2024-09-09,NT8248238,NAB,National Australia Bank Limited,TXN,50.0,39.201,1960.05,16.45,1.5,-1976.5,Day Trade Buy – National Australia Bank Limited | 50 units @ $39.201,TRADE_BUY,r003
+2024-09-05,2024-09-09,NT1348050,MQG,Macquarie Group Limited,TXN,-50.0,231.336,11566.8,21.95,2.0,11544.85,Day Trade Sell – Macquarie Group Limited | 50 units @ $231.336,TRADE_SELL,r004
+2024-09-05,2024-09-09,NT3939212,XRO,Xero Limited,TXN,150.0,146.509,21976.35,32.95,3.0,-22009.3,Day Trade Buy – Xero Limited | 150 units @ $146.509,TRADE_BUY,r003
+2024-09-06,2024-09-10,NT9249789,WDS,Woodside Energy Group Ltd,TXN,200.0,24.268,4853.6,16.45,1.5,-4870.05,Day Trade Buy – Woodside Energy Group Ltd | 200 units @ $24.268,TRADE_BUY,r003
+2024-09-06,2024-09-10,NT2754894,NAB,National Australia Bank Limited,TXN,200.0,39.224,7844.8,21.95,2.0,-7866.75,Day Trade Buy – National Australia Bank Limited | 200 units @ $39.224,TRADE_BUY,r003
+2024-09-06,2024-09-10,NT7718473,WBC,Westpac Banking Corporation,TXN,200.0,33.584,6716.8,21.95,2.0,-6738.75,Day Trade Buy – Westpac Banking Corporation | 200 units @ $33.584,TRADE_BUY,r003
+2024-09-09,2024-09-11,NT7780932,RIO,Rio Tinto Limited,TXN,-150.0,109.472,16420.8,21.95,2.0,16398.85,Day Trade Sell – Rio Tinto Limited | 150 units @ $109.472,TRADE_SELL,r004
+2024-09-09,2024-09-11,NT8750676,CBA,Commonwealth Bank of Australia,TXN,50.0,158.423,7921.15,21.95,2.0,-7943.1,Day Trade Buy – Commonwealth Bank of Australia | 50 units @ $158.423,TRADE_BUY,r003
+2024-09-10,2024-09-10,NT4042682,CSL,CSL Limited,INC,200.0,1.6,320.0,0.0,0.0,320.0,Dividend – CSL Limited | Franked distribution,DIVIDEND,r014
+2024-09-10,2024-09-12,NT1865901,MQG,Macquarie Group Limited,TXN,200.0,232.139,46427.8,32.95,3.0,-46460.75,Day Trade Buy – Macquarie Group Limited | 200 units @ $232.139,TRADE_BUY,r003
+2024-09-10,2024-09-12,NT9132114,TLS,Telstra Group Limited,TXN,150.0,3.887,583.05,16.45,1.5,-599.5,Day Trade Buy – Telstra Group Limited | 150 units @ $3.887,TRADE_BUY,r003
+2024-09-11,2024-09-13,NT2563790,ALL,Aristocrat Leisure Limited,TXN,50.0,59.885,2994.25,16.45,1.5,-3010.7,Day Trade Buy – Aristocrat Leisure Limited | 50 units @ $59.885,TRADE_BUY,r003
+2024-09-11,2024-09-13,NT2970754,WBC,Westpac Banking Corporation,TXN,50.0,33.764,1688.2,16.45,1.5,-1704.65,Day Trade Buy – Westpac Banking Corporation | 50 units @ $33.764,TRADE_BUY,r003
+2024-09-12,2024-09-16,NT9094999,RIO,Rio Tinto Limited,TXN,150.0,109.358,16403.7,21.95,2.0,-16425.65,Day Trade Buy – Rio Tinto Limited | 150 units @ $109.358,TRADE_BUY,r003
+2024-09-12,2024-09-16,NT9526867,ALL,Aristocrat Leisure Limited,TXN,100.0,59.635,5963.5,21.95,2.0,-5985.45,Day Trade Buy – Aristocrat Leisure Limited | 100 units @ $59.635,TRADE_BUY,r003
+2024-09-13,2024-09-13,NT5723078,ANZ,ANZ Banking Group Limited,INC,200.0,0.83,166.0,0.0,0.0,166.0,Dividend – ANZ Banking Group Limited | Franked distribution,DIVIDEND,r014
+2024-09-13,2024-09-17,NT9518424,XRO,Xero Limited,TXN,200.0,146.099,29219.8,32.95,3.0,-29252.75,Day Trade Buy – Xero Limited | 200 units @ $146.099,TRADE_BUY,r003
+2024-09-13,2024-09-17,NT9214801,CBA,Commonwealth Bank of Australia,TXN,150.0,157.423,23613.45,32.95,3.0,-23646.4,Day Trade Buy – Commonwealth Bank of Australia | 150 units @ $157.423,TRADE_BUY,r003
+2024-09-16,2024-09-16,NT7534756,CBA,Commonwealth Bank of Australia,INC,200.0,4.5,900.0,0.0,0.0,900.0,Dividend – Commonwealth Bank of Australia | Franked distribution,DIVIDEND,r014
+2024-09-16,2024-09-18,NT6398528,MQG,Macquarie Group Limited,TXN,200.0,231.398,46279.6,32.95,3.0,-46312.55,Day Trade Buy – Macquarie Group Limited | 200 units @ $231.398,TRADE_BUY,r003
+2024-09-16,2024-09-18,NT4918527,RIO,Rio Tinto Limited,TXN,100.0,110.2,11020.0,21.95,2.0,-11041.95,Day Trade Buy – Rio Tinto Limited | 100 units @ $110.200,TRADE_BUY,r003
+2024-09-16,2024-09-18,NT7395997,TLS,Telstra Group Limited,TXN,150.0,3.877,581.55,16.45,1.5,-598.0,Day Trade Buy – Telstra Group Limited | 150 units @ $3.877,TRADE_BUY,r003
+2024-09-17,2024-09-19,NT8387112,RIO,Rio Tinto Limited,TXN,150.0,109.862,16479.3,21.95,2.0,-16501.25,Day Trade Buy – Rio Tinto Limited | 150 units @ $109.862,TRADE_BUY,r003
+2024-09-17,2024-09-19,NT7878299,BHP,BHP Group Limited,TXN,50.0,43.624,2181.2,16.45,1.5,-2197.65,Day Trade Buy – BHP Group Limited | 50 units @ $43.624,TRADE_BUY,r003
+2024-09-18,2024-09-18,NT3417186,TLS,Telstra Group Limited,INC,500.0,0.09,45.0,0.0,0.0,45.0,Dividend – Telstra Group Limited | Franked distribution,DIVIDEND,r014
+2024-09-18,2024-09-20,NT7668663,CBA,Commonwealth Bank of Australia,TXN,150.0,158.186,23727.9,32.95,3.0,-23760.85,Day Trade Buy – Commonwealth Bank of Australia | 150 units @ $158.186,TRADE_BUY,r003
+2024-09-18,2024-09-20,NT9186400,RIO,Rio Tinto Limited,TXN,200.0,110.149,22029.8,32.95,3.0,-22062.75,Day Trade Buy – Rio Tinto Limited | 200 units @ $110.149,TRADE_BUY,r003
+2024-09-19,2024-09-19,NT8568632,BHP,BHP Group Limited,INC,1000.0,1.85,1850.0,0.0,0.0,1850.0,Dividend – BHP Group Limited | Franked distribution,DIVIDEND,r014
+2024-09-19,2024-09-19,NT3700366,MQG,Macquarie Group Limited,INC,300.0,3.8,1140.0,0.0,0.0,1140.0,Dividend – Macquarie Group Limited | Franked distribution,DIVIDEND,r014
+2024-09-19,2024-09-23,NT2516313,CSL,CSL Limited,TXN,150.0,290.84,43626.0,32.95,3.0,-43658.95,Day Trade Buy – CSL Limited | 150 units @ $290.840,TRADE_BUY,r003
+2024-09-19,2024-09-23,NT6024207,CBA,Commonwealth Bank of Australia,TXN,50.0,157.518,7875.9,21.95,2.0,-7897.85,Day Trade Buy – Commonwealth Bank of Australia | 50 units @ $157.518,TRADE_BUY,r003
+2024-09-20,2024-09-24,NT3442255,TLS,Telstra Group Limited,TXN,150.0,3.854,578.1,16.45,1.5,-594.55,Day Trade Buy – Telstra Group Limited | 150 units @ $3.854,TRADE_BUY,r003
+2024-09-20,2024-09-24,NT2324869,TCL,Transurban Group,TXN,-100.0,13.175,1317.5,16.45,1.5,1301.05,Day Trade Sell – Transurban Group | 100 units @ $13.175,TRADE_SELL,r004
+2024-09-23,2024-09-25,NT5261032,CSL,CSL Limited,TXN,-100.0,290.755,29075.5,32.95,3.0,29042.55,Day Trade Sell – CSL Limited | 100 units @ $290.755,TRADE_SELL,r004
+2024-09-23,2024-09-25,NT3650391,FMG,Fortescue Ltd,TXN,200.0,16.91,3382.0,16.45,1.5,-3398.45,Day Trade Buy – Fortescue Ltd | 200 units @ $16.910,TRADE_BUY,r003
+2024-09-23,2024-09-25,NT8118722,ANZ,ANZ Banking Group Limited,TXN,150.0,30.908,4636.2,16.45,1.5,-4652.65,Day Trade Buy – ANZ Banking Group Limited | 150 units @ $30.908,TRADE_BUY,r003
+2024-09-24,2024-09-26,NT7398231,XRO,Xero Limited,TXN,-200.0,146.838,29367.6,32.95,3.0,29334.65,Day Trade Sell – Xero Limited | 200 units @ $146.838,TRADE_SELL,r004
+2024-09-24,2024-09-26,NT7640518,NAB,National Australia Bank Limited,TXN,-150.0,39.315,5897.25,21.95,2.0,5875.3,Day Trade Sell – National Australia Bank Limited | 150 units @ $39.315,TRADE_SELL,r004
+2024-09-24,2024-09-26,NT9333700,ANZ,ANZ Banking Group Limited,TXN,50.0,30.956,1547.8,16.45,1.5,-1564.25,Day Trade Buy – ANZ Banking Group Limited | 50 units @ $30.956,TRADE_BUY,r003
+2024-09-25,2024-09-25,NT3067542,WES,Wesfarmers Limited,INC,300.0,1.18,354.0,0.0,0.0,354.0,Dividend – Wesfarmers Limited | Franked distribution,DIVIDEND,r014
+2024-09-25,2024-09-25,NT6111869,RIO,Rio Tinto Limited,INC,200.0,3.9,780.0,0.0,0.0,780.0,Dividend – Rio Tinto Limited | Franked distribution,DIVIDEND,r014
+2024-09-25,2024-09-27,NT4189885,TCL,Transurban Group,TXN,-150.0,13.198,1979.7,16.45,1.5,1963.25,Day Trade Sell – Transurban Group | 150 units @ $13.198,TRADE_SELL,r004
+2024-09-25,2024-09-27,NT1661401,WDS,Woodside Energy Group Ltd,TXN,100.0,24.366,2436.6,16.45,1.5,-2453.05,Day Trade Buy – Woodside Energy Group Ltd | 100 units @ $24.366,TRADE_BUY,r003
+2024-09-25,2024-09-27,NT2512187,ANZ,ANZ Banking Group Limited,TXN,150.0,30.975,4646.25,16.45,1.5,-4662.7,Day Trade Buy – ANZ Banking Group Limited | 150 units @ $30.975,TRADE_BUY,r003
+2024-09-26,2024-09-26,NT2217848,WBC,Westpac Banking Corporation,INC,200.0,0.76,152.0,0.0,0.0,152.0,Dividend – Westpac Banking Corporation | Franked distribution,DIVIDEND,r014
+2024-09-26,2024-09-30,NT5572250,ALL,Aristocrat Leisure Limited,TXN,150.0,59.48,8922.0,21.95,2.0,-8943.95,Day Trade Buy – Aristocrat Leisure Limited | 150 units @ $59.480,TRADE_BUY,r003
+2024-09-26,2024-09-30,NT5951651,WES,Wesfarmers Limited,TXN,200.0,72.837,14567.4,21.95,2.0,-14589.35,Day Trade Buy – Wesfarmers Limited | 200 units @ $72.837,TRADE_BUY,r003
+2024-09-26,2024-09-30,NT2263313,WBC,Westpac Banking Corporation,TXN,50.0,33.719,1685.95,16.45,1.5,-1702.4,Day Trade Buy – Westpac Banking Corporation | 50 units @ $33.719,TRADE_BUY,r003
+2024-09-27,2024-10-01,NT7136687,XRO,Xero Limited,TXN,200.0,147.275,29455.0,32.95,3.0,-29487.95,Day Trade Buy – Xero Limited | 200 units @ $147.275,TRADE_BUY,r003
+2024-09-27,2024-10-01,NT8630043,FMG,Fortescue Ltd,TXN,150.0,16.86,2529.0,16.45,1.5,-2545.45,Day Trade Buy – Fortescue Ltd | 150 units @ $16.860,TRADE_BUY,r003
+2024-09-30,2024-10-02,NT8910069,CSL,CSL Limited,TXN,50.0,292.244,14612.2,21.95,2.0,-14634.15,Day Trade Buy – CSL Limited | 50 units @ $292.244,TRADE_BUY,r003
+2024-09-30,2024-10-02,NT4713925,WES,Wesfarmers Limited,TXN,150.0,73.245,10986.75,21.95,2.0,-11008.7,Day Trade Buy – Wesfarmers Limited | 150 units @ $73.245,TRADE_BUY,r003
+2024-09-30,2024-10-02,NT6069909,FMG,Fortescue Ltd,TXN,200.0,16.878,3375.6,16.45,1.5,-3392.05,Day Trade Buy – Fortescue Ltd | 200 units @ $16.878,TRADE_BUY,r003
+2024-10-01,2024-10-03,NT2948178,WBC,Westpac Banking Corporation,TXN,150.0,33.851,5077.65,21.95,2.0,-5099.6,Day Trade Buy – Westpac Banking Corporation | 150 units @ $33.851,TRADE_BUY,r003
+2024-10-01,2024-10-03,NT7224540,BHP,BHP Group Limited,TXN,100.0,43.892,4389.2,16.45,1.5,-4405.65,Day Trade Buy – BHP Group Limited | 100 units @ $43.892,TRADE_BUY,r003
+2024-10-02,2024-10-04,NT9209880,CSL,CSL Limited,TXN,200.0,290.48,58096.0,32.95,3.0,-58128.95,Day Trade Buy – CSL Limited | 200 units @ $290.480,TRADE_BUY,r003
+2024-10-02,2024-10-04,NT7216461,ALL,Aristocrat Leisure Limited,TXN,-150.0,59.873,8980.95,21.95,2.0,8959.0,Day Trade Sell – Aristocrat Leisure Limited | 150 units @ $59.873,TRADE_SELL,r004
+2024-10-02,2024-10-04,NT2666893,XRO,Xero Limited,TXN,100.0,146.936,14693.6,21.95,2.0,-14715.55,Day Trade Buy – Xero Limited | 100 units @ $146.936,TRADE_BUY,r003
+2024-10-03,2024-10-07,NT3049499,MQG,Macquarie Group Limited,TXN,-150.0,230.518,34577.7,32.95,3.0,34544.75,Day Trade Sell – Macquarie Group Limited | 150 units @ $230.518,TRADE_SELL,r004
+2024-10-03,2024-10-07,NT1358318,FMG,Fortescue Ltd,TXN,50.0,16.954,847.7,16.45,1.5,-864.15,Day Trade Buy – Fortescue Ltd | 50 units @ $16.954,TRADE_BUY,r003
+2024-10-03,2024-10-07,NT4442778,TLS,Telstra Group Limited,TXN,100.0,3.842,384.2,16.45,1.5,-400.65,Day Trade Buy – Telstra Group Limited | 100 units @ $3.842,TRADE_BUY,r003
+2024-10-04,2024-10-08,NT3475548,CSL,CSL Limited,TXN,100.0,291.706,29170.6,32.95,3.0,-29203.55,Day Trade Buy – CSL Limited | 100 units @ $291.706,TRADE_BUY,r003
+2024-10-04,2024-10-08,NT3427461,ANZ,ANZ Banking Group Limited,TXN,150.0,31.062,4659.3,16.45,1.5,-4675.75,Day Trade Buy – ANZ Banking Group Limited | 150 units @ $31.062,TRADE_BUY,r003
+2024-10-07,2024-10-09,NT7010308,TCL,Transurban Group,TXN,-50.0,13.23,661.5,16.45,1.5,645.05,Day Trade Sell – Transurban Group | 50 units @ $13.230,TRADE_SELL,r004
+2024-10-07,2024-10-09,NT5452128,WBC,Westpac Banking Corporation,TXN,-150.0,33.69,5053.5,21.95,2.0,5031.55,Day Trade Sell – Westpac Banking Corporation | 150 units @ $33.690,TRADE_SELL,r004
+2024-10-07,2024-10-09,NT8990081,CBA,Commonwealth Bank of Australia,TXN,50.0,158.23,7911.5,21.95,2.0,-7933.45,Day Trade Buy – Commonwealth Bank of Australia | 50 units @ $158.230,TRADE_BUY,r003
+2024-10-08,2024-10-10,NT1727544,MQG,Macquarie Group Limited,TXN,100.0,230.799,23079.9,32.95,3.0,-23112.85,Day Trade Buy – Macquarie Group Limited | 100 units @ $230.799,TRADE_BUY,r003
+2024-10-08,2024-10-10,NT1522621,CSL,CSL Limited,TXN,150.0,293.475,44021.25,32.95,3.0,-44054.2,Day Trade Buy – CSL Limited | 150 units @ $293.475,TRADE_BUY,r003
+2024-10-08,2024-10-10,NT2811298,CBA,Commonwealth Bank of Australia,TXN,200.0,158.157,31631.4,32.95,3.0,-31664.35,Day Trade Buy – Commonwealth Bank of Australia | 200 units @ $158.157,TRADE_BUY,r003
+2024-10-09,2024-10-11,NT6455706,CBA,Commonwealth Bank of Australia,TXN,-50.0,158.357,7917.85,21.95,2.0,7895.9,Day Trade Sell – Commonwealth Bank of Australia | 50 units @ $158.357,TRADE_SELL,r004
+2024-10-09,2024-10-11,NT8217547,WDS,Woodside Energy Group Ltd,TXN,150.0,24.375,3656.25,16.45,1.5,-3672.7,Day Trade Buy – Woodside Energy Group Ltd | 150 units @ $24.375,TRADE_BUY,r003
+2024-10-09,2024-10-11,NT4833486,TLS,Telstra Group Limited,TXN,100.0,3.844,384.4,16.45,1.5,-400.85,Day Trade Buy – Telstra Group Limited | 100 units @ $3.844,TRADE_BUY,r003
+2024-10-10,2024-10-14,NT5276341,WES,Wesfarmers Limited,TXN,200.0,72.932,14586.4,21.95,2.0,-14608.35,Day Trade Buy – Wesfarmers Limited | 200 units @ $72.932,TRADE_BUY,r003
+2024-10-10,2024-10-14,NT2432176,WDS,Woodside Energy Group Ltd,TXN,-200.0,24.235,4847.0,16.45,1.5,4830.55,Day Trade Sell – Woodside Energy Group Ltd | 200 units @ $24.235,TRADE_SELL,r004
+2024-10-10,2024-10-14,NT2006313,ALL,Aristocrat Leisure Limited,TXN,150.0,59.515,8927.25,21.95,2.0,-8949.2,Day Trade Buy – Aristocrat Leisure Limited | 150 units @ $59.515,TRADE_BUY,r003
+2024-10-11,2024-10-15,NT1863121,FMG,Fortescue Ltd,TXN,200.0,16.894,3378.8,16.45,1.5,-3395.25,Day Trade Buy – Fortescue Ltd | 200 units @ $16.894,TRADE_BUY,r003
+2024-10-11,2024-10-15,NT9512969,CBA,Commonwealth Bank of Australia,TXN,-150.0,158.473,23770.95,32.95,3.0,23738.0,Day Trade Sell – Commonwealth Bank of Australia | 150 units @ $158.473,TRADE_SELL,r004
+2024-10-11,2024-10-15,NT6873938,WES,Wesfarmers Limited,TXN,100.0,73.032,7303.2,21.95,2.0,-7325.15,Day Trade Buy – Wesfarmers Limited | 100 units @ $73.032,TRADE_BUY,r003
+2024-10-14,2024-10-16,NT1440466,CBA,Commonwealth Bank of Australia,TXN,200.0,158.432,31686.4,32.95,3.0,-31719.35,Day Trade Buy – Commonwealth Bank of Australia | 200 units @ $158.432,TRADE_BUY,r003
+2024-10-14,2024-10-16,NT5584716,TCL,Transurban Group,TXN,-150.0,13.27,1990.5,16.45,1.5,1974.05,Day Trade Sell – Transurban Group | 150 units @ $13.270,TRADE_SELL,r004
+2024-10-14,2024-10-16,NT4043480,NAB,National Australia Bank Limited,TXN,150.0,39.19,5878.5,21.95,2.0,-5900.45,Day Trade Buy – National Australia Bank Limited | 150 units @ $39.190,TRADE_BUY,r003
+2024-10-15,2024-10-17,NT9900022,CBA,Commonwealth Bank of Australia,TXN,-50.0,158.754,7937.7,21.95,2.0,7915.75,Day Trade Sell – Commonwealth Bank of Australia | 50 units @ $158.754,TRADE_SELL,r004
+2024-10-15,2024-10-17,NT6228407,WBC,Westpac Banking Corporation,TXN,-150.0,33.598,5039.7,21.95,2.0,5017.75,Day Trade Sell – Westpac Banking Corporation | 150 units @ $33.598,TRADE_SELL,r004
+2024-10-15,2024-10-17,NT3610197,ALL,Aristocrat Leisure Limited,TXN,50.0,59.734,2986.7,16.45,1.5,-3003.15,Day Trade Buy – Aristocrat Leisure Limited | 50 units @ $59.734,TRADE_BUY,r003
+2024-10-16,2024-10-18,NT8416270,FMG,Fortescue Ltd,TXN,200.0,16.88,3376.0,16.45,1.5,-3392.45,Day Trade Buy – Fortescue Ltd | 200 units @ $16.880,TRADE_BUY,r003
+2024-10-16,2024-10-18,NT2860421,CBA,Commonwealth Bank of Australia,TXN,50.0,158.032,7901.6,21.95,2.0,-7923.55,Day Trade Buy – Commonwealth Bank of Australia | 50 units @ $158.032,TRADE_BUY,r003
+2024-10-17,2024-10-21,NT1919088,MQG,Macquarie Group Limited,TXN,200.0,229.749,45949.8,32.95,3.0,-45982.75,Day Trade Buy – Macquarie Group Limited | 200 units @ $229.749,TRADE_BUY,r003
+2024-10-17,2024-10-21,NT5286905,FMG,Fortescue Ltd,TXN,100.0,16.834,1683.4,16.45,1.5,-1699.85,Day Trade Buy – Fortescue Ltd | 100 units @ $16.834,TRADE_BUY,r003
+2024-10-17,2024-10-21,NT3947669,NAB,National Australia Bank Limited,TXN,200.0,39.069,7813.8,21.95,2.0,-7835.75,Day Trade Buy – National Australia Bank Limited | 200 units @ $39.069,TRADE_BUY,r003
+2024-10-18,2024-10-22,NT1709714,MQG,Macquarie Group Limited,TXN,-150.0,230.214,34532.1,32.95,3.0,34499.15,Day Trade Sell – Macquarie Group Limited | 150 units @ $230.214,TRADE_SELL,r004
+2024-10-18,2024-10-22,NT8202195,WDS,Woodside Energy Group Ltd,TXN,50.0,24.184,1209.2,16.45,1.5,-1225.65,Day Trade Buy – Woodside Energy Group Ltd | 50 units @ $24.184,TRADE_BUY,r003
+2024-10-21,2024-10-23,NT8719145,NAB,National Australia Bank Limited,TXN,-150.0,38.787,5818.05,21.95,2.0,5796.1,Day Trade Sell – National Australia Bank Limited | 150 units @ $38.787,TRADE_SELL,r004
+2024-10-21,2024-10-23,NT2776088,CBA,Commonwealth Bank of Australia,TXN,50.0,158.69,7934.5,21.95,2.0,-7956.45,Day Trade Buy – Commonwealth Bank of Australia | 50 units @ $158.690,TRADE_BUY,r003
+2024-10-21,2024-10-23,NT6205543,WES,Wesfarmers Limited,TXN,50.0,73.211,3660.55,16.45,1.5,-3677.0,Day Trade Buy – Wesfarmers Limited | 50 units @ $73.211,TRADE_BUY,r003
+2024-10-22,2024-10-24,NT4253164,TLS,Telstra Group Limited,TXN,50.0,3.828,191.4,16.45,1.5,-207.85,Day Trade Buy – Telstra Group Limited | 50 units @ $3.828,TRADE_BUY,r003
+2024-10-22,2024-10-24,NT3456926,TCL,Transurban Group,TXN,-100.0,13.257,1325.7,16.45,1.5,1309.25,Day Trade Sell – Transurban Group | 100 units @ $13.257,TRADE_SELL,r004
+2024-10-23,2024-10-25,NT9289908,CSL,CSL Limited,TXN,-50.0,293.874,14693.7,21.95,2.0,14671.75,Day Trade Sell – CSL Limited | 50 units @ $293.874,TRADE_SELL,r004
+2024-10-23,2024-10-25,NT6422534,WBC,Westpac Banking Corporation,TXN,200.0,33.654,6730.8,21.95,2.0,-6752.75,Day Trade Buy – Westpac Banking Corporation | 200 units @ $33.654,TRADE_BUY,r003
+2024-10-24,2024-10-28,NT1942411,WBC,Westpac Banking Corporation,TXN,150.0,33.69,5053.5,21.95,2.0,-5075.45,Day Trade Buy – Westpac Banking Corporation | 150 units @ $33.690,TRADE_BUY,r003
+2024-10-24,2024-10-28,NT1954456,RIO,Rio Tinto Limited,TXN,200.0,109.749,21949.8,32.95,3.0,-21982.75,Day Trade Buy – Rio Tinto Limited | 200 units @ $109.749,TRADE_BUY,r003
+2024-10-24,2024-10-28,NT9507186,CBA,Commonwealth Bank of Australia,TXN,50.0,158.122,7906.1,21.95,2.0,-7928.05,Day Trade Buy – Commonwealth Bank of Australia | 50 units @ $158.122,TRADE_BUY,r003
+2024-10-25,2024-10-29,NT8979730,RIO,Rio Tinto Limited,TXN,100.0,109.785,10978.5,21.95,2.0,-11000.45,Day Trade Buy – Rio Tinto Limited | 100 units @ $109.785,TRADE_BUY,r003
+2024-10-25,2024-10-29,NT6761929,TCL,Transurban Group,TXN,-200.0,13.317,2663.4,16.45,1.5,2646.95,Day Trade Sell – Transurban Group | 200 units @ $13.317,TRADE_SELL,r004
+2024-10-28,2024-10-30,NT8372274,MQG,Macquarie Group Limited,TXN,100.0,229.251,22925.1,32.95,3.0,-22958.05,Day Trade Buy – Macquarie Group Limited | 100 units @ $229.251,TRADE_BUY,r003
+2024-10-28,2024-10-30,NT5746166,FMG,Fortescue Ltd,TXN,150.0,16.842,2526.3,16.45,1.5,-2542.75,Day Trade Buy – Fortescue Ltd | 150 units @ $16.842,TRADE_BUY,r003
+2024-10-29,2024-10-31,NT2585546,FMG,Fortescue Ltd,TXN,-150.0,16.892,2533.8,16.45,1.5,2517.35,Day Trade Sell – Fortescue Ltd | 150 units @ $16.892,TRADE_SELL,r004
+2024-10-29,2024-10-31,NT3522845,CSL,CSL Limited,TXN,150.0,293.432,44014.8,32.95,3.0,-44047.75,Day Trade Buy – CSL Limited | 150 units @ $293.432,TRADE_BUY,r003
+2024-10-29,2024-10-31,NT6204824,BHP,BHP Group Limited,TXN,100.0,43.966,4396.6,16.45,1.5,-4413.05,Day Trade Buy – BHP Group Limited | 100 units @ $43.966,TRADE_BUY,r003
+2024-10-30,2024-11-01,NT6510922,WBC,Westpac Banking Corporation,TXN,150.0,33.847,5077.05,21.95,2.0,-5099.0,Day Trade Buy – Westpac Banking Corporation | 150 units @ $33.847,TRADE_BUY,r003
+2024-10-30,2024-11-01,NT8103580,CSL,CSL Limited,TXN,50.0,293.835,14691.75,21.95,2.0,-14713.7,Day Trade Buy – CSL Limited | 50 units @ $293.835,TRADE_BUY,r003
+2024-10-30,2024-11-01,NT4593556,ALL,Aristocrat Leisure Limited,TXN,-150.0,59.307,8896.05,21.95,2.0,8874.1,Day Trade Sell – Aristocrat Leisure Limited | 150 units @ $59.307,TRADE_SELL,r004
+2024-10-31,2024-11-04,NT2696860,ANZ,ANZ Banking Group Limited,TXN,150.0,30.994,4649.1,16.45,1.5,-4665.55,Day Trade Buy – ANZ Banking Group Limited | 150 units @ $30.994,TRADE_BUY,r003
+2024-10-31,2024-11-04,NT3198638,WDS,Woodside Energy Group Ltd,TXN,50.0,24.203,1210.15,16.45,1.5,-1226.6,Day Trade Buy – Woodside Energy Group Ltd | 50 units @ $24.203,TRADE_BUY,r003
+2024-10-31,2024-11-04,NT3777286,WBC,Westpac Banking Corporation,TXN,100.0,33.748,3374.8,16.45,1.5,-3391.25,Day Trade Buy – Westpac Banking Corporation | 100 units @ $33.748,TRADE_BUY,r003
+2024-11-01,2024-11-05,NT5780297,WES,Wesfarmers Limited,TXN,100.0,73.438,7343.8,21.95,2.0,-7365.75,Day Trade Buy – Wesfarmers Limited | 100 units @ $73.438,TRADE_BUY,r003
+2024-11-01,2024-11-05,NT6192009,TLS,Telstra Group Limited,TXN,100.0,3.847,384.7,16.45,1.5,-401.15,Day Trade Buy – Telstra Group Limited | 100 units @ $3.847,TRADE_BUY,r003
+2024-11-04,2024-11-06,NT5727345,WDS,Woodside Energy Group Ltd,TXN,200.0,24.174,4834.8,16.45,1.5,-4851.25,Day Trade Buy – Woodside Energy Group Ltd | 200 units @ $24.174,TRADE_BUY,r003
+2024-11-04,2024-11-06,NT4350371,XRO,Xero Limited,TXN,200.0,147.224,29444.8,32.95,3.0,-29477.75,Day Trade Buy – Xero Limited | 200 units @ $147.224,TRADE_BUY,r003
+2024-11-04,2024-11-06,NT9062973,ANZ,ANZ Banking Group Limited,TXN,-150.0,30.861,4629.15,16.45,1.5,4612.7,Day Trade Sell – ANZ Banking Group Limited | 150 units @ $30.861,TRADE_SELL,r004
+2024-11-05,2024-11-07,NT3689594,ALL,Aristocrat Leisure Limited,TXN,50.0,59.28,2964.0,16.45,1.5,-2980.45,Day Trade Buy – Aristocrat Leisure Limited | 50 units @ $59.280,TRADE_BUY,r003
+2024-11-05,2024-11-07,NT2538698,XRO,Xero Limited,TXN,100.0,148.118,14811.8,21.95,2.0,-14833.75,Day Trade Buy – Xero Limited | 100 units @ $148.118,TRADE_BUY,r003
+2024-11-06,2024-11-08,NT7651393,XRO,Xero Limited,TXN,50.0,149.067,7453.35,21.95,2.0,-7475.3,Day Trade Buy – Xero Limited | 50 units @ $149.067,TRADE_BUY,r003
+2024-11-06,2024-11-08,NT1472908,RIO,Rio Tinto Limited,TXN,50.0,109.438,5471.9,21.95,2.0,-5493.85,Day Trade Buy – Rio Tinto Limited | 50 units @ $109.438,TRADE_BUY,r003
+2024-11-07,2024-11-11,NT5813037,XRO,Xero Limited,TXN,-100.0,149.336,14933.6,21.95,2.0,14911.65,Day Trade Sell – Xero Limited | 100 units @ $149.336,TRADE_SELL,r004
+2024-11-07,2024-11-11,NT8870361,ALL,Aristocrat Leisure Limited,TXN,100.0,59.206,5920.6,21.95,2.0,-5942.55,Day Trade Buy – Aristocrat Leisure Limited | 100 units @ $59.206,TRADE_BUY,r003
+2024-11-08,2024-11-12,NT9854536,WDS,Woodside Energy Group Ltd,TXN,100.0,24.061,2406.1,16.45,1.5,-2422.55,Day Trade Buy – Woodside Energy Group Ltd | 100 units @ $24.061,TRADE_BUY,r003
+2024-11-08,2024-11-12,NT1801102,CBA,Commonwealth Bank of Australia,TXN,100.0,158.573,15857.3,21.95,2.0,-15879.25,Day Trade Buy – Commonwealth Bank of Australia | 100 units @ $158.573,TRADE_BUY,r003
+2024-11-11,2024-11-13,NT5059048,CBA,Commonwealth Bank of Australia,TXN,50.0,158.591,7929.55,21.95,2.0,-7951.5,Day Trade Buy – Commonwealth Bank of Australia | 50 units @ $158.591,TRADE_BUY,r003
+2024-11-11,2024-11-13,NT5035998,WDS,Woodside Energy Group Ltd,TXN,50.0,23.994,1199.7,16.45,1.5,-1216.15,Day Trade Buy – Woodside Energy Group Ltd | 50 units @ $23.994,TRADE_BUY,r003
+2024-11-11,2024-11-13,NT7049927,RIO,Rio Tinto Limited,TXN,50.0,108.949,5447.45,21.95,2.0,-5469.4,Day Trade Buy – Rio Tinto Limited | 50 units @ $108.949,TRADE_BUY,r003
+2024-11-12,2024-11-14,NT5255545,WES,Wesfarmers Limited,TXN,200.0,73.486,14697.2,21.95,2.0,-14719.15,Day Trade Buy – Wesfarmers Limited | 200 units @ $73.486,TRADE_BUY,r003
+2024-11-12,2024-11-14,NT2739191,XRO,Xero Limited,TXN,50.0,149.328,7466.4,21.95,2.0,-7488.35,Day Trade Buy – Xero Limited | 50 units @ $149.328,TRADE_BUY,r003
+2024-11-13,2024-11-15,NT8795078,WBC,Westpac Banking Corporation,TXN,100.0,33.797,3379.7,16.45,1.5,-3396.15,Day Trade Buy – Westpac Banking Corporation | 100 units @ $33.797,TRADE_BUY,r003
+2024-11-13,2024-11-15,NT2058651,BHP,BHP Group Limited,TXN,100.0,44.037,4403.7,16.45,1.5,-4420.15,Day Trade Buy – BHP Group Limited | 100 units @ $44.037,TRADE_BUY,r003
+2024-11-13,2024-11-15,NT1734947,TLS,Telstra Group Limited,TXN,50.0,3.875,193.75,16.45,1.5,-210.2,Day Trade Buy – Telstra Group Limited | 50 units @ $3.875,TRADE_BUY,r003
+2024-11-14,2024-11-18,NT4206183,TLS,Telstra Group Limited,TXN,200.0,3.881,776.2,16.45,1.5,-792.65,Day Trade Buy – Telstra Group Limited | 200 units @ $3.881,TRADE_BUY,r003
+2024-11-14,2024-11-18,NT6568772,NAB,National Australia Bank Limited,TXN,50.0,39.008,1950.4,16.45,1.5,-1966.85,Day Trade Buy – National Australia Bank Limited | 50 units @ $39.008,TRADE_BUY,r003
+2024-11-15,2024-11-19,NT4134272,WES,Wesfarmers Limited,TXN,200.0,73.506,14701.2,21.95,2.0,-14723.15,Day Trade Buy – Wesfarmers Limited | 200 units @ $73.506,TRADE_BUY,r003
+2024-11-15,2024-11-19,NT8121922,WDS,Woodside Energy Group Ltd,TXN,150.0,24.0,3600.0,16.45,1.5,-3616.45,Day Trade Buy – Woodside Energy Group Ltd | 150 units @ $24.000,TRADE_BUY,r003
+2024-11-15,2024-11-19,NT6389033,ALL,Aristocrat Leisure Limited,TXN,100.0,59.267,5926.7,21.95,2.0,-5948.65,Day Trade Buy – Aristocrat Leisure Limited | 100 units @ $59.267,TRADE_BUY,r003
+2024-11-18,2024-11-20,NT8447546,FMG,Fortescue Ltd,TXN,-200.0,16.885,3377.0,16.45,1.5,3360.55,Day Trade Sell – Fortescue Ltd | 200 units @ $16.885,TRADE_SELL,r004
+2024-11-18,2024-11-20,NT8297090,NAB,National Australia Bank Limited,TXN,150.0,38.759,5813.85,21.95,2.0,-5835.8,Day Trade Buy – National Australia Bank Limited | 150 units @ $38.759,TRADE_BUY,r003
+2024-11-18,2024-11-20,NT7815076,XRO,Xero Limited,TXN,-50.0,150.351,7517.55,21.95,2.0,7495.6,Day Trade Sell – Xero Limited | 50 units @ $150.351,TRADE_SELL,r004
+2024-11-19,2024-11-21,NT2127988,BHP,BHP Group Limited,TXN,-200.0,44.259,8851.8,21.95,2.0,8829.85,Day Trade Sell – BHP Group Limited | 200 units @ $44.259,TRADE_SELL,r004
+2024-11-19,2024-11-21,NT1543335,WBC,Westpac Banking Corporation,TXN,150.0,33.921,5088.15,21.95,2.0,-5110.1,Day Trade Buy – Westpac Banking Corporation | 150 units @ $33.921,TRADE_BUY,r003
+2024-11-20,2024-11-22,NT7677903,TLS,Telstra Group Limited,TXN,100.0,3.89,389.0,16.45,1.5,-405.45,Day Trade Buy – Telstra Group Limited | 100 units @ $3.890,TRADE_BUY,r003
+2024-11-20,2024-11-22,NT4121368,WDS,Woodside Energy Group Ltd,TXN,-50.0,23.896,1194.8,16.45,1.5,1178.35,Day Trade Sell – Woodside Energy Group Ltd | 50 units @ $23.896,TRADE_SELL,r004
+2024-11-20,2024-11-22,NT5366937,RIO,Rio Tinto Limited,TXN,50.0,108.614,5430.7,21.95,2.0,-5452.65,Day Trade Buy – Rio Tinto Limited | 50 units @ $108.614,TRADE_BUY,r003
+2024-11-21,2024-11-25,NT3277144,CSL,CSL Limited,TXN,-200.0,294.529,58905.8,32.95,3.0,58872.85,Day Trade Sell – CSL Limited | 200 units @ $294.529,TRADE_SELL,r004
+2024-11-21,2024-11-25,NT6361793,NAB,National Australia Bank Limited,TXN,200.0,38.702,7740.4,21.95,2.0,-7762.35,Day Trade Buy – National Australia Bank Limited | 200 units @ $38.702,TRADE_BUY,r003
+2024-11-22,2024-11-26,NT3920762,MQG,Macquarie Group Limited,TXN,150.0,228.696,34304.4,32.95,3.0,-34337.35,Day Trade Buy – Macquarie Group Limited | 150 units @ $228.696,TRADE_BUY,r003
+2024-11-22,2024-11-26,NT3329967,WDS,Woodside Energy Group Ltd,TXN,50.0,23.899,1194.95,16.45,1.5,-1211.4,Day Trade Buy – Woodside Energy Group Ltd | 50 units @ $23.899,TRADE_BUY,r003
+2024-11-25,2024-11-27,NT3177199,BHP,BHP Group Limited,TXN,200.0,44.25,8850.0,21.95,2.0,-8871.95,Day Trade Buy – BHP Group Limited | 200 units @ $44.250,TRADE_BUY,r003
+2024-11-25,2024-11-27,NT9030667,TLS,Telstra Group Limited,TXN,150.0,3.868,580.2,16.45,1.5,-596.65,Day Trade Buy – Telstra Group Limited | 150 units @ $3.868,TRADE_BUY,r003
+2024-11-25,2024-11-27,NT6318841,MQG,Macquarie Group Limited,TXN,-50.0,229.705,11485.25,21.95,2.0,11463.3,Day Trade Sell – Macquarie Group Limited | 50 units @ $229.705,TRADE_SELL,r004
+2024-11-26,2024-11-28,NT3164813,RIO,Rio Tinto Limited,TXN,100.0,108.5,10850.0,21.95,2.0,-10871.95,Day Trade Buy – Rio Tinto Limited | 100 units @ $108.500,TRADE_BUY,r003
+2024-11-26,2024-11-28,NT9692311,FMG,Fortescue Ltd,TXN,50.0,16.958,847.9,16.45,1.5,-864.35,Day Trade Buy – Fortescue Ltd | 50 units @ $16.958,TRADE_BUY,r003
+2024-11-26,2024-11-28,NT4782763,MQG,Macquarie Group Limited,TXN,150.0,228.911,34336.65,32.95,3.0,-34369.6,Day Trade Buy – Macquarie Group Limited | 150 units @ $228.911,TRADE_BUY,r003
+2024-11-27,2024-11-29,NT6080553,XRO,Xero Limited,TXN,-150.0,149.721,22458.15,32.95,3.0,22425.2,Day Trade Sell – Xero Limited | 150 units @ $149.721,TRADE_SELL,r004
+2024-11-27,2024-11-29,NT3586950,CBA,Commonwealth Bank of Australia,TXN,100.0,157.956,15795.6,21.95,2.0,-15817.55,Day Trade Buy – Commonwealth Bank of Australia | 100 units @ $157.956,TRADE_BUY,r003
+2024-11-27,2024-11-29,NT1691125,NAB,National Australia Bank Limited,TXN,150.0,38.786,5817.9,21.95,2.0,-5839.85,Day Trade Buy – National Australia Bank Limited | 150 units @ $38.786,TRADE_BUY,r003
+2024-11-28,2024-12-02,NT7989166,CBA,Commonwealth Bank of Australia,TXN,150.0,158.597,23789.55,32.95,3.0,-23822.5,Day Trade Buy – Commonwealth Bank of Australia | 150 units @ $158.597,TRADE_BUY,r003
+2024-11-28,2024-12-02,NT6068298,BHP,BHP Group Limited,TXN,150.0,44.02,6603.0,21.95,2.0,-6624.95,Day Trade Buy – BHP Group Limited | 150 units @ $44.020,TRADE_BUY,r003
+2024-11-29,2024-12-03,NT9124385,NAB,National Australia Bank Limited,TXN,100.0,38.924,3892.4,16.45,1.5,-3908.85,Day Trade Buy – National Australia Bank Limited | 100 units @ $38.924,TRADE_BUY,r003
+2024-11-29,2024-12-03,NT6357240,RIO,Rio Tinto Limited,TXN,100.0,108.263,10826.3,21.95,2.0,-10848.25,Day Trade Buy – Rio Tinto Limited | 100 units @ $108.263,TRADE_BUY,r003
+2024-11-29,2024-12-03,NT7216632,CBA,Commonwealth Bank of Australia,TXN,-200.0,159.359,31871.8,32.95,3.0,31838.85,Day Trade Sell – Commonwealth Bank of Australia | 200 units @ $159.359,TRADE_SELL,r004
+2024-12-02,2024-12-04,NT3363534,TLS,Telstra Group Limited,TXN,150.0,3.866,579.9,16.45,1.5,-596.35,Day Trade Buy – Telstra Group Limited | 150 units @ $3.866,TRADE_BUY,r003
+2024-12-02,2024-12-04,NT8015136,ANZ,ANZ Banking Group Limited,TXN,200.0,30.829,6165.8,21.95,2.0,-6187.75,Day Trade Buy – ANZ Banking Group Limited | 200 units @ $30.829,TRADE_BUY,r003
+2024-12-03,2024-12-05,NT3673322,XRO,Xero Limited,TXN,-150.0,150.57,22585.5,32.95,3.0,22552.55,Day Trade Sell – Xero Limited | 150 units @ $150.570,TRADE_SELL,r004
+2024-12-03,2024-12-05,NT9344488,TLS,Telstra Group Limited,TXN,200.0,3.861,772.2,16.45,1.5,-788.65,Day Trade Buy – Telstra Group Limited | 200 units @ $3.861,TRADE_BUY,r003
+2024-12-04,2024-12-06,NT5720376,MQG,Macquarie Group Limited,TXN,-150.0,227.988,34198.2,32.95,3.0,34165.25,Day Trade Sell – Macquarie Group Limited | 150 units @ $227.988,TRADE_SELL,r004
+2024-12-04,2024-12-06,NT1137194,RIO,Rio Tinto Limited,TXN,200.0,108.861,21772.2,32.95,3.0,-21805.15,Day Trade Buy – Rio Tinto Limited | 200 units @ $108.861,TRADE_BUY,r003
+2024-12-04,2024-12-06,NT7765480,ANZ,ANZ Banking Group Limited,TXN,150.0,30.772,4615.8,16.45,1.5,-4632.25,Day Trade Buy – ANZ Banking Group Limited | 150 units @ $30.772,TRADE_BUY,r003
+2024-12-05,2024-12-09,NT9460003,BHP,BHP Group Limited,TXN,-150.0,43.856,6578.4,21.95,2.0,6556.45,Day Trade Sell – BHP Group Limited | 150 units @ $43.856,TRADE_SELL,r004
+2024-12-05,2024-12-09,NT2622046,CSL,CSL Limited,TXN,-50.0,295.121,14756.05,21.95,2.0,14734.1,Day Trade Sell – CSL Limited | 50 units @ $295.121,TRADE_SELL,r004
+2024-12-05,2024-12-09,NT7133857,MQG,Macquarie Group Limited,TXN,150.0,228.79,34318.5,32.95,3.0,-34351.45,Day Trade Buy – Macquarie Group Limited | 150 units @ $228.790,TRADE_BUY,r003
+2024-12-06,2024-12-10,NT3299088,CSL,CSL Limited,TXN,-50.0,294.647,14732.35,21.95,2.0,14710.4,Day Trade Sell – CSL Limited | 50 units @ $294.647,TRADE_SELL,r004
+2024-12-06,2024-12-10,NT9648751,MQG,Macquarie Group Limited,TXN,-200.0,229.858,45971.6,32.95,3.0,45938.65,Day Trade Sell – Macquarie Group Limited | 200 units @ $229.858,TRADE_SELL,r004
+2024-12-09,2024-12-11,NT9511333,WBC,Westpac Banking Corporation,TXN,150.0,34.032,5104.8,21.95,2.0,-5126.75,Day Trade Buy – Westpac Banking Corporation | 150 units @ $34.032,TRADE_BUY,r003
+2024-12-09,2024-12-11,NT1279121,WES,Wesfarmers Limited,TXN,150.0,73.534,11030.1,21.95,2.0,-11052.05,Day Trade Buy – Wesfarmers Limited | 150 units @ $73.534,TRADE_BUY,r003
+2024-12-09,2024-12-11,NT1447065,CSL,CSL Limited,TXN,200.0,295.514,59102.8,32.95,3.0,-59135.75,Day Trade Buy – CSL Limited | 200 units @ $295.514,TRADE_BUY,r003
+2024-12-10,2024-12-12,NT9060593,FMG,Fortescue Ltd,TXN,100.0,16.95,1695.0,16.45,1.5,-1711.45,Day Trade Buy – Fortescue Ltd | 100 units @ $16.950,TRADE_BUY,r003
+2024-12-10,2024-12-12,NT5063384,TCL,Transurban Group,TXN,-200.0,13.364,2672.8,16.45,1.5,2656.35,Day Trade Sell – Transurban Group | 200 units @ $13.364,TRADE_SELL,r004
+2024-12-10,2024-12-12,NT8399399,XRO,Xero Limited,TXN,-50.0,151.379,7568.95,21.95,2.0,7547.0,Day Trade Sell – Xero Limited | 50 units @ $151.379,TRADE_SELL,r004
+2024-12-11,2024-12-13,NT2044906,WES,Wesfarmers Limited,TXN,200.0,73.234,14646.8,21.95,2.0,-14668.75,Day Trade Buy – Wesfarmers Limited | 200 units @ $73.234,TRADE_BUY,r003
+2024-12-11,2024-12-13,NT9025733,ALL,Aristocrat Leisure Limited,TXN,150.0,59.186,8877.9,21.95,2.0,-8899.85,Day Trade Buy – Aristocrat Leisure Limited | 150 units @ $59.186,TRADE_BUY,r003
+2024-12-12,2024-12-16,NT5435261,WBC,Westpac Banking Corporation,TXN,150.0,34.013,5101.95,21.95,2.0,-5123.9,Day Trade Buy – Westpac Banking Corporation | 150 units @ $34.013,TRADE_BUY,r003
+2024-12-12,2024-12-16,NT6007984,RIO,Rio Tinto Limited,TXN,100.0,108.609,10860.9,21.95,2.0,-10882.85,Day Trade Buy – Rio Tinto Limited | 100 units @ $108.609,TRADE_BUY,r003
+2024-12-12,2024-12-16,NT4477544,MQG,Macquarie Group Limited,TXN,150.0,230.83,34624.5,32.95,3.0,-34657.45,Day Trade Buy – Macquarie Group Limited | 150 units @ $230.830,TRADE_BUY,r003
+2024-12-13,2024-12-17,NT7370211,TLS,Telstra Group Limited,TXN,150.0,3.857,578.55,16.45,1.5,-595.0,Day Trade Buy – Telstra Group Limited | 150 units @ $3.857,TRADE_BUY,r003
+2024-12-13,2024-12-17,NT3457461,RIO,Rio Tinto Limited,TXN,150.0,108.352,16252.8,21.95,2.0,-16274.75,Day Trade Buy – Rio Tinto Limited | 150 units @ $108.352,TRADE_BUY,r003
+2024-12-13,2024-12-17,NT8421839,WDS,Woodside Energy Group Ltd,TXN,50.0,23.813,1190.65,16.45,1.5,-1207.1,Day Trade Buy – Woodside Energy Group Ltd | 50 units @ $23.813,TRADE_BUY,r003
+2024-12-16,2024-12-18,NT5014486,ANZ,ANZ Banking Group Limited,TXN,-150.0,30.671,4600.65,16.45,1.5,4584.2,Day Trade Sell – ANZ Banking Group Limited | 150 units @ $30.671,TRADE_SELL,r004
+2024-12-16,2024-12-18,NT1880654,WDS,Woodside Energy Group Ltd,TXN,100.0,23.877,2387.7,16.45,1.5,-2404.15,Day Trade Buy – Woodside Energy Group Ltd | 100 units @ $23.877,TRADE_BUY,r003
+2024-12-16,2024-12-18,NT3306314,MQG,Macquarie Group Limited,TXN,-200.0,230.536,46107.2,32.95,3.0,46074.25,Day Trade Sell – Macquarie Group Limited | 200 units @ $230.536,TRADE_SELL,r004
+2024-12-17,2024-12-19,NT4346315,WES,Wesfarmers Limited,TXN,200.0,73.677,14735.4,21.95,2.0,-14757.35,Day Trade Buy – Wesfarmers Limited | 200 units @ $73.677,TRADE_BUY,r003
+2024-12-17,2024-12-19,NT2500901,FMG,Fortescue Ltd,TXN,150.0,16.885,2532.75,16.45,1.5,-2549.2,Day Trade Buy – Fortescue Ltd | 150 units @ $16.885,TRADE_BUY,r003
+2024-12-18,2024-12-20,NT3937099,MQG,Macquarie Group Limited,TXN,50.0,230.696,11534.8,21.95,2.0,-11556.75,Day Trade Buy – Macquarie Group Limited | 50 units @ $230.696,TRADE_BUY,r003
+2024-12-18,2024-12-20,NT7660463,ALL,Aristocrat Leisure Limited,TXN,50.0,59.432,2971.6,16.45,1.5,-2988.05,Day Trade Buy – Aristocrat Leisure Limited | 50 units @ $59.432,TRADE_BUY,r003
+2024-12-19,2024-12-23,NT1155477,WDS,Woodside Energy Group Ltd,TXN,150.0,23.971,3595.65,16.45,1.5,-3612.1,Day Trade Buy – Woodside Energy Group Ltd | 150 units @ $23.971,TRADE_BUY,r003
+2024-12-19,2024-12-23,NT9796605,ALL,Aristocrat Leisure Limited,TXN,150.0,59.573,8935.95,21.95,2.0,-8957.9,Day Trade Buy – Aristocrat Leisure Limited | 150 units @ $59.573,TRADE_BUY,r003
+2024-12-20,2024-12-24,NT6547958,XRO,Xero Limited,TXN,100.0,151.208,15120.8,21.95,2.0,-15142.75,Day Trade Buy – Xero Limited | 100 units @ $151.208,TRADE_BUY,r003
+2024-12-20,2024-12-24,NT1236293,MQG,Macquarie Group Limited,TXN,150.0,230.506,34575.9,32.95,3.0,-34608.85,Day Trade Buy – Macquarie Group Limited | 150 units @ $230.506,TRADE_BUY,r003
+2024-12-23,2024-12-25,NT9644974,CSL,CSL Limited,TXN,200.0,294.54,58908.0,32.95,3.0,-58940.95,Day Trade Buy – CSL Limited | 200 units @ $294.540,TRADE_BUY,r003
+2024-12-23,2024-12-25,NT3359075,FMG,Fortescue Ltd,TXN,-50.0,16.875,843.75,16.45,1.5,827.3,Day Trade Sell – Fortescue Ltd | 50 units @ $16.875,TRADE_SELL,r004
+2024-12-23,2024-12-25,NT4951390,TCL,Transurban Group,TXN,50.0,13.409,670.45,16.45,1.5,-686.9,Day Trade Buy – Transurban Group | 50 units @ $13.409,TRADE_BUY,r003
+2024-12-24,2024-12-26,NT7032283,TLS,Telstra Group Limited,TXN,50.0,3.873,193.65,16.45,1.5,-210.1,Day Trade Buy – Telstra Group Limited | 50 units @ $3.873,TRADE_BUY,r003
+2024-12-24,2024-12-26,NT3679603,NAB,National Australia Bank Limited,TXN,50.0,38.714,1935.7,16.45,1.5,-1952.15,Day Trade Buy – National Australia Bank Limited | 50 units @ $38.714,TRADE_BUY,r003
+2024-12-24,2024-12-26,NT5949909,CSL,CSL Limited,TXN,150.0,294.346,44151.9,32.95,3.0,-44184.85,Day Trade Buy – CSL Limited | 150 units @ $294.346,TRADE_BUY,r003
+2024-12-27,2024-12-31,NT7268384,ANZ,ANZ Banking Group Limited,TXN,200.0,30.631,6126.2,21.95,2.0,-6148.15,Day Trade Buy – ANZ Banking Group Limited | 200 units @ $30.631,TRADE_BUY,r003
+2024-12-27,2024-12-31,NT4664338,WBC,Westpac Banking Corporation,TXN,200.0,34.048,6809.6,21.95,2.0,-6831.55,Day Trade Buy – Westpac Banking Corporation | 200 units @ $34.048,TRADE_BUY,r003
+2024-12-30,2025-01-01,NT2882551,MQG,Macquarie Group Limited,TXN,-150.0,230.802,34620.3,32.95,3.0,34587.35,Day Trade Sell – Macquarie Group Limited | 150 units @ $230.802,TRADE_SELL,r004
+2024-12-30,2025-01-01,NT3514105,RIO,Rio Tinto Limited,TXN,100.0,108.323,10832.3,21.95,2.0,-10854.25,Day Trade Buy – Rio Tinto Limited | 100 units @ $108.323,TRADE_BUY,r003
+2024-12-31,2025-01-02,NT9562677,CBA,Commonwealth Bank of Australia,TXN,-200.0,159.784,31956.8,32.95,3.0,31923.85,Day Trade Sell – Commonwealth Bank of Australia | 200 units @ $159.784,TRADE_SELL,r004
+2024-12-31,2025-01-02,NT8663806,FMG,Fortescue Ltd,TXN,100.0,16.783,1678.3,16.45,1.5,-1694.75,Day Trade Buy – Fortescue Ltd | 100 units @ $16.783,TRADE_BUY,r003
+2024-12-31,2025-01-02,NT7642917,ANZ,ANZ Banking Group Limited,TXN,150.0,30.643,4596.45,16.45,1.5,-4612.9,Day Trade Buy – ANZ Banking Group Limited | 150 units @ $30.643,TRADE_BUY,r003
+2025-01-02,2025-01-06,NT2069713,ALL,Aristocrat Leisure Limited,TXN,50.0,59.628,2981.4,16.45,1.5,-2997.85,Day Trade Buy – Aristocrat Leisure Limited | 50 units @ $59.628,TRADE_BUY,r003
+2025-01-02,2025-01-06,NT8920040,ANZ,ANZ Banking Group Limited,TXN,50.0,30.451,1522.55,16.45,1.5,-1539.0,Day Trade Buy – ANZ Banking Group Limited | 50 units @ $30.451,TRADE_BUY,r003
+2025-01-03,2025-01-07,NT7416943,WBC,Westpac Banking Corporation,TXN,200.0,34.193,6838.6,21.95,2.0,-6860.55,Day Trade Buy – Westpac Banking Corporation | 200 units @ $34.193,TRADE_BUY,r003
+2025-01-03,2025-01-07,NT3231198,TCL,Transurban Group,TXN,200.0,13.473,2694.6,16.45,1.5,-2711.05,Day Trade Buy – Transurban Group | 200 units @ $13.473,TRADE_BUY,r003
+2025-01-03,2025-01-07,NT7594429,WDS,Woodside Energy Group Ltd,TXN,100.0,23.908,2390.8,16.45,1.5,-2407.25,Day Trade Buy – Woodside Energy Group Ltd | 100 units @ $23.908,TRADE_BUY,r003
+2025-01-06,2025-01-08,NT8115687,XRO,Xero Limited,TXN,150.0,151.468,22720.2,32.95,3.0,-22753.15,Day Trade Buy – Xero Limited | 150 units @ $151.468,TRADE_BUY,r003
+2025-01-06,2025-01-08,NT3602504,BHP,BHP Group Limited,TXN,100.0,44.017,4401.7,16.45,1.5,-4418.15,Day Trade Buy – BHP Group Limited | 100 units @ $44.017,TRADE_BUY,r003
+2025-01-07,2025-01-09,NT2128954,BHP,BHP Group Limited,TXN,-50.0,44.062,2203.1,16.45,1.5,2186.65,Day Trade Sell – BHP Group Limited | 50 units @ $44.062,TRADE_SELL,r004
+2025-01-07,2025-01-09,NT1742169,TCL,Transurban Group,TXN,-50.0,13.406,670.3,16.45,1.5,653.85,Day Trade Sell – Transurban Group | 50 units @ $13.406,TRADE_SELL,r004
+2025-01-08,2025-01-10,NT5853035,MQG,Macquarie Group Limited,TXN,-50.0,231.1,11555.0,21.95,2.0,11533.05,Day Trade Sell – Macquarie Group Limited | 50 units @ $231.100,TRADE_SELL,r004
+2025-01-08,2025-01-10,NT6379867,ANZ,ANZ Banking Group Limited,TXN,150.0,30.546,4581.9,16.45,1.5,-4598.35,Day Trade Buy – ANZ Banking Group Limited | 150 units @ $30.546,TRADE_BUY,r003
+2025-01-09,2025-01-13,NT3938247,FMG,Fortescue Ltd,TXN,150.0,16.731,2509.65,16.45,1.5,-2526.1,Day Trade Buy – Fortescue Ltd | 150 units @ $16.731,TRADE_BUY,r003
+2025-01-09,2025-01-13,NT6778321,MQG,Macquarie Group Limited,TXN,-200.0,230.652,46130.4,32.95,3.0,46097.45,Day Trade Sell – Macquarie Group Limited | 200 units @ $230.652,TRADE_SELL,r004
+2025-01-10,2025-01-14,NT7315953,TCL,Transurban Group,TXN,-200.0,13.433,2686.6,16.45,1.5,2670.15,Day Trade Sell – Transurban Group | 200 units @ $13.433,TRADE_SELL,r004
+2025-01-10,2025-01-14,NT6045519,MQG,Macquarie Group Limited,TXN,100.0,231.164,23116.4,32.95,3.0,-23149.35,Day Trade Buy – Macquarie Group Limited | 100 units @ $231.164,TRADE_BUY,r003
+2025-01-10,2025-01-14,NT7923579,TLS,Telstra Group Limited,TXN,200.0,3.859,771.8,16.45,1.5,-788.25,Day Trade Buy – Telstra Group Limited | 200 units @ $3.859,TRADE_BUY,r003
+2025-01-13,2025-01-15,NT8546170,WES,Wesfarmers Limited,TXN,150.0,73.535,11030.25,21.95,2.0,-11052.2,Day Trade Buy – Wesfarmers Limited | 150 units @ $73.535,TRADE_BUY,r003
+2025-01-13,2025-01-15,NT7327828,ANZ,ANZ Banking Group Limited,TXN,-100.0,30.365,3036.5,16.45,1.5,3020.05,Day Trade Sell – ANZ Banking Group Limited | 100 units @ $30.365,TRADE_SELL,r004
+2025-01-14,2025-01-16,NT6586214,XRO,Xero Limited,TXN,100.0,150.92,15092.0,21.95,2.0,-15113.95,Day Trade Buy – Xero Limited | 100 units @ $150.920,TRADE_BUY,r003
+2025-01-14,2025-01-16,NT2968239,CBA,Commonwealth Bank of Australia,TXN,100.0,160.533,16053.3,21.95,2.0,-16075.25,Day Trade Buy – Commonwealth Bank of Australia | 100 units @ $160.533,TRADE_BUY,r003
+2025-01-15,2025-01-17,NT5015307,WDS,Woodside Energy Group Ltd,TXN,100.0,23.941,2394.1,16.45,1.5,-2410.55,Day Trade Buy – Woodside Energy Group Ltd | 100 units @ $23.941,TRADE_BUY,r003
+2025-01-15,2025-01-17,NT7027375,ANZ,ANZ Banking Group Limited,TXN,200.0,30.486,6097.2,21.95,2.0,-6119.15,Day Trade Buy – ANZ Banking Group Limited | 200 units @ $30.486,TRADE_BUY,r003
+2025-01-15,2025-01-17,NT8876742,ALL,Aristocrat Leisure Limited,TXN,200.0,59.538,11907.6,21.95,2.0,-11929.55,Day Trade Buy – Aristocrat Leisure Limited | 200 units @ $59.538,TRADE_BUY,r003
+2025-01-16,2025-01-20,NT4712363,WDS,Woodside Energy Group Ltd,TXN,50.0,23.892,1194.6,16.45,1.5,-1211.05,Day Trade Buy – Woodside Energy Group Ltd | 50 units @ $23.892,TRADE_BUY,r003
+2025-01-16,2025-01-20,NT4291551,ANZ,ANZ Banking Group Limited,TXN,200.0,30.286,6057.2,21.95,2.0,-6079.15,Day Trade Buy – ANZ Banking Group Limited | 200 units @ $30.286,TRADE_BUY,r003
+2025-01-16,2025-01-20,NT6663388,TLS,Telstra Group Limited,TXN,100.0,3.86,386.0,16.45,1.5,-402.45,Day Trade Buy – Telstra Group Limited | 100 units @ $3.860,TRADE_BUY,r003
+2025-01-17,2025-01-21,NT6908535,ALL,Aristocrat Leisure Limited,TXN,100.0,59.593,5959.3,21.95,2.0,-5981.25,Day Trade Buy – Aristocrat Leisure Limited | 100 units @ $59.593,TRADE_BUY,r003
+2025-01-17,2025-01-21,NT1985360,FMG,Fortescue Ltd,TXN,-200.0,16.783,3356.6,16.45,1.5,3340.15,Day Trade Sell – Fortescue Ltd | 200 units @ $16.783,TRADE_SELL,r004
+2025-01-17,2025-01-21,NT1813936,WDS,Woodside Energy Group Ltd,TXN,50.0,24.012,1200.6,16.45,1.5,-1217.05,Day Trade Buy – Woodside Energy Group Ltd | 50 units @ $24.012,TRADE_BUY,r003
+2025-01-20,2025-01-22,NT9484790,WBC,Westpac Banking Corporation,TXN,-100.0,34.076,3407.6,16.45,1.5,3391.15,Day Trade Sell – Westpac Banking Corporation | 100 units @ $34.076,TRADE_SELL,r004
+2025-01-20,2025-01-22,NT1263935,XRO,Xero Limited,TXN,200.0,150.006,30001.2,32.95,3.0,-30034.15,Day Trade Buy – Xero Limited | 200 units @ $150.006,TRADE_BUY,r003
+2025-01-20,2025-01-22,NT5609384,FMG,Fortescue Ltd,TXN,-50.0,16.795,839.75,16.45,1.5,823.3,Day Trade Sell – Fortescue Ltd | 50 units @ $16.795,TRADE_SELL,r004
+2025-01-21,2025-01-23,NT2615878,BHP,BHP Group Limited,TXN,-100.0,44.084,4408.4,16.45,1.5,4391.95,Day Trade Sell – BHP Group Limited | 100 units @ $44.084,TRADE_SELL,r004
+2025-01-21,2025-01-23,NT5484964,MQG,Macquarie Group Limited,TXN,150.0,230.775,34616.25,32.95,3.0,-34649.2,Day Trade Buy – Macquarie Group Limited | 150 units @ $230.775,TRADE_BUY,r003
+2025-01-21,2025-01-23,NT5080351,ALL,Aristocrat Leisure Limited,TXN,200.0,59.213,11842.6,21.95,2.0,-11864.55,Day Trade Buy – Aristocrat Leisure Limited | 200 units @ $59.213,TRADE_BUY,r003
+2025-01-22,2025-01-24,NT1531577,NAB,National Australia Bank Limited,TXN,50.0,38.851,1942.55,16.45,1.5,-1959.0,Day Trade Buy – National Australia Bank Limited | 50 units @ $38.851,TRADE_BUY,r003
+2025-01-22,2025-01-24,NT1158547,FMG,Fortescue Ltd,TXN,-200.0,16.773,3354.6,16.45,1.5,3338.15,Day Trade Sell – Fortescue Ltd | 200 units @ $16.773,TRADE_SELL,r004
+2025-01-23,2025-01-27,NT2599906,RIO,Rio Tinto Limited,TXN,150.0,108.092,16213.8,21.95,2.0,-16235.75,Day Trade Buy – Rio Tinto Limited | 150 units @ $108.092,TRADE_BUY,r003
+2025-01-23,2025-01-27,NT8977571,XRO,Xero Limited,TXN,-100.0,150.463,15046.3,21.95,2.0,15024.35,Day Trade Sell – Xero Limited | 100 units @ $150.463,TRADE_SELL,r004
+2025-01-24,2025-01-28,NT6276177,FMG,Fortescue Ltd,TXN,-50.0,16.867,843.35,16.45,1.5,826.9,Day Trade Sell – Fortescue Ltd | 50 units @ $16.867,TRADE_SELL,r004
+2025-01-24,2025-01-28,NT7682298,NAB,National Australia Bank Limited,TXN,100.0,38.652,3865.2,16.45,1.5,-3881.65,Day Trade Buy – National Australia Bank Limited | 100 units @ $38.652,TRADE_BUY,r003
+2025-01-28,2025-01-30,NT6565503,WBC,Westpac Banking Corporation,TXN,200.0,34.097,6819.4,21.95,2.0,-6841.35,Day Trade Buy – Westpac Banking Corporation | 200 units @ $34.097,TRADE_BUY,r003
+2025-01-28,2025-01-30,NT6802559,CSL,CSL Limited,TXN,50.0,295.036,14751.8,21.95,2.0,-14773.75,Day Trade Buy – CSL Limited | 50 units @ $295.036,TRADE_BUY,r003
+2025-01-28,2025-01-30,NT7655572,ANZ,ANZ Banking Group Limited,TXN,50.0,30.242,1512.1,16.45,1.5,-1528.55,Day Trade Buy – ANZ Banking Group Limited | 50 units @ $30.242,TRADE_BUY,r003
+2025-01-29,2025-01-31,NT6969521,BHP,BHP Group Limited,TXN,200.0,44.238,8847.6,21.95,2.0,-8869.55,Day Trade Buy – BHP Group Limited | 200 units @ $44.238,TRADE_BUY,r003
+2025-01-29,2025-01-31,NT7376562,FMG,Fortescue Ltd,TXN,100.0,16.809,1680.9,16.45,1.5,-1697.35,Day Trade Buy – Fortescue Ltd | 100 units @ $16.809,TRADE_BUY,r003
+2025-01-29,2025-01-31,NT2376369,NAB,National Australia Bank Limited,TXN,100.0,38.773,3877.3,16.45,1.5,-3893.75,Day Trade Buy – National Australia Bank Limited | 100 units @ $38.773,TRADE_BUY,r003
+2025-01-30,2025-02-03,NT2787627,ALL,Aristocrat Leisure Limited,TXN,200.0,59.083,11816.6,21.95,2.0,-11838.55,Day Trade Buy – Aristocrat Leisure Limited | 200 units @ $59.083,TRADE_BUY,r003
+2025-01-30,2025-02-03,NT5525929,TCL,Transurban Group,TXN,200.0,13.487,2697.4,16.45,1.5,-2713.85,Day Trade Buy – Transurban Group | 200 units @ $13.487,TRADE_BUY,r003
+2025-01-30,2025-02-03,NT9597330,FMG,Fortescue Ltd,TXN,200.0,16.698,3339.6,16.45,1.5,-3356.05,Day Trade Buy – Fortescue Ltd | 200 units @ $16.698,TRADE_BUY,r003
+2025-01-31,2025-02-04,NT1207041,CBA,Commonwealth Bank of Australia,TXN,150.0,160.797,24119.55,32.95,3.0,-24152.5,Day Trade Buy – Commonwealth Bank of Australia | 150 units @ $160.797,TRADE_BUY,r003
+2025-01-31,2025-02-04,NT5072543,TLS,Telstra Group Limited,TXN,50.0,3.851,192.55,16.45,1.5,-209.0,Day Trade Buy – Telstra Group Limited | 50 units @ $3.851,TRADE_BUY,r003
+2025-02-03,2025-02-05,NT9273246,FMG,Fortescue Ltd,TXN,150.0,16.626,2493.9,16.45,1.5,-2510.35,Day Trade Buy – Fortescue Ltd | 150 units @ $16.626,TRADE_BUY,r003
+2025-02-03,2025-02-05,NT9124053,WES,Wesfarmers Limited,TXN,150.0,73.343,11001.45,21.95,2.0,-11023.4,Day Trade Buy – Wesfarmers Limited | 150 units @ $73.343,TRADE_BUY,r003
+2025-02-04,2025-02-06,NT3273137,NAB,National Australia Bank Limited,TXN,100.0,38.795,3879.5,16.45,1.5,-3895.95,Day Trade Buy – National Australia Bank Limited | 100 units @ $38.795,TRADE_BUY,r003
+2025-02-04,2025-02-06,NT7373495,ANZ,ANZ Banking Group Limited,TXN,150.0,30.462,4569.3,16.45,1.5,-4585.75,Day Trade Buy – ANZ Banking Group Limited | 150 units @ $30.462,TRADE_BUY,r003
+2025-02-04,2025-02-06,NT3283789,ALL,Aristocrat Leisure Limited,TXN,150.0,58.865,8829.75,21.95,2.0,-8851.7,Day Trade Buy – Aristocrat Leisure Limited | 150 units @ $58.865,TRADE_BUY,r003
+2025-02-05,2025-02-07,NT5889688,RIO,Rio Tinto Limited,TXN,200.0,107.844,21568.8,32.95,3.0,-21601.75,Day Trade Buy – Rio Tinto Limited | 200 units @ $107.844,TRADE_BUY,r003
+2025-02-05,2025-02-07,NT5702656,TLS,Telstra Group Limited,TXN,100.0,3.858,385.8,16.45,1.5,-402.25,Day Trade Buy – Telstra Group Limited | 100 units @ $3.858,TRADE_BUY,r003
+2025-02-06,2025-02-10,NT1451577,TLS,Telstra Group Limited,TXN,100.0,3.849,384.9,16.45,1.5,-401.35,Day Trade Buy – Telstra Group Limited | 100 units @ $3.849,TRADE_BUY,r003
+2025-02-06,2025-02-10,NT5887726,CBA,Commonwealth Bank of Australia,TXN,100.0,160.589,16058.9,21.95,2.0,-16080.85,Day Trade Buy – Commonwealth Bank of Australia | 100 units @ $160.589,TRADE_BUY,r003
+2025-02-06,2025-02-10,NT3335038,CSL,CSL Limited,TXN,200.0,292.986,58597.2,32.95,3.0,-58630.15,Day Trade Buy – CSL Limited | 200 units @ $292.986,TRADE_BUY,r003
+2025-02-07,2025-02-11,NT2240929,NAB,National Australia Bank Limited,TXN,200.0,38.604,7720.8,21.95,2.0,-7742.75,Day Trade Buy – National Australia Bank Limited | 200 units @ $38.604,TRADE_BUY,r003
+2025-02-07,2025-02-11,NT8017921,FMG,Fortescue Ltd,TXN,200.0,16.622,3324.4,16.45,1.5,-3340.85,Day Trade Buy – Fortescue Ltd | 200 units @ $16.622,TRADE_BUY,r003
+2025-02-10,2025-02-12,NT5164624,ALL,Aristocrat Leisure Limited,TXN,-50.0,58.884,2944.2,16.45,1.5,2927.75,Day Trade Sell – Aristocrat Leisure Limited | 50 units @ $58.884,TRADE_SELL,r004
+2025-02-10,2025-02-12,NT7704473,TCL,Transurban Group,TXN,50.0,13.443,672.15,16.45,1.5,-688.6,Day Trade Buy – Transurban Group | 50 units @ $13.443,TRADE_BUY,r003
+2025-02-10,2025-02-12,NT2654343,MQG,Macquarie Group Limited,TXN,-200.0,230.58,46116.0,32.95,3.0,46083.05,Day Trade Sell – Macquarie Group Limited | 200 units @ $230.580,TRADE_SELL,r004
+2025-02-11,2025-02-13,NT1412092,RIO,Rio Tinto Limited,TXN,100.0,107.804,10780.4,21.95,2.0,-10802.35,Day Trade Buy – Rio Tinto Limited | 100 units @ $107.804,TRADE_BUY,r003
+2025-02-11,2025-02-13,NT3376915,TLS,Telstra Group Limited,TXN,-50.0,3.847,192.35,16.45,1.5,175.9,Day Trade Sell – Telstra Group Limited | 50 units @ $3.847,TRADE_SELL,r004
+2025-02-12,2025-02-14,NT8351204,RIO,Rio Tinto Limited,TXN,150.0,107.824,16173.6,21.95,2.0,-16195.55,Day Trade Buy – Rio Tinto Limited | 150 units @ $107.824,TRADE_BUY,r003
+2025-02-12,2025-02-14,NT2930810,TCL,Transurban Group,TXN,50.0,13.46,673.0,16.45,1.5,-689.45,Day Trade Buy – Transurban Group | 50 units @ $13.460,TRADE_BUY,r003
+2025-02-12,2025-02-14,NT3757404,ANZ,ANZ Banking Group Limited,TXN,50.0,30.442,1522.1,16.45,1.5,-1538.55,Day Trade Buy – ANZ Banking Group Limited | 50 units @ $30.442,TRADE_BUY,r003
+2025-02-13,2025-02-17,NT8751982,MQG,Macquarie Group Limited,TXN,150.0,230.5,34575.0,32.95,3.0,-34607.95,Day Trade Buy – Macquarie Group Limited | 150 units @ $230.500,TRADE_BUY,r003
+2025-02-13,2025-02-17,NT8250013,WBC,Westpac Banking Corporation,TXN,-100.0,34.042,3404.2,16.45,1.5,3387.75,Day Trade Sell – Westpac Banking Corporation | 100 units @ $34.042,TRADE_SELL,r004
+2025-02-14,2025-02-18,NT4452490,RIO,Rio Tinto Limited,TXN,50.0,107.829,5391.45,21.95,2.0,-5413.4,Day Trade Buy – Rio Tinto Limited | 50 units @ $107.829,TRADE_BUY,r003
+2025-02-14,2025-02-18,NT4136665,CSL,CSL Limited,TXN,50.0,293.859,14692.95,21.95,2.0,-14714.9,Day Trade Buy – CSL Limited | 50 units @ $293.859,TRADE_BUY,r003
+2025-02-17,2025-02-19,NT6258048,RIO,Rio Tinto Limited,TXN,200.0,107.426,21485.2,32.95,3.0,-21518.15,Day Trade Buy – Rio Tinto Limited | 200 units @ $107.426,TRADE_BUY,r003
+2025-02-17,2025-02-19,NT8681625,CBA,Commonwealth Bank of Australia,TXN,50.0,161.017,8050.85,21.95,2.0,-8072.8,Day Trade Buy – Commonwealth Bank of Australia | 50 units @ $161.017,TRADE_BUY,r003
+2025-02-18,2025-02-20,NT5002586,WDS,Woodside Energy Group Ltd,TXN,100.0,23.917,2391.7,16.45,1.5,-2408.15,Day Trade Buy – Woodside Energy Group Ltd | 100 units @ $23.917,TRADE_BUY,r003
+2025-02-18,2025-02-20,NT8016887,CSL,CSL Limited,TXN,100.0,292.584,29258.4,32.95,3.0,-29291.35,Day Trade Buy – CSL Limited | 100 units @ $292.584,TRADE_BUY,r003
+2025-02-18,2025-02-20,NT3906397,XRO,Xero Limited,TXN,-200.0,150.46,30092.0,32.95,3.0,30059.05,Day Trade Sell – Xero Limited | 200 units @ $150.460,TRADE_SELL,r004
+2025-02-19,2025-02-21,NT7023677,NAB,National Australia Bank Limited,TXN,200.0,38.51,7702.0,21.95,2.0,-7723.95,Day Trade Buy – National Australia Bank Limited | 200 units @ $38.510,TRADE_BUY,r003
+2025-02-19,2025-02-21,NT9479842,WBC,Westpac Banking Corporation,TXN,100.0,34.022,3402.2,16.45,1.5,-3418.65,Day Trade Buy – Westpac Banking Corporation | 100 units @ $34.022,TRADE_BUY,r003
+2025-02-19,2025-02-21,NT8446596,XRO,Xero Limited,TXN,200.0,150.329,30065.8,32.95,3.0,-30098.75,Day Trade Buy – Xero Limited | 200 units @ $150.329,TRADE_BUY,r003
+2025-02-20,2025-02-24,NT5611266,CSL,CSL Limited,TXN,100.0,293.736,29373.6,32.95,3.0,-29406.55,Day Trade Buy – CSL Limited | 100 units @ $293.736,TRADE_BUY,r003
+2025-02-20,2025-02-24,NT9309978,BHP,BHP Group Limited,TXN,200.0,44.135,8827.0,21.95,2.0,-8848.95,Day Trade Buy – BHP Group Limited | 200 units @ $44.135,TRADE_BUY,r003
+2025-02-21,2025-02-25,NT1698108,CSL,CSL Limited,TXN,150.0,292.596,43889.4,32.95,3.0,-43922.35,Day Trade Buy – CSL Limited | 150 units @ $292.596,TRADE_BUY,r003
+2025-02-21,2025-02-25,NT2718262,CBA,Commonwealth Bank of Australia,TXN,100.0,160.98,16098.0,21.95,2.0,-16119.95,Day Trade Buy – Commonwealth Bank of Australia | 100 units @ $160.980,TRADE_BUY,r003
+2025-02-24,2025-02-26,NT2459332,NAB,National Australia Bank Limited,TXN,200.0,38.811,7762.2,21.95,2.0,-7784.15,Day Trade Buy – National Australia Bank Limited | 200 units @ $38.811,TRADE_BUY,r003
+2025-02-24,2025-02-26,NT6882609,XRO,Xero Limited,TXN,-100.0,151.213,15121.3,21.95,2.0,15099.35,Day Trade Sell – Xero Limited | 100 units @ $151.213,TRADE_SELL,r004
+2025-02-25,2025-02-27,NT6885707,WBC,Westpac Banking Corporation,TXN,100.0,34.159,3415.9,16.45,1.5,-3432.35,Day Trade Buy – Westpac Banking Corporation | 100 units @ $34.159,TRADE_BUY,r003
+2025-02-25,2025-02-27,NT5909595,CSL,CSL Limited,TXN,100.0,293.24,29324.0,32.95,3.0,-29356.95,Day Trade Buy – CSL Limited | 100 units @ $293.240,TRADE_BUY,r003
+2025-02-25,2025-02-27,NT7905438,WDS,Woodside Energy Group Ltd,TXN,-50.0,23.831,1191.55,16.45,1.5,1175.1,Day Trade Sell – Woodside Energy Group Ltd | 50 units @ $23.831,TRADE_SELL,r004
+2025-02-26,2025-02-28,NT6403886,XRO,Xero Limited,TXN,-100.0,151.797,15179.7,21.95,2.0,15157.75,Day Trade Sell – Xero Limited | 100 units @ $151.797,TRADE_SELL,r004
+2025-02-26,2025-02-28,NT5508325,FMG,Fortescue Ltd,TXN,200.0,16.677,3335.4,16.45,1.5,-3351.85,Day Trade Buy – Fortescue Ltd | 200 units @ $16.677,TRADE_BUY,r003
+2025-02-26,2025-02-28,NT2561871,WBC,Westpac Banking Corporation,TXN,50.0,34.112,1705.6,16.45,1.5,-1722.05,Day Trade Buy – Westpac Banking Corporation | 50 units @ $34.112,TRADE_BUY,r003
+2025-02-27,2025-03-03,NT2562657,ALL,Aristocrat Leisure Limited,TXN,150.0,59.239,8885.85,21.95,2.0,-8907.8,Day Trade Buy – Aristocrat Leisure Limited | 150 units @ $59.239,TRADE_BUY,r003
+2025-02-27,2025-03-03,NT9966154,TLS,Telstra Group Limited,TXN,150.0,3.843,576.45,16.45,1.5,-592.9,Day Trade Buy – Telstra Group Limited | 150 units @ $3.843,TRADE_BUY,r003
+2025-02-27,2025-03-03,NT6416778,RIO,Rio Tinto Limited,TXN,100.0,108.072,10807.2,21.95,2.0,-10829.15,Day Trade Buy – Rio Tinto Limited | 100 units @ $108.072,TRADE_BUY,r003
+2025-02-28,2025-03-04,NT1812172,MQG,Macquarie Group Limited,TXN,200.0,230.436,46087.2,32.95,3.0,-46120.15,Day Trade Buy – Macquarie Group Limited | 200 units @ $230.436,TRADE_BUY,r003
+2025-02-28,2025-03-04,NT3650523,CSL,CSL Limited,TXN,-200.0,293.437,58687.4,32.95,3.0,58654.45,Day Trade Sell – CSL Limited | 200 units @ $293.437,TRADE_SELL,r004
+2025-02-28,2025-03-04,NT3213134,WBC,Westpac Banking Corporation,TXN,-200.0,33.895,6779.0,21.95,2.0,6757.05,Day Trade Sell – Westpac Banking Corporation | 200 units @ $33.895,TRADE_SELL,r004
+2025-03-03,2025-03-05,NT7238503,WBC,Westpac Banking Corporation,TXN,150.0,33.781,5067.15,21.95,2.0,-5089.1,Day Trade Buy – Westpac Banking Corporation | 150 units @ $33.781,TRADE_BUY,r003
+2025-03-03,2025-03-05,NT6125594,XRO,Xero Limited,TXN,50.0,152.268,7613.4,21.95,2.0,-7635.35,Day Trade Buy – Xero Limited | 50 units @ $152.268,TRADE_BUY,r003
+2025-03-03,2025-03-05,NT2596917,NAB,National Australia Bank Limited,TXN,200.0,38.921,7784.2,21.95,2.0,-7806.15,Day Trade Buy – National Australia Bank Limited | 200 units @ $38.921,TRADE_BUY,r003
+2025-03-04,2025-03-04,NT7611593,WES,Wesfarmers Limited,INC,200.0,1.18,236.0,0.0,0.0,236.0,Dividend – Wesfarmers Limited | Franked distribution,DIVIDEND,r014
+2025-03-04,2025-03-06,NT6764217,CBA,Commonwealth Bank of Australia,TXN,-200.0,160.603,32120.6,32.95,3.0,32087.65,Day Trade Sell – Commonwealth Bank of Australia | 200 units @ $160.603,TRADE_SELL,r004
+2025-03-04,2025-03-06,NT9014480,WBC,Westpac Banking Corporation,TXN,200.0,34.001,6800.2,21.95,2.0,-6822.15,Day Trade Buy – Westpac Banking Corporation | 200 units @ $34.001,TRADE_BUY,r003
+2025-03-04,2025-03-06,NT7166661,CSL,CSL Limited,TXN,-50.0,292.956,14647.8,21.95,2.0,14625.85,Day Trade Sell – CSL Limited | 50 units @ $292.956,TRADE_SELL,r004
+2025-03-05,2025-03-07,NT3396676,WES,Wesfarmers Limited,TXN,100.0,73.702,7370.2,21.95,2.0,-7392.15,Day Trade Buy – Wesfarmers Limited | 100 units @ $73.702,TRADE_BUY,r003
+2025-03-05,2025-03-07,NT4574477,TCL,Transurban Group,TXN,100.0,13.444,1344.4,16.45,1.5,-1360.85,Day Trade Buy – Transurban Group | 100 units @ $13.444,TRADE_BUY,r003
+2025-03-06,2025-03-06,NT2060950,CBA,Commonwealth Bank of Australia,INC,200.0,4.5,900.0,0.0,0.0,900.0,Dividend – Commonwealth Bank of Australia | Franked distribution,DIVIDEND,r014
+2025-03-06,2025-03-10,NT2454383,WDS,Woodside Energy Group Ltd,TXN,200.0,23.904,4780.8,16.45,1.5,-4797.25,Day Trade Buy – Woodside Energy Group Ltd | 200 units @ $23.904,TRADE_BUY,r003
+2025-03-06,2025-03-10,NT7442986,WES,Wesfarmers Limited,TXN,50.0,73.257,3662.85,16.45,1.5,-3679.3,Day Trade Buy – Wesfarmers Limited | 50 units @ $73.257,TRADE_BUY,r003
+2025-03-07,2025-03-11,NT5780177,TLS,Telstra Group Limited,TXN,-50.0,3.829,191.45,16.45,1.5,175.0,Day Trade Sell – Telstra Group Limited | 50 units @ $3.829,TRADE_SELL,r004
+2025-03-07,2025-03-11,NT9548370,TCL,Transurban Group,TXN,-150.0,13.482,2022.3,16.45,1.5,2005.85,Day Trade Sell – Transurban Group | 150 units @ $13.482,TRADE_SELL,r004
+2025-03-07,2025-03-11,NT5015476,WBC,Westpac Banking Corporation,TXN,50.0,33.899,1694.95,16.45,1.5,-1711.4,Day Trade Buy – Westpac Banking Corporation | 50 units @ $33.899,TRADE_BUY,r003
+2025-03-10,2025-03-10,NT5240303,MQG,Macquarie Group Limited,INC,300.0,3.8,1140.0,0.0,0.0,1140.0,Dividend – Macquarie Group Limited | Franked distribution,DIVIDEND,r014
+2025-03-10,2025-03-12,NT1202450,ANZ,ANZ Banking Group Limited,TXN,50.0,30.545,1527.25,16.45,1.5,-1543.7,Day Trade Buy – ANZ Banking Group Limited | 50 units @ $30.545,TRADE_BUY,r003
+2025-03-10,2025-03-12,NT8060918,RIO,Rio Tinto Limited,TXN,100.0,108.777,10877.7,21.95,2.0,-10899.65,Day Trade Buy – Rio Tinto Limited | 100 units @ $108.777,TRADE_BUY,r003
+2025-03-11,2025-03-11,NT4552356,RIO,Rio Tinto Limited,INC,500.0,3.9,1950.0,0.0,0.0,1950.0,Dividend – Rio Tinto Limited | Franked distribution,DIVIDEND,r014
+2025-03-11,2025-03-13,NT2133008,TCL,Transurban Group,TXN,-50.0,13.538,676.9,16.45,1.5,660.45,Day Trade Sell – Transurban Group | 50 units @ $13.538,TRADE_SELL,r004
+2025-03-11,2025-03-13,NT7676912,RIO,Rio Tinto Limited,TXN,50.0,108.347,5417.35,21.95,2.0,-5439.3,Day Trade Buy – Rio Tinto Limited | 50 units @ $108.347,TRADE_BUY,r003
+2025-03-12,2025-03-14,NT6199374,WES,Wesfarmers Limited,TXN,100.0,72.846,7284.6,21.95,2.0,-7306.55,Day Trade Buy – Wesfarmers Limited | 100 units @ $72.846,TRADE_BUY,r003
+2025-03-12,2025-03-14,NT7555386,ALL,Aristocrat Leisure Limited,TXN,100.0,59.593,5959.3,21.95,2.0,-5981.25,Day Trade Buy – Aristocrat Leisure Limited | 100 units @ $59.593,TRADE_BUY,r003
+2025-03-12,2025-03-14,NT8339797,WDS,Woodside Energy Group Ltd,TXN,50.0,24.018,1200.9,16.45,1.5,-1217.35,Day Trade Buy – Woodside Energy Group Ltd | 50 units @ $24.018,TRADE_BUY,r003
+2025-03-13,2025-03-17,NT1923227,BHP,BHP Group Limited,TXN,-200.0,43.925,8785.0,21.95,2.0,8763.05,Day Trade Sell – BHP Group Limited | 200 units @ $43.925,TRADE_SELL,r004
+2025-03-13,2025-03-17,NT3302031,ANZ,ANZ Banking Group Limited,TXN,-100.0,30.693,3069.3,16.45,1.5,3052.85,Day Trade Sell – ANZ Banking Group Limited | 100 units @ $30.693,TRADE_SELL,r004
+2025-03-14,2025-03-14,NT1187069,TLS,Telstra Group Limited,INC,500.0,0.09,45.0,0.0,0.0,45.0,Dividend – Telstra Group Limited | Franked distribution,DIVIDEND,r014
+2025-03-14,2025-03-18,NT3129542,RIO,Rio Tinto Limited,TXN,-150.0,108.38,16257.0,21.95,2.0,16235.05,Day Trade Sell – Rio Tinto Limited | 150 units @ $108.380,TRADE_SELL,r004
+2025-03-14,2025-03-18,NT1492516,TLS,Telstra Group Limited,TXN,50.0,3.85,192.5,16.45,1.5,-208.95,Day Trade Buy – Telstra Group Limited | 50 units @ $3.850,TRADE_BUY,r003
+2025-03-17,2025-03-19,NT9569497,NAB,National Australia Bank Limited,TXN,50.0,38.733,1936.65,16.45,1.5,-1953.1,Day Trade Buy – National Australia Bank Limited | 50 units @ $38.733,TRADE_BUY,r003
+2025-03-17,2025-03-19,NT5280137,MQG,Macquarie Group Limited,TXN,100.0,230.016,23001.6,32.95,3.0,-23034.55,Day Trade Buy – Macquarie Group Limited | 100 units @ $230.016,TRADE_BUY,r003
+2025-03-17,2025-03-19,NT9536665,CBA,Commonwealth Bank of Australia,TXN,-50.0,161.568,8078.4,21.95,2.0,8056.45,Day Trade Sell – Commonwealth Bank of Australia | 50 units @ $161.568,TRADE_SELL,r004
+2025-03-18,2025-03-18,NT5862651,WBC,Westpac Banking Corporation,INC,200.0,0.76,152.0,0.0,0.0,152.0,Dividend – Westpac Banking Corporation | Franked distribution,DIVIDEND,r014
+2025-03-18,2025-03-20,NT4002466,ANZ,ANZ Banking Group Limited,TXN,200.0,30.708,6141.6,21.95,2.0,-6163.55,Day Trade Buy – ANZ Banking Group Limited | 200 units @ $30.708,TRADE_BUY,r003
+2025-03-18,2025-03-20,NT5165165,BHP,BHP Group Limited,TXN,-200.0,44.079,8815.8,21.95,2.0,8793.85,Day Trade Sell – BHP Group Limited | 200 units @ $44.079,TRADE_SELL,r004
+2025-03-19,2025-03-21,NT1883692,NAB,National Australia Bank Limited,TXN,50.0,38.744,1937.2,16.45,1.5,-1953.65,Day Trade Buy – National Australia Bank Limited | 50 units @ $38.744,TRADE_BUY,r003
+2025-03-19,2025-03-21,NT2156393,XRO,Xero Limited,TXN,50.0,152.963,7648.15,21.95,2.0,-7670.1,Day Trade Buy – Xero Limited | 50 units @ $152.963,TRADE_BUY,r003
+2025-03-19,2025-03-21,NT8662929,CBA,Commonwealth Bank of Australia,TXN,150.0,161.955,24293.25,32.95,3.0,-24326.2,Day Trade Buy – Commonwealth Bank of Australia | 150 units @ $161.955,TRADE_BUY,r003
+2025-03-20,2025-03-24,NT9277218,NAB,National Australia Bank Limited,TXN,100.0,38.826,3882.6,16.45,1.5,-3899.05,Day Trade Buy – National Australia Bank Limited | 100 units @ $38.826,TRADE_BUY,r003
+2025-03-20,2025-03-24,NT7879264,CSL,CSL Limited,TXN,-100.0,294.373,29437.3,32.95,3.0,29404.35,Day Trade Sell – CSL Limited | 100 units @ $294.373,TRADE_SELL,r004
+2025-03-21,2025-03-21,NT7628900,ANZ,ANZ Banking Group Limited,INC,1000.0,0.83,830.0,0.0,0.0,830.0,Dividend – ANZ Banking Group Limited | Franked distribution,DIVIDEND,r014
+2025-03-21,2025-03-25,NT7312844,FMG,Fortescue Ltd,TXN,-150.0,16.762,2514.3,16.45,1.5,2497.85,Day Trade Sell – Fortescue Ltd | 150 units @ $16.762,TRADE_SELL,r004
+2025-03-21,2025-03-25,NT4995789,XRO,Xero Limited,TXN,-50.0,153.612,7680.6,21.95,2.0,7658.65,Day Trade Sell – Xero Limited | 50 units @ $153.612,TRADE_SELL,r004
+2025-03-21,2025-03-25,NT2560728,ALL,Aristocrat Leisure Limited,TXN,100.0,59.944,5994.4,21.95,2.0,-6016.35,Day Trade Buy – Aristocrat Leisure Limited | 100 units @ $59.944,TRADE_BUY,r003
+2025-03-24,2025-03-26,NT2424426,WDS,Woodside Energy Group Ltd,TXN,150.0,24.046,3606.9,16.45,1.5,-3623.35,Day Trade Buy – Woodside Energy Group Ltd | 150 units @ $24.046,TRADE_BUY,r003
+2025-03-24,2025-03-26,NT2044933,XRO,Xero Limited,TXN,-200.0,153.573,30714.6,32.95,3.0,30681.65,Day Trade Sell – Xero Limited | 200 units @ $153.573,TRADE_SELL,r004
+2025-03-25,2025-03-27,NT7592651,ANZ,ANZ Banking Group Limited,TXN,150.0,30.673,4600.95,16.45,1.5,-4617.4,Day Trade Buy – ANZ Banking Group Limited | 150 units @ $30.673,TRADE_BUY,r003
+2025-03-25,2025-03-27,NT4919346,NAB,National Australia Bank Limited,TXN,150.0,39.013,5851.95,21.95,2.0,-5873.9,Day Trade Buy – National Australia Bank Limited | 150 units @ $39.013,TRADE_BUY,r003
+2025-03-26,2025-03-26,NT3288101,NAB,National Australia Bank Limited,INC,300.0,0.99,297.0,0.0,0.0,297.0,Dividend – National Australia Bank Limited | Franked distribution,DIVIDEND,r014
+2025-03-26,2025-03-28,NT3757754,WBC,Westpac Banking Corporation,TXN,-50.0,34.008,1700.4,16.45,1.5,1683.95,Day Trade Sell – Westpac Banking Corporation | 50 units @ $34.008,TRADE_SELL,r004
+2025-03-26,2025-03-28,NT4483557,TCL,Transurban Group,TXN,50.0,13.482,674.1,16.45,1.5,-690.55,Day Trade Buy – Transurban Group | 50 units @ $13.482,TRADE_BUY,r003
+2025-03-27,2025-03-27,NT8738745,CSL,CSL Limited,INC,200.0,1.6,320.0,0.0,0.0,320.0,Dividend – CSL Limited | Franked distribution,DIVIDEND,r014
+2025-03-27,2025-03-31,NT1676621,NAB,National Australia Bank Limited,TXN,150.0,38.756,5813.4,21.95,2.0,-5835.35,Day Trade Buy – National Australia Bank Limited | 150 units @ $38.756,TRADE_BUY,r003
+2025-03-27,2025-03-31,NT5164420,XRO,Xero Limited,TXN,-100.0,154.19,15419.0,21.95,2.0,15397.05,Day Trade Sell – Xero Limited | 100 units @ $154.190,TRADE_SELL,r004
+2025-03-27,2025-03-31,NT5364874,CBA,Commonwealth Bank of Australia,TXN,50.0,161.435,8071.75,21.95,2.0,-8093.7,Day Trade Buy – Commonwealth Bank of Australia | 50 units @ $161.435,TRADE_BUY,r003
+2025-03-28,2025-04-01,NT2709721,BHP,BHP Group Limited,TXN,-100.0,44.252,4425.2,16.45,1.5,4408.75,Day Trade Sell – BHP Group Limited | 100 units @ $44.252,TRADE_SELL,r004
+2025-03-28,2025-04-01,NT4729376,WES,Wesfarmers Limited,TXN,-50.0,72.409,3620.45,16.45,1.5,3604.0,Day Trade Sell – Wesfarmers Limited | 50 units @ $72.409,TRADE_SELL,r004
+2025-03-31,2025-03-31,NT8264954,BHP,BHP Group Limited,INC,1000.0,1.85,1850.0,0.0,0.0,1850.0,Dividend – BHP Group Limited | Franked distribution,DIVIDEND,r014
+2025-03-31,2025-04-02,NT5342289,TLS,Telstra Group Limited,TXN,50.0,3.867,193.35,16.45,1.5,-209.8,Day Trade Buy – Telstra Group Limited | 50 units @ $3.867,TRADE_BUY,r003
+2025-03-31,2025-04-02,NT8439543,FMG,Fortescue Ltd,TXN,-50.0,16.699,834.95,16.45,1.5,818.5,Day Trade Sell – Fortescue Ltd | 50 units @ $16.699,TRADE_SELL,r004
+2025-03-31,2025-04-02,NT8734211,XRO,Xero Limited,TXN,-150.0,153.723,23058.45,32.95,3.0,23025.5,Day Trade Sell – Xero Limited | 150 units @ $153.723,TRADE_SELL,r004
+2025-04-01,2025-04-03,NT3899223,XRO,Xero Limited,TXN,200.0,153.44,30688.0,32.95,3.0,-30720.95,Day Trade Buy – Xero Limited | 200 units @ $153.440,TRADE_BUY,r003
+2025-04-01,2025-04-03,NT3493621,ALL,Aristocrat Leisure Limited,TXN,150.0,60.128,9019.2,21.95,2.0,-9041.15,Day Trade Buy – Aristocrat Leisure Limited | 150 units @ $60.128,TRADE_BUY,r003
+2025-04-01,2025-04-03,NT9370012,WES,Wesfarmers Limited,TXN,100.0,72.405,7240.5,21.95,2.0,-7262.45,Day Trade Buy – Wesfarmers Limited | 100 units @ $72.405,TRADE_BUY,r003
+2025-04-02,2025-04-04,NT9821696,BHP,BHP Group Limited,TXN,-200.0,44.244,8848.8,21.95,2.0,8826.85,Day Trade Sell – BHP Group Limited | 200 units @ $44.244,TRADE_SELL,r004
+2025-04-02,2025-04-04,NT7024901,CBA,Commonwealth Bank of Australia,TXN,50.0,162.6,8130.0,21.95,2.0,-8151.95,Day Trade Buy – Commonwealth Bank of Australia | 50 units @ $162.600,TRADE_BUY,r003
+2025-04-02,2025-04-04,NT9428760,NAB,National Australia Bank Limited,TXN,150.0,38.843,5826.45,21.95,2.0,-5848.4,Day Trade Buy – National Australia Bank Limited | 150 units @ $38.843,TRADE_BUY,r003
+2025-04-03,2025-04-07,NT5713268,WBC,Westpac Banking Corporation,TXN,50.0,34.041,1702.05,16.45,1.5,-1718.5,Day Trade Buy – Westpac Banking Corporation | 50 units @ $34.041,TRADE_BUY,r003
+2025-04-03,2025-04-07,NT4905100,BHP,BHP Group Limited,TXN,150.0,44.461,6669.15,21.95,2.0,-6691.1,Day Trade Buy – BHP Group Limited | 150 units @ $44.461,TRADE_BUY,r003
+2025-04-03,2025-04-07,NT1937991,TLS,Telstra Group Limited,TXN,100.0,3.854,385.4,16.45,1.5,-401.85,Day Trade Buy – Telstra Group Limited | 100 units @ $3.854,TRADE_BUY,r003
+2025-04-04,2025-04-08,NT3914404,CSL,CSL Limited,TXN,200.0,295.514,59102.8,32.95,3.0,-59135.75,Day Trade Buy – CSL Limited | 200 units @ $295.514,TRADE_BUY,r003
+2025-04-04,2025-04-08,NT1473227,XRO,Xero Limited,TXN,150.0,153.52,23028.0,32.95,3.0,-23060.95,Day Trade Buy – Xero Limited | 150 units @ $153.520,TRADE_BUY,r003
+2025-04-07,2025-04-09,NT9258194,CSL,CSL Limited,TXN,100.0,295.355,29535.5,32.95,3.0,-29568.45,Day Trade Buy – CSL Limited | 100 units @ $295.355,TRADE_BUY,r003
+2025-04-07,2025-04-09,NT4902772,WDS,Woodside Energy Group Ltd,TXN,-50.0,23.96,1198.0,16.45,1.5,1181.55,Day Trade Sell – Woodside Energy Group Ltd | 50 units @ $23.960,TRADE_SELL,r004
+2025-04-07,2025-04-09,NT4380011,WBC,Westpac Banking Corporation,TXN,-200.0,33.785,6757.0,21.95,2.0,6735.05,Day Trade Sell – Westpac Banking Corporation | 200 units @ $33.785,TRADE_SELL,r004
+2025-04-08,2025-04-10,NT3478196,ALL,Aristocrat Leisure Limited,TXN,-150.0,60.264,9039.6,21.95,2.0,9017.65,Day Trade Sell – Aristocrat Leisure Limited | 150 units @ $60.264,TRADE_SELL,r004
+2025-04-08,2025-04-10,NT7121835,WBC,Westpac Banking Corporation,TXN,50.0,33.995,1699.75,16.45,1.5,-1716.2,Day Trade Buy – Westpac Banking Corporation | 50 units @ $33.995,TRADE_BUY,r003
+2025-04-08,2025-04-10,NT6646557,TCL,Transurban Group,TXN,200.0,13.459,2691.8,16.45,1.5,-2708.25,Day Trade Buy – Transurban Group | 200 units @ $13.459,TRADE_BUY,r003
+2025-04-09,2025-04-11,NT3922635,WBC,Westpac Banking Corporation,TXN,200.0,34.241,6848.2,21.95,2.0,-6870.15,Day Trade Buy – Westpac Banking Corporation | 200 units @ $34.241,TRADE_BUY,r003
+2025-04-09,2025-04-11,NT3941912,ALL,Aristocrat Leisure Limited,TXN,-150.0,60.33,9049.5,21.95,2.0,9027.55,Day Trade Sell – Aristocrat Leisure Limited | 150 units @ $60.330,TRADE_SELL,r004
+2025-04-10,2025-04-14,NT1543292,WBC,Westpac Banking Corporation,TXN,200.0,34.064,6812.8,21.95,2.0,-6834.75,Day Trade Buy – Westpac Banking Corporation | 200 units @ $34.064,TRADE_BUY,r003
+2025-04-10,2025-04-14,NT2746679,WDS,Woodside Energy Group Ltd,TXN,100.0,23.918,2391.8,16.45,1.5,-2408.25,Day Trade Buy – Woodside Energy Group Ltd | 100 units @ $23.918,TRADE_BUY,r003
+2025-04-10,2025-04-14,NT6360633,ALL,Aristocrat Leisure Limited,TXN,-50.0,60.041,3002.05,16.45,1.5,2985.6,Day Trade Sell – Aristocrat Leisure Limited | 50 units @ $60.041,TRADE_SELL,r004
+2025-04-11,2025-04-15,NT5449526,XRO,Xero Limited,TXN,150.0,153.958,23093.7,32.95,3.0,-23126.65,Day Trade Buy – Xero Limited | 150 units @ $153.958,TRADE_BUY,r003
+2025-04-11,2025-04-15,NT2812519,ALL,Aristocrat Leisure Limited,TXN,150.0,60.1,9015.0,21.95,2.0,-9036.95,Day Trade Buy – Aristocrat Leisure Limited | 150 units @ $60.100,TRADE_BUY,r003
+2025-04-14,2025-04-16,NT9272543,WES,Wesfarmers Limited,TXN,100.0,72.582,7258.2,21.95,2.0,-7280.15,Day Trade Buy – Wesfarmers Limited | 100 units @ $72.582,TRADE_BUY,r003
+2025-04-14,2025-04-16,NT9044494,RIO,Rio Tinto Limited,TXN,-200.0,108.294,21658.8,32.95,3.0,21625.85,Day Trade Sell – Rio Tinto Limited | 200 units @ $108.294,TRADE_SELL,r004
+2025-04-15,2025-04-17,NT6347182,WBC,Westpac Banking Corporation,TXN,50.0,33.847,1692.35,16.45,1.5,-1708.8,Day Trade Buy – Westpac Banking Corporation | 50 units @ $33.847,TRADE_BUY,r003
+2025-04-15,2025-04-17,NT7299138,RIO,Rio Tinto Limited,TXN,-150.0,107.905,16185.75,21.95,2.0,16163.8,Day Trade Sell – Rio Tinto Limited | 150 units @ $107.905,TRADE_SELL,r004
+2025-04-16,2025-04-18,NT8236404,MQG,Macquarie Group Limited,TXN,200.0,229.819,45963.8,32.95,3.0,-45996.75,Day Trade Buy – Macquarie Group Limited | 200 units @ $229.819,TRADE_BUY,r003
+2025-04-16,2025-04-18,NT2698824,CBA,Commonwealth Bank of Australia,TXN,-200.0,161.933,32386.6,32.95,3.0,32353.65,Day Trade Sell – Commonwealth Bank of Australia | 200 units @ $161.933,TRADE_SELL,r004
+2025-04-17,2025-04-21,NT5989554,WES,Wesfarmers Limited,TXN,150.0,72.74,10911.0,21.95,2.0,-10932.95,Day Trade Buy – Wesfarmers Limited | 150 units @ $72.740,TRADE_BUY,r003
+2025-04-17,2025-04-21,NT7053704,ALL,Aristocrat Leisure Limited,TXN,-200.0,59.828,11965.6,21.95,2.0,11943.65,Day Trade Sell – Aristocrat Leisure Limited | 200 units @ $59.828,TRADE_SELL,r004
+2025-04-22,2025-04-24,NT1431773,NAB,National Australia Bank Limited,TXN,-200.0,38.89,7778.0,21.95,2.0,7756.05,Day Trade Sell – National Australia Bank Limited | 200 units @ $38.890,TRADE_SELL,r004
+2025-04-22,2025-04-24,NT2937918,XRO,Xero Limited,TXN,50.0,154.034,7701.7,21.95,2.0,-7723.65,Day Trade Buy – Xero Limited | 50 units @ $154.034,TRADE_BUY,r003
+2025-04-23,2025-04-25,NT7399588,RIO,Rio Tinto Limited,TXN,-200.0,107.455,21491.0,32.95,3.0,21458.05,Day Trade Sell – Rio Tinto Limited | 200 units @ $107.455,TRADE_SELL,r004
+2025-04-23,2025-04-25,NT5419132,WDS,Woodside Energy Group Ltd,TXN,150.0,23.944,3591.6,16.45,1.5,-3608.05,Day Trade Buy – Woodside Energy Group Ltd | 150 units @ $23.944,TRADE_BUY,r003
+2025-04-23,2025-04-25,NT2622400,FMG,Fortescue Ltd,TXN,-50.0,16.674,833.7,16.45,1.5,817.25,Day Trade Sell – Fortescue Ltd | 50 units @ $16.674,TRADE_SELL,r004
+2025-04-24,2025-04-28,NT7494562,TCL,Transurban Group,TXN,100.0,13.524,1352.4,16.45,1.5,-1368.85,Day Trade Buy – Transurban Group | 100 units @ $13.524,TRADE_BUY,r003
+2025-04-24,2025-04-28,NT4953417,MQG,Macquarie Group Limited,TXN,200.0,230.001,46000.2,32.95,3.0,-46033.15,Day Trade Buy – Macquarie Group Limited | 200 units @ $230.001,TRADE_BUY,r003
+2025-04-24,2025-04-28,NT9670757,WES,Wesfarmers Limited,TXN,50.0,72.297,3614.85,16.45,1.5,-3631.3,Day Trade Buy – Wesfarmers Limited | 50 units @ $72.297,TRADE_BUY,r003
+2025-04-28,2025-04-30,NT4233407,CBA,Commonwealth Bank of Australia,TXN,100.0,161.725,16172.5,21.95,2.0,-16194.45,Day Trade Buy – Commonwealth Bank of Australia | 100 units @ $161.725,TRADE_BUY,r003
+2025-04-28,2025-04-30,NT3480985,TCL,Transurban Group,TXN,-200.0,13.529,2705.8,16.45,1.5,2689.35,Day Trade Sell – Transurban Group | 200 units @ $13.529,TRADE_SELL,r004
+2025-04-29,2025-05-01,NT6471499,TLS,Telstra Group Limited,TXN,200.0,3.838,767.6,16.45,1.5,-784.05,Day Trade Buy – Telstra Group Limited | 200 units @ $3.838,TRADE_BUY,r003
+2025-04-29,2025-05-01,NT9767135,ALL,Aristocrat Leisure Limited,TXN,50.0,59.723,2986.15,16.45,1.5,-3002.6,Day Trade Buy – Aristocrat Leisure Limited | 50 units @ $59.723,TRADE_BUY,r003
+2025-04-29,2025-05-01,NT2681144,TCL,Transurban Group,TXN,-100.0,13.484,1348.4,16.45,1.5,1331.95,Day Trade Sell – Transurban Group | 100 units @ $13.484,TRADE_SELL,r004
+2025-04-30,2025-05-02,NT5431477,TCL,Transurban Group,TXN,150.0,13.567,2035.05,16.45,1.5,-2051.5,Day Trade Buy – Transurban Group | 150 units @ $13.567,TRADE_BUY,r003
+2025-04-30,2025-05-02,NT5620682,NAB,National Australia Bank Limited,TXN,-200.0,38.837,7767.4,21.95,2.0,7745.45,Day Trade Sell – National Australia Bank Limited | 200 units @ $38.837,TRADE_SELL,r004
+2025-05-01,2025-05-05,NT5506097,BHP,BHP Group Limited,TXN,50.0,44.647,2232.35,16.45,1.5,-2248.8,Day Trade Buy – BHP Group Limited | 50 units @ $44.647,TRADE_BUY,r003
+2025-05-01,2025-05-05,NT9248001,WES,Wesfarmers Limited,TXN,150.0,71.967,10795.05,21.95,2.0,-10817.0,Day Trade Buy – Wesfarmers Limited | 150 units @ $71.967,TRADE_BUY,r003
+2025-05-01,2025-05-05,NT8434162,TLS,Telstra Group Limited,TXN,-100.0,3.852,385.2,16.45,1.5,368.75,Day Trade Sell – Telstra Group Limited | 100 units @ $3.852,TRADE_SELL,r004
+2025-05-02,2025-05-06,NT4546544,NAB,National Australia Bank Limited,TXN,-50.0,38.871,1943.55,16.45,1.5,1927.1,Day Trade Sell – National Australia Bank Limited | 50 units @ $38.871,TRADE_SELL,r004
+2025-05-02,2025-05-06,NT7273172,ALL,Aristocrat Leisure Limited,TXN,200.0,59.723,11944.6,21.95,2.0,-11966.55,Day Trade Buy – Aristocrat Leisure Limited | 200 units @ $59.723,TRADE_BUY,r003
+2025-05-02,2025-05-06,NT9502613,WES,Wesfarmers Limited,TXN,-100.0,72.083,7208.3,21.95,2.0,7186.35,Day Trade Sell – Wesfarmers Limited | 100 units @ $72.083,TRADE_SELL,r004
+2025-05-05,2025-05-07,NT5185752,WBC,Westpac Banking Corporation,TXN,100.0,33.967,3396.7,16.45,1.5,-3413.15,Day Trade Buy – Westpac Banking Corporation | 100 units @ $33.967,TRADE_BUY,r003
+2025-05-05,2025-05-07,NT5596579,ANZ,ANZ Banking Group Limited,TXN,150.0,30.532,4579.8,16.45,1.5,-4596.25,Day Trade Buy – ANZ Banking Group Limited | 150 units @ $30.532,TRADE_BUY,r003
+2025-05-06,2025-05-08,NT9200480,MQG,Macquarie Group Limited,TXN,-50.0,231.147,11557.35,21.95,2.0,11535.4,Day Trade Sell – Macquarie Group Limited | 50 units @ $231.147,TRADE_SELL,r004
+2025-05-06,2025-05-08,NT6867997,WES,Wesfarmers Limited,TXN,200.0,71.776,14355.2,21.95,2.0,-14377.15,Day Trade Buy – Wesfarmers Limited | 200 units @ $71.776,TRADE_BUY,r003
+2025-05-06,2025-05-08,NT2516524,FMG,Fortescue Ltd,TXN,150.0,16.713,2506.95,16.45,1.5,-2523.4,Day Trade Buy – Fortescue Ltd | 150 units @ $16.713,TRADE_BUY,r003
+2025-05-07,2025-05-09,NT4776753,BHP,BHP Group Limited,TXN,100.0,44.868,4486.8,16.45,1.5,-4503.25,Day Trade Buy – BHP Group Limited | 100 units @ $44.868,TRADE_BUY,r003
+2025-05-07,2025-05-09,NT1149283,WBC,Westpac Banking Corporation,TXN,200.0,33.81,6762.0,21.95,2.0,-6783.95,Day Trade Buy – Westpac Banking Corporation | 200 units @ $33.810,TRADE_BUY,r003
+2025-05-07,2025-05-09,NT1141997,CSL,CSL Limited,TXN,100.0,294.102,29410.2,32.95,3.0,-29443.15,Day Trade Buy – CSL Limited | 100 units @ $294.102,TRADE_BUY,r003
+2025-05-08,2025-05-12,NT8700708,ALL,Aristocrat Leisure Limited,TXN,200.0,59.639,11927.8,21.95,2.0,-11949.75,Day Trade Buy – Aristocrat Leisure Limited | 200 units @ $59.639,TRADE_BUY,r003
+2025-05-08,2025-05-12,NT1123271,WDS,Woodside Energy Group Ltd,TXN,200.0,23.908,4781.6,16.45,1.5,-4798.05,Day Trade Buy – Woodside Energy Group Ltd | 200 units @ $23.908,TRADE_BUY,r003
+2025-05-08,2025-05-12,NT5742531,FMG,Fortescue Ltd,TXN,150.0,16.732,2509.8,16.45,1.5,-2526.25,Day Trade Buy – Fortescue Ltd | 150 units @ $16.732,TRADE_BUY,r003
+2025-05-09,2025-05-13,NT5645358,RIO,Rio Tinto Limited,TXN,150.0,107.188,16078.2,21.95,2.0,-16100.15,Day Trade Buy – Rio Tinto Limited | 150 units @ $107.188,TRADE_BUY,r003
+2025-05-09,2025-05-13,NT9678746,CBA,Commonwealth Bank of Australia,TXN,-150.0,161.892,24283.8,32.95,3.0,24250.85,Day Trade Sell – Commonwealth Bank of Australia | 150 units @ $161.892,TRADE_SELL,r004
+2025-05-12,2025-05-14,NT3347627,TCL,Transurban Group,TXN,200.0,13.61,2722.0,16.45,1.5,-2738.45,Day Trade Buy – Transurban Group | 200 units @ $13.610,TRADE_BUY,r003
+2025-05-12,2025-05-14,NT8022366,XRO,Xero Limited,TXN,150.0,154.203,23130.45,32.95,3.0,-23163.4,Day Trade Buy – Xero Limited | 150 units @ $154.203,TRADE_BUY,r003
+2025-05-13,2025-05-15,NT4730635,CSL,CSL Limited,TXN,100.0,295.521,29552.1,32.95,3.0,-29585.05,Day Trade Buy – CSL Limited | 100 units @ $295.521,TRADE_BUY,r003
+2025-05-13,2025-05-15,NT7014583,ALL,Aristocrat Leisure Limited,TXN,200.0,59.679,11935.8,21.95,2.0,-11957.75,Day Trade Buy – Aristocrat Leisure Limited | 200 units @ $59.679,TRADE_BUY,r003
+2025-05-14,2025-05-16,NT8898392,XRO,Xero Limited,TXN,100.0,154.84,15484.0,21.95,2.0,-15505.95,Day Trade Buy – Xero Limited | 100 units @ $154.840,TRADE_BUY,r003
+2025-05-14,2025-05-16,NT6630978,FMG,Fortescue Ltd,TXN,100.0,16.671,1667.1,16.45,1.5,-1683.55,Day Trade Buy – Fortescue Ltd | 100 units @ $16.671,TRADE_BUY,r003
+2025-05-15,2025-05-19,NT6558579,TLS,Telstra Group Limited,TXN,150.0,3.867,580.05,16.45,1.5,-596.5,Day Trade Buy – Telstra Group Limited | 150 units @ $3.867,TRADE_BUY,r003
+2025-05-15,2025-05-19,NT8894293,ANZ,ANZ Banking Group Limited,TXN,200.0,30.547,6109.4,21.95,2.0,-6131.35,Day Trade Buy – ANZ Banking Group Limited | 200 units @ $30.547,TRADE_BUY,r003
+2025-05-16,2025-05-20,NT7930789,RIO,Rio Tinto Limited,TXN,200.0,107.087,21417.4,32.95,3.0,-21450.35,Day Trade Buy – Rio Tinto Limited | 200 units @ $107.087,TRADE_BUY,r003
+2025-05-16,2025-05-20,NT6749046,ANZ,ANZ Banking Group Limited,TXN,100.0,30.622,3062.2,16.45,1.5,-3078.65,Day Trade Buy – ANZ Banking Group Limited | 100 units @ $30.622,TRADE_BUY,r003
+2025-05-19,2025-05-21,NT3966618,WBC,Westpac Banking Corporation,TXN,50.0,33.676,1683.8,16.45,1.5,-1700.25,Day Trade Buy – Westpac Banking Corporation | 50 units @ $33.676,TRADE_BUY,r003
+2025-05-19,2025-05-21,NT3828735,TLS,Telstra Group Limited,TXN,200.0,3.845,769.0,16.45,1.5,-785.45,Day Trade Buy – Telstra Group Limited | 200 units @ $3.845,TRADE_BUY,r003
+2025-05-19,2025-05-21,NT8276470,ALL,Aristocrat Leisure Limited,TXN,-50.0,59.436,2971.8,16.45,1.5,2955.35,Day Trade Sell – Aristocrat Leisure Limited | 50 units @ $59.436,TRADE_SELL,r004
+2025-05-20,2025-05-22,NT1236174,WES,Wesfarmers Limited,TXN,100.0,71.305,7130.5,21.95,2.0,-7152.45,Day Trade Buy – Wesfarmers Limited | 100 units @ $71.305,TRADE_BUY,r003
+2025-05-20,2025-05-22,NT1069186,RIO,Rio Tinto Limited,TXN,-100.0,107.225,10722.5,21.95,2.0,10700.55,Day Trade Sell – Rio Tinto Limited | 100 units @ $107.225,TRADE_SELL,r004
+2025-05-20,2025-05-22,NT2723158,WDS,Woodside Energy Group Ltd,TXN,150.0,23.837,3575.55,16.45,1.5,-3592.0,Day Trade Buy – Woodside Energy Group Ltd | 150 units @ $23.837,TRADE_BUY,r003
+2025-05-21,2025-05-23,NT9728991,WBC,Westpac Banking Corporation,TXN,150.0,33.57,5035.5,21.95,2.0,-5057.45,Day Trade Buy – Westpac Banking Corporation | 150 units @ $33.570,TRADE_BUY,r003
+2025-05-21,2025-05-23,NT9223833,CBA,Commonwealth Bank of Australia,TXN,100.0,161.749,16174.9,21.95,2.0,-16196.85,Day Trade Buy – Commonwealth Bank of Australia | 100 units @ $161.749,TRADE_BUY,r003
+2025-05-21,2025-05-23,NT4763487,BHP,BHP Group Limited,TXN,-200.0,44.732,8946.4,21.95,2.0,8924.45,Day Trade Sell – BHP Group Limited | 200 units @ $44.732,TRADE_SELL,r004
+2025-05-22,2025-05-26,NT1626854,ANZ,ANZ Banking Group Limited,TXN,-100.0,30.435,3043.5,16.45,1.5,3027.05,Day Trade Sell – ANZ Banking Group Limited | 100 units @ $30.435,TRADE_SELL,r004
+2025-05-22,2025-05-26,NT1804641,ALL,Aristocrat Leisure Limited,TXN,50.0,59.568,2978.4,16.45,1.5,-2994.85,Day Trade Buy – Aristocrat Leisure Limited | 50 units @ $59.568,TRADE_BUY,r003
+2025-05-23,2025-05-27,NT5240244,BHP,BHP Group Limited,TXN,200.0,44.567,8913.4,21.95,2.0,-8935.35,Day Trade Buy – BHP Group Limited | 200 units @ $44.567,TRADE_BUY,r003
+2025-05-23,2025-05-27,NT2694160,ALL,Aristocrat Leisure Limited,TXN,50.0,59.359,2967.95,16.45,1.5,-2984.4,Day Trade Buy – Aristocrat Leisure Limited | 50 units @ $59.359,TRADE_BUY,r003
+2025-05-26,2025-05-28,NT2975258,CSL,CSL Limited,TXN,50.0,294.453,14722.65,21.95,2.0,-14744.6,Day Trade Buy – CSL Limited | 50 units @ $294.453,TRADE_BUY,r003
+2025-05-26,2025-05-28,NT4351238,WDS,Woodside Energy Group Ltd,TXN,-200.0,23.907,4781.4,16.45,1.5,4764.95,Day Trade Sell – Woodside Energy Group Ltd | 200 units @ $23.907,TRADE_SELL,r004
+2025-05-26,2025-05-28,NT7874568,ALL,Aristocrat Leisure Limited,TXN,100.0,59.634,5963.4,21.95,2.0,-5985.35,Day Trade Buy – Aristocrat Leisure Limited | 100 units @ $59.634,TRADE_BUY,r003
+2025-05-27,2025-05-29,NT1045936,MQG,Macquarie Group Limited,TXN,200.0,232.373,46474.6,32.95,3.0,-46507.55,Day Trade Buy – Macquarie Group Limited | 200 units @ $232.373,TRADE_BUY,r003
+2025-05-27,2025-05-29,NT9289690,RIO,Rio Tinto Limited,TXN,50.0,106.75,5337.5,21.95,2.0,-5359.45,Day Trade Buy – Rio Tinto Limited | 50 units @ $106.750,TRADE_BUY,r003
+2025-05-28,2025-05-30,NT4878226,TCL,Transurban Group,TXN,50.0,13.553,677.65,16.45,1.5,-694.1,Day Trade Buy – Transurban Group | 50 units @ $13.553,TRADE_BUY,r003
+2025-05-28,2025-05-30,NT2674515,MQG,Macquarie Group Limited,TXN,150.0,233.248,34987.2,32.95,3.0,-35020.15,Day Trade Buy – Macquarie Group Limited | 150 units @ $233.248,TRADE_BUY,r003
+2025-05-29,2025-06-02,NT2944497,XRO,Xero Limited,TXN,150.0,154.351,23152.65,32.95,3.0,-23185.6,Day Trade Buy – Xero Limited | 150 units @ $154.351,TRADE_BUY,r003
+2025-05-29,2025-06-02,NT3321873,NAB,National Australia Bank Limited,TXN,-50.0,39.056,1952.8,16.45,1.5,1936.35,Day Trade Sell – National Australia Bank Limited | 50 units @ $39.056,TRADE_SELL,r004
+2025-05-30,2025-06-03,NT2559464,TLS,Telstra Group Limited,TXN,150.0,3.864,579.6,16.45,1.5,-596.05,Day Trade Buy – Telstra Group Limited | 150 units @ $3.864,TRADE_BUY,r003
+2025-05-30,2025-06-03,NT8659448,WDS,Woodside Energy Group Ltd,TXN,50.0,23.889,1194.45,16.45,1.5,-1210.9,Day Trade Buy – Woodside Energy Group Ltd | 50 units @ $23.889,TRADE_BUY,r003
+2025-06-02,2025-06-04,NT1983923,ALL,Aristocrat Leisure Limited,TXN,-100.0,59.799,5979.9,21.95,2.0,5957.95,Day Trade Sell – Aristocrat Leisure Limited | 100 units @ $59.799,TRADE_SELL,r004
+2025-06-02,2025-06-04,NT9097940,XRO,Xero Limited,TXN,50.0,154.738,7736.9,21.95,2.0,-7758.85,Day Trade Buy – Xero Limited | 50 units @ $154.738,TRADE_BUY,r003
+2025-06-02,2025-06-04,NT7016291,RIO,Rio Tinto Limited,TXN,100.0,106.828,10682.8,21.95,2.0,-10704.75,Day Trade Buy – Rio Tinto Limited | 100 units @ $106.828,TRADE_BUY,r003
+2025-06-03,2025-06-05,NT2062602,RIO,Rio Tinto Limited,TXN,200.0,106.38,21276.0,32.95,3.0,-21308.95,Day Trade Buy – Rio Tinto Limited | 200 units @ $106.380,TRADE_BUY,r003
+2025-06-03,2025-06-05,NT6675742,WDS,Woodside Energy Group Ltd,TXN,100.0,23.814,2381.4,16.45,1.5,-2397.85,Day Trade Buy – Woodside Energy Group Ltd | 100 units @ $23.814,TRADE_BUY,r003
+2025-06-04,2025-06-06,NT7457158,WES,Wesfarmers Limited,TXN,200.0,71.611,14322.2,21.95,2.0,-14344.15,Day Trade Buy – Wesfarmers Limited | 200 units @ $71.611,TRADE_BUY,r003
+2025-06-04,2025-06-06,NT3632804,FMG,Fortescue Ltd,TXN,-50.0,16.746,837.3,16.45,1.5,820.85,Day Trade Sell – Fortescue Ltd | 50 units @ $16.746,TRADE_SELL,r004
+2025-06-05,2025-06-09,NT6551494,XRO,Xero Limited,TXN,200.0,154.135,30827.0,32.95,3.0,-30859.95,Day Trade Buy – Xero Limited | 200 units @ $154.135,TRADE_BUY,r003
+2025-06-05,2025-06-09,NT7352484,RIO,Rio Tinto Limited,TXN,100.0,105.706,10570.6,21.95,2.0,-10592.55,Day Trade Buy – Rio Tinto Limited | 100 units @ $105.706,TRADE_BUY,r003
+2025-06-05,2025-06-09,NT8517846,WBC,Westpac Banking Corporation,TXN,200.0,33.476,6695.2,21.95,2.0,-6717.15,Day Trade Buy – Westpac Banking Corporation | 200 units @ $33.476,TRADE_BUY,r003
+2025-06-06,2025-06-10,NT7917892,RIO,Rio Tinto Limited,TXN,-50.0,106.274,5313.7,21.95,2.0,5291.75,Day Trade Sell – Rio Tinto Limited | 50 units @ $106.274,TRADE_SELL,r004
+2025-06-06,2025-06-10,NT6110305,TLS,Telstra Group Limited,TXN,50.0,3.864,193.2,16.45,1.5,-209.65,Day Trade Buy – Telstra Group Limited | 50 units @ $3.864,TRADE_BUY,r003
+2025-06-06,2025-06-10,NT7095875,CBA,Commonwealth Bank of Australia,TXN,200.0,161.779,32355.8,32.95,3.0,-32388.75,Day Trade Buy – Commonwealth Bank of Australia | 200 units @ $161.779,TRADE_BUY,r003
+2025-06-10,2025-06-12,NT7095071,XRO,Xero Limited,TXN,200.0,154.114,30822.8,32.95,3.0,-30855.75,Day Trade Buy – Xero Limited | 200 units @ $154.114,TRADE_BUY,r003
+2025-06-10,2025-06-12,NT6958243,RIO,Rio Tinto Limited,TXN,-100.0,105.586,10558.6,21.95,2.0,10536.65,Day Trade Sell – Rio Tinto Limited | 100 units @ $105.586,TRADE_SELL,r004
+2025-06-11,2025-06-13,NT9261472,MQG,Macquarie Group Limited,TXN,50.0,234.106,11705.3,21.95,2.0,-11727.25,Day Trade Buy – Macquarie Group Limited | 50 units @ $234.106,TRADE_BUY,r003
+2025-06-11,2025-06-13,NT4287016,WDS,Woodside Energy Group Ltd,TXN,-200.0,23.878,4775.6,16.45,1.5,4759.15,Day Trade Sell – Woodside Energy Group Ltd | 200 units @ $23.878,TRADE_SELL,r004
+2025-06-11,2025-06-13,NT4197381,TLS,Telstra Group Limited,TXN,-200.0,3.89,778.0,16.45,1.5,761.55,Day Trade Sell – Telstra Group Limited | 200 units @ $3.890,TRADE_SELL,r004
+2025-06-12,2025-06-16,NT8558212,TCL,Transurban Group,TXN,50.0,13.477,673.85,16.45,1.5,-690.3,Day Trade Buy – Transurban Group | 50 units @ $13.477,TRADE_BUY,r003
+2025-06-12,2025-06-16,NT1072773,WES,Wesfarmers Limited,TXN,100.0,71.587,7158.7,21.95,2.0,-7180.65,Day Trade Buy – Wesfarmers Limited | 100 units @ $71.587,TRADE_BUY,r003
+2025-06-13,2025-06-17,NT3972963,MQG,Macquarie Group Limited,TXN,200.0,234.719,46943.8,32.95,3.0,-46976.75,Day Trade Buy – Macquarie Group Limited | 200 units @ $234.719,TRADE_BUY,r003
+2025-06-13,2025-06-17,NT6399642,WES,Wesfarmers Limited,TXN,-100.0,71.316,7131.6,21.95,2.0,7109.65,Day Trade Sell – Wesfarmers Limited | 100 units @ $71.316,TRADE_SELL,r004
+2025-06-16,2025-06-18,NT6752216,WES,Wesfarmers Limited,TXN,150.0,71.542,10731.3,21.95,2.0,-10753.25,Day Trade Buy – Wesfarmers Limited | 150 units @ $71.542,TRADE_BUY,r003
+2025-06-16,2025-06-18,NT9594877,CSL,CSL Limited,TXN,-100.0,294.031,29403.1,32.95,3.0,29370.15,Day Trade Sell – CSL Limited | 100 units @ $294.031,TRADE_SELL,r004
+2025-06-16,2025-06-18,NT4646403,ALL,Aristocrat Leisure Limited,TXN,150.0,60.059,9008.85,21.95,2.0,-9030.8,Day Trade Buy – Aristocrat Leisure Limited | 150 units @ $60.059,TRADE_BUY,r003
+2025-06-17,2025-06-19,NT6408662,FMG,Fortescue Ltd,TXN,100.0,16.672,1667.2,16.45,1.5,-1683.65,Day Trade Buy – Fortescue Ltd | 100 units @ $16.672,TRADE_BUY,r003
+2025-06-17,2025-06-19,NT8004117,TLS,Telstra Group Limited,TXN,200.0,3.905,781.0,16.45,1.5,-797.45,Day Trade Buy – Telstra Group Limited | 200 units @ $3.905,TRADE_BUY,r003
+2025-06-17,2025-06-19,NT8086467,WDS,Woodside Energy Group Ltd,TXN,150.0,23.961,3594.15,16.45,1.5,-3610.6,Day Trade Buy – Woodside Energy Group Ltd | 150 units @ $23.961,TRADE_BUY,r003
+2025-06-18,2025-06-20,NT3700047,BHP,BHP Group Limited,TXN,-50.0,44.372,2218.6,16.45,1.5,2202.15,Day Trade Sell – BHP Group Limited | 50 units @ $44.372,TRADE_SELL,r004
+2025-06-18,2025-06-20,NT5951637,WES,Wesfarmers Limited,TXN,100.0,71.835,7183.5,21.95,2.0,-7205.45,Day Trade Buy – Wesfarmers Limited | 100 units @ $71.835,TRADE_BUY,r003
+2025-06-19,2025-06-23,NT7524435,TLS,Telstra Group Limited,TXN,100.0,3.906,390.6,16.45,1.5,-407.05,Day Trade Buy – Telstra Group Limited | 100 units @ $3.906,TRADE_BUY,r003
+2025-06-19,2025-06-23,NT1788191,XRO,Xero Limited,TXN,150.0,154.773,23215.95,32.95,3.0,-23248.9,Day Trade Buy – Xero Limited | 150 units @ $154.773,TRADE_BUY,r003
+2025-06-20,2025-06-24,NT5216804,WES,Wesfarmers Limited,TXN,-50.0,71.589,3579.45,16.45,1.5,3563.0,Day Trade Sell – Wesfarmers Limited | 50 units @ $71.589,TRADE_SELL,r004
+2025-06-20,2025-06-24,NT7169672,TCL,Transurban Group,TXN,200.0,13.535,2707.0,16.45,1.5,-2723.45,Day Trade Buy – Transurban Group | 200 units @ $13.535,TRADE_BUY,r003
+2025-06-20,2025-06-24,NT4246352,FMG,Fortescue Ltd,TXN,100.0,16.695,1669.5,16.45,1.5,-1685.95,Day Trade Buy – Fortescue Ltd | 100 units @ $16.695,TRADE_BUY,r003
+2025-06-23,2025-06-25,NT3002424,FMG,Fortescue Ltd,TXN,100.0,16.618,1661.8,16.45,1.5,-1678.25,Day Trade Buy – Fortescue Ltd | 100 units @ $16.618,TRADE_BUY,r003
+2025-06-23,2025-06-25,NT5278461,CBA,Commonwealth Bank of Australia,TXN,-150.0,161.851,24277.65,32.95,3.0,24244.7,Day Trade Sell – Commonwealth Bank of Australia | 150 units @ $161.851,TRADE_SELL,r004
+2025-06-24,2025-06-26,NT6052539,ALL,Aristocrat Leisure Limited,TXN,150.0,59.738,8960.7,21.95,2.0,-8982.65,Day Trade Buy – Aristocrat Leisure Limited | 150 units @ $59.738,TRADE_BUY,r003
+2025-06-24,2025-06-26,NT6332789,WBC,Westpac Banking Corporation,TXN,-150.0,33.45,5017.5,21.95,2.0,4995.55,Day Trade Sell – Westpac Banking Corporation | 150 units @ $33.450,TRADE_SELL,r004
+2025-06-24,2025-06-26,NT3673793,BHP,BHP Group Limited,TXN,50.0,44.702,2235.1,16.45,1.5,-2251.55,Day Trade Buy – BHP Group Limited | 50 units @ $44.702,TRADE_BUY,r003
+2025-06-25,2025-06-27,NT5925360,CBA,Commonwealth Bank of Australia,TXN,150.0,162.274,24341.1,32.95,3.0,-24374.05,Day Trade Buy – Commonwealth Bank of Australia | 150 units @ $162.274,TRADE_BUY,r003
+2025-06-25,2025-06-27,NT1147701,TLS,Telstra Group Limited,TXN,200.0,3.914,782.8,16.45,1.5,-799.25,Day Trade Buy – Telstra Group Limited | 200 units @ $3.914,TRADE_BUY,r003
+2025-06-25,2025-06-27,NT5090740,ANZ,ANZ Banking Group Limited,TXN,100.0,30.364,3036.4,16.45,1.5,-3052.85,Day Trade Buy – ANZ Banking Group Limited | 100 units @ $30.364,TRADE_BUY,r003
+2025-06-26,2025-06-30,NT9671603,WES,Wesfarmers Limited,TXN,-150.0,71.406,10710.9,21.95,2.0,10688.95,Day Trade Sell – Wesfarmers Limited | 150 units @ $71.406,TRADE_SELL,r004
+2025-06-26,2025-06-30,NT5973336,TCL,Transurban Group,TXN,200.0,13.529,2705.8,16.45,1.5,-2722.25,Day Trade Buy – Transurban Group | 200 units @ $13.529,TRADE_BUY,r003
+2025-06-26,2025-06-30,NT3808418,CBA,Commonwealth Bank of Australia,TXN,50.0,161.493,8074.65,21.95,2.0,-8096.6,Day Trade Buy – Commonwealth Bank of Australia | 50 units @ $161.493,TRADE_BUY,r003
+2025-06-27,2025-07-01,NT8117053,FMG,Fortescue Ltd,TXN,100.0,16.552,1655.2,16.45,1.5,-1671.65,Day Trade Buy – Fortescue Ltd | 100 units @ $16.552,TRADE_BUY,r003
+2025-06-27,2025-07-01,NT2209981,CBA,Commonwealth Bank of Australia,TXN,200.0,161.226,32245.2,32.95,3.0,-32278.15,Day Trade Buy – Commonwealth Bank of Australia | 200 units @ $161.226,TRADE_BUY,r003
+2025-06-30,2025-07-02,NT1910467,BHP,BHP Group Limited,TXN,-50.0,44.803,2240.15,16.45,1.5,2223.7,Day Trade Sell – BHP Group Limited | 50 units @ $44.803,TRADE_SELL,r004
+2025-06-30,2025-07-02,NT4819259,RIO,Rio Tinto Limited,TXN,50.0,105.41,5270.5,21.95,2.0,-5292.45,Day Trade Buy – Rio Tinto Limited | 50 units @ $105.410,TRADE_BUY,r003

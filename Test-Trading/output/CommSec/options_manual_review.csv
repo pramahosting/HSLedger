@@ -1,0 +1,49 @@
+row_index,trade_date,fy_end_year,symbol,event_type,quantity,net_cash_aud,description
+76,2024-07-27,2025,CBA,OPTION_SELL,500.0,890.0,Option Sell – Commonwealth Bank of Australia | 500.0 contracts @ $1.780 | Call/Put option
+90,2024-08-01,2025,CBA,OPTION_SELL,100.0,124.0,Option Sell – Commonwealth Bank of Australia | 100.0 contracts @ $1.240 | Call/Put option
+99,2024-08-04,2025,NAB,OPTION_BUY,100.0,-51.0,Option Buy – National Australia Bank Limited | 100.0 contracts @ $0.510 | Call/Put option
+111,2024-08-08,2025,NAB,OPTION_BUY,1000.0,-2190.0,Option Buy – National Australia Bank Limited | 1000.0 contracts @ $2.190 | Call/Put option
+157,2024-08-23,2025,WES,OPTION_BUY,1000.0,-640.0,Option Buy – Wesfarmers Limited | 1000.0 contracts @ $0.640 | Call/Put option
+166,2024-08-28,2025,WES,OPTION_BUY,100.0,-208.0,Option Buy – Wesfarmers Limited | 100.0 contracts @ $2.080 | Call/Put option
+170,2024-08-29,2025,NAB,OPTION_BUY,1000.0,-970.0,Option Buy – National Australia Bank Limited | 1000.0 contracts @ $0.970 | Call/Put option
+192,2024-09-05,2025,MQG,OPTION_BUY,100.0,-293.71,Options Trade (Long) – Macquarie Group Limited | 100.0 contracts @ $2.830 | Hedging position
+194,2024-09-05,2025,CSL,OPTION_BUY,500.0,-1240.02,Options Trade (Long) – CSL Limited | 500.0 contracts @ $2.460 | Hedging position
+196,2024-09-06,2025,WES,OPTION_BUY,1000.0,-1020.0,Option Buy – Wesfarmers Limited | 1000.0 contracts @ $1.020 | Call/Put option
+215,2024-09-13,2025,WES,OPTION_BUY,100.0,-206.0,Option Buy – Wesfarmers Limited | 100.0 contracts @ $2.060 | Call/Put option
+313,2024-10-19,2025,CSL,OPTION_SELL,500.0,525.0,Option Sell – CSL Limited | 500.0 contracts @ $1.050 | Call/Put option
+404,2024-11-21,2025,NAB,OPTION_SELL,1000.0,780.0,Option Sell – National Australia Bank Limited | 1000.0 contracts @ $0.780 | Call/Put option
+438,2024-12-04,2025,CSL,OPTION_SELL,-200.0,152.42,Options Trade (Short) – CSL Limited | 200.0 contracts @ $0.820 | Hedging position
+448,2024-12-06,2025,MQG,OPTION_BUY,500.0,-1362.62,Options Trade (Long) – Macquarie Group Limited | 500.0 contracts @ $2.700 | Hedging position
+487,2024-12-21,2025,WES,OPTION_BUY,1000.0,-2210.0,Option Buy – Wesfarmers Limited | 1000.0 contracts @ $2.210 | Call/Put option
+488,2024-12-22,2025,NAB,OPTION_SELL,500.0,1055.0,Option Sell – National Australia Bank Limited | 500.0 contracts @ $2.110 | Call/Put option
+506,2024-12-31,2025,WES,OPTION_BUY,1000.0,-840.0,Option Buy – Wesfarmers Limited | 1000.0 contracts @ $0.840 | Call/Put option
+511,2025-01-02,2025,NAB,OPTION_SELL,200.0,258.0,Option Sell – National Australia Bank Limited | 200.0 contracts @ $1.290 | Call/Put option
+533,2025-01-11,2025,CSL,OPTION_BUY,100.0,-222.0,Option Buy – CSL Limited | 100.0 contracts @ $2.220 | Call/Put option
+536,2025-01-12,2025,BHP,OPTION_SELL,500.0,1240.0,Option Sell – BHP Group Limited | 500.0 contracts @ $2.480 | Call/Put option
+537,2025-01-12,2025,CSL,OPTION_SELL,200.0,278.0,Option Sell – CSL Limited | 200.0 contracts @ $1.390 | Call/Put option
+544,2025-01-15,2025,BHP,OPTION_BUY,200.0,-318.0,Option Buy – BHP Group Limited | 200.0 contracts @ $1.590 | Call/Put option
+567,2025-01-26,2025,BHP,OPTION_SELL,500.0,230.0,Option Sell – BHP Group Limited | 500.0 contracts @ $0.460 | Call/Put option
+568,2025-01-27,2025,BHP,OPTION_BUY,1000.0,-1850.0,Option Buy – BHP Group Limited | 1000.0 contracts @ $1.850 | Call/Put option
+571,2025-01-29,2025,NAB,OPTION_SELL,100.0,106.0,Option Sell – National Australia Bank Limited | 100.0 contracts @ $1.060 | Call/Put option
+594,2025-02-06,2025,CSL,OPTION_SELL,200.0,436.0,Option Sell – CSL Limited | 200.0 contracts @ $2.180 | Call/Put option
+600,2025-02-08,2025,CBA,OPTION_BUY,500.0,-640.0,Option Buy – Commonwealth Bank of Australia | 500.0 contracts @ $1.280 | Call/Put option
+628,2025-02-18,2025,WES,OPTION_SELL,500.0,495.0,Option Sell – Wesfarmers Limited | 500.0 contracts @ $0.990 | Call/Put option
+653,2025-02-27,2025,BHP,OPTION_SELL,200.0,462.0,Option Sell – BHP Group Limited | 200.0 contracts @ $2.310 | Call/Put option
+669,2025-03-05,2025,CSL,OPTION_BUY,500.0,-650.0,Option Buy – CSL Limited | 500.0 contracts @ $1.300 | Call/Put option
+684,2025-03-11,2025,CSL,OPTION_BUY,100.0,-332.92,Options Trade (Long) – CSL Limited | 100.0 contracts @ $3.220 | Hedging position
+695,2025-03-15,2025,BHP,OPTION_SELL,1000.0,2210.0,Option Sell – BHP Group Limited | 1000.0 contracts @ $2.210 | Call/Put option
+731,2025-03-26,2025,MQG,OPTION_BUY,500.0,-1682.89,Options Trade (Long) – Macquarie Group Limited | 500.0 contracts @ $3.340 | Hedging position
+740,2025-03-29,2025,WES,OPTION_SELL,500.0,1065.0,Option Sell – Wesfarmers Limited | 500.0 contracts @ $2.130 | Call/Put option
+747,2025-04-01,2025,WES,OPTION_SELL,500.0,890.0,Option Sell – Wesfarmers Limited | 500.0 contracts @ $1.780 | Call/Put option
+762,2025-04-05,2025,WES,OPTION_BUY,500.0,-215.0,Option Buy – Wesfarmers Limited | 500.0 contracts @ $0.430 | Call/Put option
+776,2025-04-10,2025,CBA,OPTION_BUY,200.0,-418.0,Option Buy – Commonwealth Bank of Australia | 200.0 contracts @ $2.090 | Call/Put option
+783,2025-04-14,2025,CSL,OPTION_SELL,1000.0,1200.0,Option Sell – CSL Limited | 1000.0 contracts @ $1.200 | Call/Put option
+812,2025-04-28,2025,BHP,OPTION_BUY,200.0,-176.0,Option Buy – BHP Group Limited | 200.0 contracts @ $0.880 | Call/Put option
+840,2025-05-08,2025,WES,OPTION_SELL,500.0,455.0,Option Sell – Wesfarmers Limited | 500.0 contracts @ $0.910 | Call/Put option
+856,2025-05-14,2025,BHP,OPTION_SELL,100.0,168.0,Option Sell – BHP Group Limited | 100.0 contracts @ $1.680 | Call/Put option
+883,2025-05-24,2025,WES,OPTION_SELL,500.0,655.0,Option Sell – Wesfarmers Limited | 500.0 contracts @ $1.310 | Call/Put option
+885,2025-05-25,2025,BHP,OPTION_BUY,500.0,-205.0,Option Buy – BHP Group Limited | 500.0 contracts @ $0.410 | Call/Put option
+923,2025-06-07,2025,WES,OPTION_SELL,200.0,456.0,Option Sell – Wesfarmers Limited | 200.0 contracts @ $2.280 | Call/Put option
+947,2025-06-17,2025,CSL,OPTION_BUY,1000.0,-2300.0,Option Buy – CSL Limited | 1000.0 contracts @ $2.300 | Call/Put option
+954,2025-06-18,2025,BHP,OPTION_BUY,200.0,-560.53,Options Trade (Long) – BHP Group Limited | 200.0 contracts @ $2.750 | Hedging position
+985,2025-06-30,2025,CBA,OPTION_SELL,-100.0,264.79,Options Trade (Short) – Commonwealth Bank of Australia | 100.0 contracts @ $2.770 | Hedging position

@@ -1,0 +1,77 @@
+row_index,trade_date,fy_end_year,symbol,event_type,amount_aud,description
+16,2024-07-04,2025,CASH,INTEREST,69.74,Interest Income – CommSec Cash Account | Regular interest payment
+78,2024-07-29,2025,CASH,INTEREST,20.77,Interest Income – CommSec Cash Account | Regular interest payment
+85,2024-07-31,2025,CASH,LENDING_INCOME,52.88,Share Lending Income – CommSec Cash Account | Lending fee received
+86,2024-07-31,2025,CASH,INTEREST,24.92,Interest Income – CommSec Cash Account | Regular interest payment
+104,2024-08-06,2025,CASH,INTEREST,59.71,Interest Income – CommSec Cash Account | Regular interest payment
+173,2024-08-30,2025,CASH,LENDING_INCOME,56.67,Share Lending Income – CommSec Cash Account | Lending fee received
+174,2024-08-30,2025,CASH,INTEREST,40.21,Interest Income – CommSec Cash Account | Regular interest payment
+180,2024-09-02,2025,CBA,DIVIDEND,104.9,Dividend – Commonwealth Bank of Australia | Franked distribution
+187,2024-09-04,2025,CSL,DIVIDEND,243.31,Dividend – CSL Limited | Franked distribution
+201,2024-09-09,2025,CASH,INTEREST,96.42,Interest Income – CommSec Cash Account | Regular interest payment
+210,2024-09-12,2025,WES,DIVIDEND,214.78,Dividend – Wesfarmers Limited | Franked distribution
+220,2024-09-16,2025,MQG,DIVIDEND,174.11,Dividend – Macquarie Group Limited | Franked distribution
+221,2024-09-16,2025,WBC,DIVIDEND,186.39,Dividend – Westpac Banking Corporation | Franked distribution
+234,2024-09-20,2025,ANZ,DIVIDEND,166.0,Dividend – ANZ Banking Group Limited | Franked distribution
+242,2024-09-23,2025,ANZ,DIVIDEND,145.03,Dividend – ANZ Banking Group Limited | Franked distribution
+247,2024-09-24,2025,NAB,DIVIDEND,255.75,Dividend – National Australia Bank Limited | Franked distribution
+253,2024-09-26,2025,BHP,DIVIDEND,572.12,Dividend – BHP Group Limited | Franked distribution
+254,2024-09-26,2025,RIO,DIVIDEND,538.09,Dividend – Rio Tinto Limited | Franked distribution
+255,2024-09-26,2025,TLS,DIVIDEND,197.03,Dividend – Telstra Group Limited | Franked distribution
+262,2024-09-30,2025,CASH,LENDING_INCOME,48.13,Share Lending Income – CommSec Cash Account | Lending fee received
+263,2024-09-30,2025,CASH,INTEREST,77.82,Interest Income – CommSec Cash Account | Regular interest payment
+289,2024-10-10,2025,TLS,DIVIDEND,25.5,Dividend – Telstra Group Limited | Franked distribution
+290,2024-10-10,2025,WDS,DIVIDEND,350.0,Dividend – Woodside Energy Group Limited | Franked distribution
+291,2024-10-10,2025,CSL,DIVIDEND,370.0,Dividend – CSL Limited | Franked distribution
+333,2024-10-26,2025,CASH,INTEREST,70.03,Interest Income – CommSec Cash Account | Regular interest payment
+347,2024-10-31,2025,CASH,INTEREST,22.53,Interest Income – CommSec Cash Account | Regular interest payment
+348,2024-10-31,2025,CASH,LENDING_INCOME,27.24,Share Lending Income – CommSec Cash Account | Lending fee received
+384,2024-11-14,2025,BHP,DIVIDEND,360.0,Dividend – BHP Group Limited | Franked distribution
+385,2024-11-14,2025,CSL,DIVIDEND,925.0,Dividend – CSL Limited | Franked distribution
+415,2024-11-26,2025,CASH,INTEREST,52.81,Interest Income – CommSec Cash Account | Regular interest payment
+428,2024-11-29,2025,CASH,LENDING_INCOME,40.53,Share Lending Income – CommSec Cash Account | Lending fee received
+429,2024-11-29,2025,CASH,INTEREST,46.38,Interest Income – CommSec Cash Account | Regular interest payment
+432,2024-12-02,2025,CASH,INTEREST,114.53,Interest Income – CommSec Cash Account | Regular interest payment
+441,2024-12-05,2025,CASH,INTEREST,24.54,Interest Income – CommSec Cash Account | Regular interest payment
+504,2024-12-31,2025,CASH,INTEREST,23.21,Interest Income – CommSec Cash Account | Regular interest payment
+505,2024-12-31,2025,CASH,LENDING_INCOME,20.57,Share Lending Income – CommSec Cash Account | Lending fee received
+532,2025-01-11,2025,CASH,INTEREST,73.26,Interest Income – CommSec Cash Account | Regular interest payment
+553,2025-01-19,2025,CASH,INTEREST,118.44,Interest Income – CommSec Cash Account | Regular interest payment
+578,2025-01-31,2025,CASH,INTEREST,38.05,Interest Income – CommSec Cash Account | Regular interest payment
+579,2025-01-31,2025,CASH,LENDING_INCOME,37.46,Share Lending Income – CommSec Cash Account | Lending fee received
+593,2025-02-06,2025,CASH,INTEREST,37.57,Interest Income – CommSec Cash Account | Regular interest payment
+619,2025-02-14,2025,MQG,DIVIDEND,3850.0,Dividend – Macquarie Group Limited | Franked distribution
+620,2025-02-14,2025,BHP,DIVIDEND,600.0,Dividend – BHP Group Limited | Franked distribution
+656,2025-02-28,2025,CASH,INTEREST,45.04,Interest Income – CommSec Cash Account | Regular interest payment
+657,2025-02-28,2025,CASH,LENDING_INCOME,21.15,Share Lending Income – CommSec Cash Account | Lending fee received
+668,2025-03-05,2025,TLS,DIVIDEND,488.98,Dividend – Telstra Group Limited | Franked distribution
+673,2025-03-06,2025,CBA,DIVIDEND,223.77,Dividend – Commonwealth Bank of Australia | Franked distribution
+681,2025-03-10,2025,NAB,DIVIDEND,124.01,Dividend – National Australia Bank Limited | Franked distribution
+701,2025-03-18,2025,WES,DIVIDEND,599.47,Dividend – Wesfarmers Limited | Franked distribution
+705,2025-03-19,2025,BHP,DIVIDEND,565.56,Dividend – BHP Group Limited | Franked distribution
+712,2025-03-21,2025,CBA,DIVIDEND,2650.0,Dividend – Commonwealth Bank of Australia | Franked distribution
+713,2025-03-21,2025,ANZ,DIVIDEND,103.8,Dividend – ANZ Banking Group Limited | Franked distribution
+714,2025-03-21,2025,MQG,DIVIDEND,119.8,Dividend – Macquarie Group Limited | Franked distribution
+715,2025-03-21,2025,CSL,DIVIDEND,317.6,Dividend – CSL Limited | Franked distribution
+729,2025-03-26,2025,RIO,DIVIDEND,451.07,Dividend – Rio Tinto Limited | Franked distribution
+741,2025-03-31,2025,CASH,LENDING_INCOME,33.52,Share Lending Income – CommSec Cash Account | Lending fee received
+742,2025-03-31,2025,CASH,INTEREST,18.5,Interest Income – CommSec Cash Account | Regular interest payment
+743,2025-03-31,2025,WBC,DIVIDEND,592.54,Dividend – Westpac Banking Corporation | Franked distribution
+775,2025-04-10,2025,NAB,DIVIDEND,303.0,Dividend – National Australia Bank Limited | Franked distribution
+817,2025-04-30,2025,CASH,INTEREST,25.24,Interest Income – CommSec Cash Account | Regular interest payment
+818,2025-04-30,2025,CASH,LENDING_INCOME,22.57,Share Lending Income – CommSec Cash Account | Lending fee received
+862,2025-05-16,2025,CBA,DIVIDEND,530.0,Dividend – Commonwealth Bank of Australia | Franked distribution
+863,2025-05-16,2025,WES,DIVIDEND,204.0,Dividend – Wesfarmers Limited | Franked distribution
+864,2025-05-16,2025,MQG,DIVIDEND,1925.0,Dividend – Macquarie Group Limited | Franked distribution
+865,2025-05-16,2025,WBC,DIVIDEND,225.0,Dividend – Westpac Banking Corporation | Franked distribution
+866,2025-05-16,2025,ANZ,DIVIDEND,249.0,Dividend – ANZ Banking Group Limited | Franked distribution
+897,2025-05-30,2025,CASH,INTEREST,54.13,Interest Income – CommSec Cash Account | Regular interest payment
+898,2025-05-30,2025,CASH,LENDING_INCOME,21.11,Share Lending Income – CommSec Cash Account | Lending fee received
+925,2025-06-08,2025,CASH,INTEREST,100.62,Interest Income – CommSec Cash Account | Regular interest payment
+933,2025-06-12,2025,WES,DIVIDEND,204.0,Dividend – Wesfarmers Limited | Franked distribution
+934,2025-06-12,2025,NAB,DIVIDEND,202.0,Dividend – National Australia Bank Limited | Franked distribution
+935,2025-06-12,2025,WBC,DIVIDEND,750.0,Dividend – Westpac Banking Corporation | Franked distribution
+936,2025-06-12,2025,TLS,DIVIDEND,85.0,Dividend – Telstra Group Limited | Franked distribution
+937,2025-06-12,2025,WDS,DIVIDEND,140.0,Dividend – Woodside Energy Group Limited | Franked distribution
+983,2025-06-30,2025,CASH,INTEREST,56.47,Interest Income – CommSec Cash Account | Regular interest payment
+984,2025-06-30,2025,CASH,LENDING_INCOME,10.11,Share Lending Income – CommSec Cash Account | Lending fee received

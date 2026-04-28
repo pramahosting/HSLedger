@@ -1,0 +1,151 @@
+row_index,trade_date,fy_end_year,mode,event_type,symbol,qty_disposed,proceeds_aud,cost_base_aud,raw_gain_aud,discount_amount_aud,taxable_gain_aud,allocation_count,description
+0,2024-01-07,2024,investor,TRADE_SELL,NAB,50.0,1966.4,0.0,1966.4,0.0,1966.4,0,Day Trade Sell – National Australia Bank Limited | 50 units @ $39.394
+1,2024-01-07,2024,investor,TRADE_SELL,FMG,150.0,2470.05,0.0,2470.05,0.0,2470.05,0,Day Trade Sell – Fortescue Ltd | 150 units @ $16.489
+5,2024-01-10,2024,investor,TRADE_SELL,ALL,50.0,3028.35,0.0,3028.35,0.0,3028.35,0,Day Trade Sell – Aristocrat Leisure Limited | 50 units @ $60.633
+14,2024-02-08,2024,investor,TRADE_SELL,WES,150.0,11211.45,0.0,11211.45,0.0,11211.45,0,Day Trade Sell – Wesfarmers Limited | 150 units @ $74.765
+16,2024-02-09,2024,investor,TRADE_SELL,CBA,50.0,7804.7,0.0,7804.7,0.0,7804.7,0,Day Trade Sell – Commonwealth Bank of Australia | 50 units @ $156.160
+23,2024-03-07,2024,investor,TRADE_SELL,TCL,150.0,1968.9,0.0,1968.9,0.0,1968.9,0,Day Trade Sell – Transurban Group | 150 units @ $13.148
+27,2024-03-09,2024,investor,TRADE_SELL,CBA,100.0,15591.8,7804.15,7787.65,0.0,7787.65,1,Day Trade Sell – Commonwealth Bank of Australia | 100 units @ $155.951
+29,2024-03-10,2024,investor,TRADE_SELL,FMG,100.0,1649.9,836.75,813.15,0.0,813.15,1,Day Trade Sell – Fortescue Ltd | 100 units @ $16.532
+30,2024-03-10,2024,investor,TRADE_SELL,CSL,50.0,14543.45,14771.7,-228.25,0.0,-228.25,1,Day Trade Sell – CSL Limited | 50 units @ $290.935
+33,2024-03-12,2024,investor,TRADE_SELL,RIO,200.0,22092.3,21982.7,109.6,0.0,109.6,1,Day Trade Sell – Rio Tinto Limited | 200 units @ $110.478
+39,2024-04-09,2024,investor,TRADE_SELL,TCL,100.0,1307.6,1317.4,-9.8,0.0,-9.8,1,Day Trade Sell – Transurban Group | 100 units @ $13.109
+40,2024-04-09,2024,investor,TRADE_SELL,XRO,200.0,29004.5,0.0,29004.5,0.0,29004.5,0,Day Trade Sell – Xero Limited | 200 units @ $145.039
+48,2024-04-12,2024,investor,TRADE_SELL,ANZ,200.0,6115.1,6183.7,-68.6,0.0,-68.6,2,Day Trade Sell – ANZ Banking Group Limited | 200 units @ $30.592
+52,2024-05-08,2024,investor,TRADE_SELL,ALL,150.0,9011.55,9067.4,-55.85,0.0,-55.85,2,Day Trade Sell – Aristocrat Leisure Limited | 150 units @ $60.099
+54,2024-05-09,2024,investor,TRADE_SELL,WES,50.0,3754.95,3744.45,10.5,0.0,10.5,1,Day Trade Sell – Wesfarmers Limited | 50 units @ $75.165
+57,2024-05-11,2024,investor,TRADE_SELL,BHP,150.0,6502.2,6424.35,77.85,0.0,77.85,1,Day Trade Sell – BHP Group Limited | 150 units @ $43.370
+61,2024-06-08,2024,investor,TRADE_SELL,CBA,150.0,23497.2,15532.2,7965.0,0.0,7965.0,1,Day Trade Sell – Commonwealth Bank of Australia | 150 units @ $156.670
+63,2024-06-08,2024,investor,TRADE_SELL,WBC,150.0,4951.05,4984.1,-33.05,0.0,-33.05,3,Day Trade Sell – Westpac Banking Corporation | 150 units @ $33.029
+70,2024-06-12,2024,investor,TRADE_SELL,WBC,100.0,3370.7,3338.1,32.6,0.0,32.6,2,Day Trade Sell – Westpac Banking Corporation | 100 units @ $33.740
+71,2024-07-08,2025,investor,TRADE_SELL,XRO,50.0,7345.15,7358.6,-13.45,0.0,-13.45,1,Day Trade Sell – Xero Limited | 50 units @ $146.969
+73,2024-07-10,2025,investor,TRADE_SELL,ANZ,50.0,1537.9,0.0,1537.9,0.0,1537.9,0,Day Trade Sell – ANZ Banking Group Limited | 50 units @ $30.824
+78,2024-07-15,2025,investor,TRADE_SELL,ALL,200.0,12041.9,0.0,12041.9,0.0,12041.9,0,Day Trade Sell – Aristocrat Leisure Limited | 200 units @ $60.226
+79,2024-07-15,2025,investor,TRADE_SELL,CBA,50.0,7888.15,7781.45,106.7,0.0,106.7,1,Day Trade Sell – Commonwealth Bank of Australia | 50 units @ $157.829
+85,2024-07-17,2025,investor,TRADE_SELL,RIO,150.0,16400.7,16458.45,-57.75,0.0,-57.75,1,Day Trade Sell – Rio Tinto Limited | 150 units @ $109.360
+86,2024-07-18,2025,investor,TRADE_SELL,CSL,200.0,58633.9,58697.35,-63.45,0.0,-63.45,2,Day Trade Sell – CSL Limited | 200 units @ $293.186
+98,2024-07-24,2025,investor,TRADE_SELL,MQG,200.0,46630.3,46229.5,400.8,0.0,400.8,1,Day Trade Sell – Macquarie Group Limited | 200 units @ $233.168
+102,2024-07-25,2025,investor,TRADE_SELL,FMG,50.0,829.9,830.8,-0.9,0.0,-0.9,1,Day Trade Sell – Fortescue Ltd | 50 units @ $16.664
+107,2024-07-29,2025,investor,TRADE_SELL,CSL,150.0,43732.5,43912.53,-180.03,0.0,-180.03,2,Day Trade Sell – CSL Limited | 150 units @ $291.572
+108,2024-07-30,2025,investor,TRADE_SELL,CSL,150.0,43873.65,44275.73,-402.08,0.0,-402.08,1,Day Trade Sell – CSL Limited | 150 units @ $292.513
+113,2024-08-07,2025,investor,TRADE_SELL,ANZ,150.0,4584.45,4635.23,-50.78,0.0,-50.78,2,Day Trade Sell – ANZ Banking Group Limited | 150 units @ $30.585
+119,2024-08-10,2025,investor,TRADE_SELL,ALL,100.0,6033.7,5990.2,43.5,0.0,43.5,1,Day Trade Sell – Aristocrat Leisure Limited | 100 units @ $60.370
+120,2024-08-11,2025,investor,TRADE_SELL,MQG,50.0,11513.05,11536.12,-23.08,0.0,-23.08,1,Day Trade Sell – Macquarie Group Limited | 50 units @ $230.327
+139,2024-08-21,2025,investor,TRADE_SELL,WBC,50.0,1657.45,1680.75,-23.3,0.0,-23.3,1,Day Trade Sell – Westpac Banking Corporation | 50 units @ $33.215
+141,2024-08-22,2025,investor,TRADE_SELL,MQG,100.0,23092.0,23072.25,19.75,0.0,19.75,1,Day Trade Sell – Macquarie Group Limited | 100 units @ $230.953
+142,2024-08-22,2025,investor,TRADE_SELL,TCL,100.0,1308.8,1312.9,-4.1,0.0,-4.1,1,Day Trade Sell – Transurban Group | 100 units @ $13.121
+148,2024-08-27,2025,investor,TRADE_SELL,RIO,150.0,16535.1,16495.15,39.95,0.0,39.95,2,Day Trade Sell – Rio Tinto Limited | 150 units @ $110.256
+152,2024-08-29,2025,investor,TRADE_SELL,WES,100.0,7529.0,7468.55,60.45,0.0,60.45,2,Day Trade Sell – Wesfarmers Limited | 100 units @ $75.323
+153,2024-08-29,2025,investor,TRADE_SELL,MQG,200.0,46205.9,45941.22,264.68,0.0,264.68,3,Day Trade Sell – Macquarie Group Limited | 200 units @ $231.046
+155,2024-08-30,2025,investor,TRADE_SELL,TCL,200.0,2628.5,2650.62,-22.12,0.0,-22.12,2,Day Trade Sell – Transurban Group | 200 units @ $13.159
+163,2024-09-09,2025,investor,TRADE_SELL,WBC,100.0,3333.8,3347.3,-13.5,0.0,-13.5,2,Day Trade Sell – Westpac Banking Corporation | 100 units @ $33.371
+166,2024-09-10,2025,investor,TRADE_SELL,CSL,150.0,43465.05,43910.32,-445.27,0.0,-445.27,1,Day Trade Sell – CSL Limited | 150 units @ $289.789
+169,2024-09-12,2025,investor,TRADE_SELL,FMG,150.0,2487.3,2494.75,-7.45,0.0,-7.45,2,Day Trade Sell – Fortescue Ltd | 150 units @ $16.604
+174,2024-09-16,2025,investor,TRADE_SELL,MQG,50.0,11616.75,11618.4,-1.65,0.0,-1.65,1,Day Trade Sell – Macquarie Group Limited | 50 units @ $232.401
+175,2024-09-16,2025,investor,TRADE_SELL,FMG,100.0,1650.6,1666.3,-15.7,0.0,-15.7,1,Day Trade Sell – Fortescue Ltd | 100 units @ $16.539
+177,2024-09-17,2025,investor,TRADE_SELL,ANZ,150.0,4632.6,4648.27,-15.67,0.0,-15.67,1,Day Trade Sell – ANZ Banking Group Limited | 150 units @ $30.906
+186,2024-09-23,2025,investor,TRADE_SELL,FMG,50.0,823.75,831.95,-8.2,0.0,-8.2,1,Day Trade Sell – Fortescue Ltd | 50 units @ $16.541
+196,2024-09-26,2025,investor,TRADE_SELL,CBA,100.0,15566.8,15781.15,-214.35,0.0,-214.35,1,Day Trade Sell – Commonwealth Bank of Australia | 100 units @ $155.701
+200,2024-09-27,2025,investor,TRADE_SELL,ALL,200.0,12133.9,12087.35,46.55,0.0,46.55,2,Day Trade Sell – Aristocrat Leisure Limited | 200 units @ $60.686
+213,2024-10-10,2025,investor,TRADE_SELL,WES,200.0,15015.9,14981.35,34.55,0.0,34.55,2,Day Trade Sell – Wesfarmers Limited | 200 units @ $75.096
+214,2024-10-12,2025,investor,TRADE_SELL,BHP,150.0,6412.8,6467.93,-55.12,0.0,-55.12,2,Day Trade Sell – BHP Group Limited | 150 units @ $42.774
+222,2024-10-16,2025,investor,TRADE_SELL,ANZ,100.0,3067.3,3086.0,-18.7,0.0,-18.7,1,Day Trade Sell – ANZ Banking Group Limited | 100 units @ $30.706
+227,2024-10-21,2025,investor,TRADE_SELL,WBC,100.0,3341.2,3347.0,-5.8,0.0,-5.8,2,Day Trade Sell – Westpac Banking Corporation | 100 units @ $33.445
+232,2024-10-22,2025,investor,TRADE_SELL,TLS,200.0,779.1,781.5,-2.4,0.0,-2.4,1,Day Trade Sell – Telstra Group Limited | 200 units @ $3.912
+238,2024-10-25,2025,investor,TRADE_SELL,ANZ,50.0,1515.25,1536.8,-21.55,0.0,-21.55,1,Day Trade Sell – ANZ Banking Group Limited | 50 units @ $30.371
+241,2024-10-28,2025,investor,TRADE_SELL,NAB,50.0,1949.3,1955.3,-6.0,0.0,-6.0,1,Day Trade Sell – National Australia Bank Limited | 50 units @ $39.052
+242,2024-10-29,2025,investor,TRADE_SELL,WES,50.0,3746.75,3766.57,-19.82,0.0,-19.82,1,Day Trade Sell – Wesfarmers Limited | 50 units @ $75.001
+244,2024-10-30,2025,investor,TRADE_SELL,ALL,50.0,3012.4,2982.35,30.05,0.0,30.05,1,Day Trade Sell – Aristocrat Leisure Limited | 50 units @ $60.314
+247,2024-10-31,2025,investor,TRADE_SELL,WDS,100.0,2470.7,2485.05,-14.35,0.0,-14.35,2,Day Trade Sell – Woodside Energy Group Ltd | 100 units @ $24.740
+254,2024-11-10,2025,investor,TRADE_SELL,WDS,50.0,1229.85,1240.35,-10.5,0.0,-10.5,1,Day Trade Sell – Woodside Energy Group Ltd | 50 units @ $24.663
+255,2024-11-10,2025,investor,TRADE_SELL,TLS,50.0,189.75,193.62,-3.88,0.0,-3.88,1,Day Trade Sell – Telstra Group Limited | 50 units @ $3.861
+266,2024-11-14,2025,investor,TRADE_SELL,ALL,200.0,12170.3,11978.5,191.8,0.0,191.8,1,Day Trade Sell – Aristocrat Leisure Limited | 200 units @ $60.868
+271,2024-11-18,2025,investor,TRADE_SELL,WBC,200.0,6746.1,6650.7,95.4,0.0,95.4,3,Day Trade Sell – Westpac Banking Corporation | 200 units @ $33.747
+274,2024-11-19,2025,investor,TRADE_SELL,WES,150.0,11273.4,11241.08,32.32,0.0,32.32,2,Day Trade Sell – Wesfarmers Limited | 150 units @ $75.178
+276,2024-11-20,2025,investor,TRADE_SELL,ANZ,100.0,3054.9,3060.65,-5.75,0.0,-5.75,2,Day Trade Sell – ANZ Banking Group Limited | 100 units @ $30.582
+278,2024-11-21,2025,investor,TRADE_SELL,TLS,100.0,389.8,387.25,2.55,0.0,2.55,1,Day Trade Sell – Telstra Group Limited | 100 units @ $3.931
+279,2024-11-21,2025,investor,TRADE_SELL,WBC,50.0,1679.2,1649.0,30.2,0.0,30.2,1,Day Trade Sell – Westpac Banking Corporation | 50 units @ $33.650
+285,2024-11-26,2025,investor,TRADE_SELL,MQG,100.0,23093.9,23193.85,-99.95,0.0,-99.95,2,Day Trade Sell – Macquarie Group Limited | 100 units @ $230.972
+290,2024-11-28,2025,investor,TRADE_SELL,TCL,100.0,1320.3,1319.77,0.53,0.0,0.53,2,Day Trade Sell – Transurban Group | 100 units @ $13.236
+295,2024-12-07,2025,investor,TRADE_SELL,RIO,150.0,16496.4,16448.03,48.38,0.0,48.38,1,Day Trade Sell – Rio Tinto Limited | 150 units @ $109.998
+298,2024-12-08,2025,investor,TRADE_SELL,ALL,150.0,8981.85,8958.75,23.1,0.0,23.1,1,Day Trade Sell – Aristocrat Leisure Limited | 150 units @ $59.901
+301,2024-12-09,2025,investor,TRADE_SELL,TLS,100.0,384.7,388.22,-3.52,0.0,-3.52,2,Day Trade Sell – Telstra Group Limited | 100 units @ $3.880
+305,2024-12-12,2025,investor,TRADE_SELL,CBA,100.0,15537.9,15781.15,-243.25,0.0,-243.25,1,Day Trade Sell – Commonwealth Bank of Australia | 100 units @ $155.412
+309,2024-12-16,2025,investor,TRADE_SELL,ALL,150.0,9094.35,9026.73,67.62,0.0,67.62,2,Day Trade Sell – Aristocrat Leisure Limited | 150 units @ $60.651
+310,2024-12-16,2025,investor,TRADE_SELL,MQG,150.0,34331.7,34732.35,-400.65,0.0,-400.65,2,Day Trade Sell – Macquarie Group Limited | 150 units @ $228.900
+312,2024-12-17,2025,investor,TRADE_SELL,ALL,50.0,3037.8,3022.53,15.28,0.0,15.28,1,Day Trade Sell – Aristocrat Leisure Limited | 50 units @ $60.822
+318,2024-12-20,2025,investor,TRADE_SELL,TCL,200.0,2653.1,2617.9,35.2,0.0,35.2,1,Day Trade Sell – Transurban Group | 200 units @ $13.282
+320,2024-12-20,2025,investor,TRADE_SELL,CSL,150.0,43658.55,44107.62,-449.07,0.0,-449.07,2,Day Trade Sell – CSL Limited | 150 units @ $291.079
+324,2024-12-24,2025,investor,TRADE_SELL,CBA,200.0,31064.3,31388.2,-323.9,0.0,-323.9,3,Day Trade Sell – Commonwealth Bank of Australia | 200 units @ $155.338
+325,2024-12-27,2025,investor,TRADE_SELL,ANZ,150.0,4606.8,4622.62,-15.82,0.0,-15.82,1,Day Trade Sell – ANZ Banking Group Limited | 150 units @ $30.734
+326,2024-12-27,2025,investor,TRADE_SELL,CSL,50.0,14650.7,14735.42,-84.72,0.0,-84.72,1,Day Trade Sell – CSL Limited | 50 units @ $293.080
+333,2025-01-04,2025,investor,TRADE_SELL,CSL,200.0,58567.7,58646.73,-79.03,0.0,-79.03,2,Day Trade Sell – CSL Limited | 200 units @ $292.855
+335,2025-01-05,2025,investor,TRADE_SELL,BHP,150.0,6473.25,6483.38,-10.12,0.0,-10.12,1,Day Trade Sell – BHP Group Limited | 150 units @ $43.177
+337,2025-01-13,2025,investor,TRADE_SELL,TLS,150.0,590.7,584.25,6.45,0.0,6.45,2,Day Trade Sell – Telstra Group Limited | 150 units @ $3.960
+338,2025-01-13,2025,investor,TRADE_SELL,MQG,100.0,22701.3,23175.65,-474.35,0.0,-474.35,2,Day Trade Sell – Macquarie Group Limited | 100 units @ $227.046
+342,2025-01-15,2025,investor,TRADE_SELL,RIO,50.0,5552.65,5482.67,69.98,0.0,69.98,1,Day Trade Sell – Rio Tinto Limited | 50 units @ $111.119
+345,2025-01-16,2025,investor,TRADE_SELL,ALL,50.0,3067.3,3022.53,44.77,0.0,44.77,1,Day Trade Sell – Aristocrat Leisure Limited | 50 units @ $61.412
+354,2025-01-22,2025,investor,TRADE_SELL,MQG,50.0,11319.2,11594.2,-275.0,0.0,-275.0,1,Day Trade Sell – Macquarie Group Limited | 50 units @ $226.450
+356,2025-01-22,2025,investor,TRADE_SELL,RIO,50.0,5541.95,5492.6,49.35,0.0,49.35,1,Day Trade Sell – Rio Tinto Limited | 50 units @ $110.905
+365,2025-01-29,2025,investor,TRADE_SELL,FMG,200.0,3376.3,3316.7,59.6,0.0,59.6,2,Day Trade Sell – Fortescue Ltd | 200 units @ $16.898
+366,2025-01-30,2025,investor,TRADE_SELL,WBC,50.0,1650.6,1649.0,1.6,0.0,1.6,1,Day Trade Sell – Westpac Banking Corporation | 50 units @ $33.078
+368,2025-01-31,2025,investor,TRADE_SELL,ANZ,50.0,1520.0,1540.88,-20.88,0.0,-20.88,1,Day Trade Sell – ANZ Banking Group Limited | 50 units @ $30.466
+369,2025-01-31,2025,investor,TRADE_SELL,TCL,100.0,1335.0,1307.7,27.3,0.0,27.3,1,Day Trade Sell – Transurban Group | 100 units @ $13.383
+370,2025-01-31,2025,investor,TRADE_SELL,CBA,200.0,30884.5,31292.6,-408.1,0.0,-408.1,2,Day Trade Sell – Commonwealth Bank of Australia | 200 units @ $154.439
+376,2025-02-04,2025,investor,TRADE_SELL,WDS,200.0,4911.3,4963.88,-52.57,0.0,-52.57,2,Day Trade Sell – Woodside Energy Group Ltd | 200 units @ $24.573
+385,2025-02-14,2025,investor,TRADE_SELL,TLS,150.0,590.4,583.35,7.05,0.0,7.05,2,Day Trade Sell – Telstra Group Limited | 150 units @ $3.958
+389,2025-02-17,2025,investor,TRADE_SELL,RIO,50.0,5583.5,5530.1,53.4,0.0,53.4,1,Day Trade Sell – Rio Tinto Limited | 50 units @ $111.736
+395,2025-02-20,2025,investor,TRADE_SELL,FMG,150.0,2546.25,2496.9,49.35,0.0,49.35,1,Day Trade Sell – Fortescue Ltd | 150 units @ $16.997
+398,2025-02-21,2025,investor,TRADE_SELL,RIO,100.0,11288.0,11060.2,227.8,0.0,227.8,1,Day Trade Sell – Rio Tinto Limited | 100 units @ $112.913
+405,2025-02-26,2025,investor,TRADE_SELL,CSL,50.0,14684.3,14800.2,-115.9,0.0,-115.9,1,Day Trade Sell – CSL Limited | 50 units @ $293.752
+408,2025-02-27,2025,investor,TRADE_SELL,TLS,150.0,593.25,584.35,8.9,0.0,8.9,2,Day Trade Sell – Telstra Group Limited | 150 units @ $3.977
+413,2025-03-01,2025,investor,TRADE_SELL,TLS,100.0,390.8,391.65,-0.85,0.0,-0.85,2,Day Trade Sell – Telstra Group Limited | 100 units @ $3.941
+415,2025-03-01,2025,investor,TRADE_SELL,ALL,50.0,3075.85,3022.53,53.32,0.0,53.32,1,Day Trade Sell – Aristocrat Leisure Limited | 50 units @ $61.583
+417,2025-03-02,2025,investor,TRADE_SELL,WES,100.0,7484.5,7452.8,31.7,0.0,31.7,2,Day Trade Sell – Wesfarmers Limited | 100 units @ $74.878
+431,2025-03-17,2025,investor,TRADE_SELL,WBC,50.0,1631.45,1649.0,-17.55,0.0,-17.55,1,Day Trade Sell – Westpac Banking Corporation | 50 units @ $32.695
+434,2025-03-18,2025,investor,TRADE_SELL,BHP,200.0,8541.9,8685.6,-143.7,0.0,-143.7,2,Day Trade Sell – BHP Group Limited | 200 units @ $42.726
+437,2025-03-19,2025,investor,TRADE_SELL,NAB,100.0,3807.3,3891.9,-84.6,0.0,-84.6,1,Day Trade Sell – National Australia Bank Limited | 100 units @ $38.106
+441,2025-03-21,2025,investor,TRADE_SELL,MQG,150.0,34387.2,34765.7,-378.5,0.0,-378.5,2,Day Trade Sell – Macquarie Group Limited | 150 units @ $229.270
+443,2025-03-24,2025,investor,TRADE_SELL,TLS,50.0,194.4,194.8,-0.4,0.0,-0.4,1,Day Trade Sell – Telstra Group Limited | 50 units @ $3.954
+445,2025-03-24,2025,investor,TRADE_SELL,CSL,150.0,43997.55,44286.75,-289.2,0.0,-289.2,2,Day Trade Sell – CSL Limited | 150 units @ $293.339
+452,2025-03-26,2025,investor,TRADE_SELL,RIO,150.0,17110.35,16625.85,484.5,0.0,484.5,1,Day Trade Sell – Rio Tinto Limited | 150 units @ $114.091
+455,2025-03-27,2025,investor,TRADE_SELL,FMG,50.0,836.65,832.8,3.85,0.0,3.85,1,Day Trade Sell – Fortescue Ltd | 50 units @ $16.799
+469,2025-04-03,2025,investor,TRADE_SELL,WBC,150.0,4956.75,4955.05,1.7,0.0,1.7,2,Day Trade Sell – Westpac Banking Corporation | 150 units @ $33.067
+470,2025-04-03,2025,investor,TRADE_SELL,ANZ,50.0,1518.35,1545.95,-27.6,0.0,-27.6,1,Day Trade Sell – ANZ Banking Group Limited | 50 units @ $30.433
+472,2025-04-04,2025,investor,TRADE_SELL,NAB,150.0,5713.2,5885.48,-172.28,0.0,-172.28,2,Day Trade Sell – National Australia Bank Limited | 150 units @ $38.110
+474,2025-04-06,2025,investor,TRADE_SELL,FMG,100.0,1679.9,1665.6,14.3,0.0,14.3,1,Day Trade Sell – Fortescue Ltd | 100 units @ $16.832
+490,2025-04-24,2025,investor,TRADE_SELL,WES,100.0,7521.9,7431.1,90.8,0.0,90.8,1,Day Trade Sell – Wesfarmers Limited | 100 units @ $75.252
+503,2025-05-03,2025,investor,TRADE_SELL,WES,100.0,7501.5,7480.1,21.4,0.0,21.4,1,Day Trade Sell – Wesfarmers Limited | 100 units @ $75.048
+504,2025-05-03,2025,investor,TRADE_SELL,WBC,200.0,6605.5,6705.8,-100.3,0.0,-100.3,2,Day Trade Sell – Westpac Banking Corporation | 200 units @ $33.044
+507,2025-05-05,2025,investor,TRADE_SELL,ALL,200.0,12280.7,12141.6,139.1,0.0,139.1,2,Day Trade Sell – Aristocrat Leisure Limited | 200 units @ $61.420
+508,2025-05-05,2025,investor,TRADE_SELL,BHP,50.0,2172.55,2166.22,6.33,0.0,6.33,1,Day Trade Sell – BHP Group Limited | 50 units @ $43.517
+513,2025-05-13,2025,investor,TRADE_SELL,RIO,200.0,22835.7,22128.1,707.6,0.0,707.6,1,Day Trade Sell – Rio Tinto Limited | 200 units @ $114.195
+515,2025-05-14,2025,investor,TRADE_SELL,ANZ,50.0,1503.7,1544.35,-40.65,0.0,-40.65,1,Day Trade Sell – ANZ Banking Group Limited | 50 units @ $30.140
+520,2025-05-16,2025,investor,TRADE_SELL,TLS,150.0,586.65,587.05,-0.4,0.0,-0.4,3,Day Trade Sell – Telstra Group Limited | 150 units @ $3.933
+524,2025-05-19,2025,investor,TRADE_SELL,CSL,200.0,59320.1,58994.25,325.85,0.0,325.85,2,Day Trade Sell – CSL Limited | 200 units @ $296.617
+526,2025-05-20,2025,investor,TRADE_SELL,BHP,200.0,8751.7,8661.27,90.43,0.0,90.43,2,Day Trade Sell – BHP Group Limited | 200 units @ $43.775
+527,2025-05-21,2025,investor,TRADE_SELL,RIO,100.0,11526.2,11046.6,479.6,0.0,479.6,1,Day Trade Sell – Rio Tinto Limited | 100 units @ $115.295
+535,2025-05-26,2025,investor,TRADE_SELL,CSL,100.0,29761.3,29221.85,539.45,0.0,539.45,1,Day Trade Sell – CSL Limited | 100 units @ $297.646
+536,2025-05-27,2025,investor,TRADE_SELL,TLS,200.0,782.5,784.73,-2.23,0.0,-2.23,3,Day Trade Sell – Telstra Group Limited | 200 units @ $3.929
+537,2025-05-27,2025,investor,TRADE_SELL,TCL,200.0,2677.5,2627.33,50.17,0.0,50.17,2,Day Trade Sell – Transurban Group | 200 units @ $13.404
+543,2025-05-29,2025,investor,TRADE_SELL,RIO,200.0,23000.1,21976.83,1023.27,0.0,1023.27,2,Day Trade Sell – Rio Tinto Limited | 200 units @ $115.017
+563,2025-06-17,2025,investor,TRADE_SELL,WBC,200.0,6504.1,6753.43,-249.32,0.0,-249.32,2,Day Trade Sell – Westpac Banking Corporation | 200 units @ $32.537
+564,2025-06-17,2025,investor,TRADE_SELL,WDS,150.0,3763.65,3729.78,33.88,0.0,33.88,2,Day Trade Sell – Woodside Energy Group Ltd | 150 units @ $25.113
+567,2025-06-18,2025,investor,TRADE_SELL,XRO,100.0,14286.4,14590.75,-304.35,0.0,-304.35,2,Day Trade Sell – Xero Limited | 100 units @ $142.897
+575,2025-06-24,2025,investor,TRADE_SELL,RIO,50.0,5762.5,5496.92,265.58,0.0,265.58,1,Day Trade Sell – Rio Tinto Limited | 50 units @ $115.316
+576,2025-06-24,2025,investor,TRADE_SELL,WES,100.0,7569.7,7496.6,73.1,0.0,73.1,2,Day Trade Sell – Wesfarmers Limited | 100 units @ $75.730
+580,2025-06-26,2025,investor,TRADE_SELL,ALL,50.0,3043.25,3030.45,12.8,0.0,12.8,1,Day Trade Sell – Aristocrat Leisure Limited | 50 units @ $60.931
+588,2025-07-01,2026,investor,TRADE_SELL,WBC,150.0,5044.05,5002.12,41.93,0.0,41.93,1,Day Trade Sell – Westpac Banking Corporation | 150 units @ $33.649
+593,2025-07-03,2026,investor,TRADE_SELL,WBC,50.0,1653.9,1650.55,3.35,0.0,3.35,1,Day Trade Sell – Westpac Banking Corporation | 50 units @ $33.144
+599,2025-07-05,2026,investor,TRADE_SELL,CBA,100.0,15628.1,15601.0,27.1,0.0,27.1,2,Day Trade Sell – Commonwealth Bank of Australia | 100 units @ $156.314
+602,2025-08-01,2026,investor,TRADE_SELL,WBC,150.0,5031.75,4970.05,61.7,0.0,61.7,2,Day Trade Sell – Westpac Banking Corporation | 150 units @ $33.567
+605,2025-08-04,2026,investor,TRADE_SELL,FMG,150.0,2502.3,2495.93,6.38,0.0,6.38,3,Day Trade Sell – Fortescue Ltd | 150 units @ $16.704
+616,2025-09-05,2026,investor,TRADE_SELL,ALL,100.0,6087.9,6078.18,9.72,0.0,9.72,2,Day Trade Sell – Aristocrat Leisure Limited | 100 units @ $60.912
+617,2025-10-01,2026,investor,TRADE_SELL,MQG,200.0,45254.7,46160.05,-905.35,0.0,-905.35,2,Day Trade Sell – Macquarie Group Limited | 200 units @ $226.290
+619,2025-10-02,2026,investor,TRADE_SELL,ANZ,150.0,4536.45,4627.9,-91.45,0.0,-91.45,2,Day Trade Sell – ANZ Banking Group Limited | 150 units @ $30.265
+621,2025-10-02,2026,investor,TRADE_SELL,CBA,200.0,30900.1,31258.15,-358.05,0.0,-358.05,2,Day Trade Sell – Commonwealth Bank of Australia | 200 units @ $154.517
+625,2025-10-04,2026,investor,TRADE_SELL,WBC,200.0,6546.3,6579.55,-33.25,0.0,-33.25,2,Day Trade Sell – Westpac Banking Corporation | 200 units @ $32.748
+629,2025-10-06,2026,investor,TRADE_SELL,FMG,50.0,838.9,829.83,9.07,0.0,9.07,1,Day Trade Sell – Fortescue Ltd | 50 units @ $16.844
+640,2025-11-06,2026,investor,TRADE_SELL,CSL,200.0,59272.3,58577.15,695.15,347.58,347.58,2,Day Trade Sell – CSL Limited | 200 units @ $296.378
+642,2025-11-06,2026,investor,TRADE_SELL,XRO,150.0,21539.7,21962.65,-422.95,0.0,-422.95,2,Day Trade Sell – Xero Limited | 150 units @ $143.620
+651,2025-12-05,2026,investor,TRADE_SELL,RIO,100.0,11451.5,10982.5,469.0,234.5,234.5,1,Day Trade Sell – Rio Tinto Limited | 100 units @ $114.548
