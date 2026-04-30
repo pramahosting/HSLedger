@@ -109,6 +109,22 @@ def _cleanup() -> None:
     _set("temp_dir", None)
 
 
+def _quick_detect(uf) -> dict:
+    """Detect broker for an uploaded file without a full pipeline run."""
+    try:
+        import tempfile as _tf
+        from shared.detect_file_type import detect as _det_fn
+        ext = os.path.splitext(uf.name)[1].lower()
+        with _tf.NamedTemporaryFile(suffix=ext, delete=False) as tmp:
+            tmp.write(uf.getvalue())
+            tmp_path = tmp.name
+        det = _det_fn(tmp_path)
+        os.unlink(tmp_path)
+        return det
+    except Exception:
+        return {"broker": "unknown", "confidence": 0.0, "asset_class": "unknown"}
+
+
 # ── Pipeline runner ───────────────────────────────────────────────────────────
 
 def _run_pipeline(source: str, fy: str | None) -> TradingPipelineResult:
@@ -274,8 +290,307 @@ def _coverage(ticker: str, sells: list[dict]) -> tuple[str, str]:
     if total_buy == 0:
         return "⬜", "Not started"
     if total_buy >= total_sell - 1e-6:
-        return "✅", f"Covered {total_buy:,.0f} / {total_sell:,.0f} shares"
+        return "✅", f"Covered {total_sell:,.0f} / {total_sell:,.0f} shares"
     return "⚠️", f"Partial {total_buy:,.0f} / {total_sell:,.0f} shares"
+
+
+# ── Options resolver helpers ──────────────────────────────────────────────────
+
+_OPT_OUTCOMES = [
+    "— select outcome —",
+    "Expired worthless",
+    "Sold / Closed (enter close price)",
+    "Exercised into shares",
+    "Still held (open position)",
+]
+
+_OPT_OUTCOME_HELP = {
+    "Expired worthless":                 "Full premium is a capital loss in the year of expiry.",
+    "Sold / Closed (enter close price)": "Enter the net proceeds you received to close the position.",
+    "Exercised into shares":             "No CGT event now — premium is added to the cost base of shares acquired.",
+    "Still held (open position)":        "No CGT event yet — position remains open.",
+}
+
+
+def _opt_key(code: str, field: str) -> str:
+    return f"{_P}opt_{code}_{field}"
+
+
+def _opt_cgt_preview(flag, outcome: str, close_price: float) -> tuple[str, float, float]:
+    """Returns (label, gain, loss)."""
+    qty = flag.qty
+    ppu = flag.premium_paid
+    if outcome == "Expired worthless":
+        loss = round(ppu * qty, 2)
+        return f"Capital loss  −${loss:,.2f}  (full premium written off)", 0.0, loss
+    if outcome == "Sold / Closed (enter close price)":
+        if close_price <= 0:
+            return "Enter close price to see estimate", 0.0, 0.0
+        g = round((close_price - ppu) * qty, 2)
+        if g >= 0:
+            return f"Capital gain  +${g:,.2f}", g, 0.0
+        return f"Capital loss  −${abs(g):,.2f}", 0.0, abs(g)
+    if outcome == "Exercised into shares":
+        return "No immediate CGT — premium carries into share cost base", 0.0, 0.0
+    if outcome == "Still held (open position)":
+        return "No CGT event yet", 0.0, 0.0
+    return "Select an outcome above", 0.0, 0.0
+
+
+def _render_option_entry(flag, idx: int) -> None:
+    code_key    = f"{flag.code}_{idx}"
+    outcome     = st.session_state.get(_opt_key(code_key, "outcome"), "— select outcome —")
+    resolved    = outcome not in ("— select outcome —", "", None)
+    days_open   = (date.today() - flag.option_date).days
+    disc_eligible = days_open > 365
+    status_icon = "✅" if resolved else "⬜"
+
+    with st.expander(
+        f"{status_icon}  {flag.code}  ·  {int(flag.qty)} contract(s)"
+        + (f"  ·  *{outcome}*" if resolved else "  ·  *Awaiting outcome*"),
+        expanded=not resolved,
+    ):
+        left_col, right_col = st.columns([1, 1], gap="large")
+
+        with left_col:
+            st.markdown("**Position Details**")
+            detail_rows = [
+                ("Open Date",      flag.option_date.strftime("%d/%m/%Y")),
+                ("Contracts",      f"{int(flag.qty)}"),
+                ("Premium / Unit", f"${flag.premium_paid:.4f}"),
+                ("Total Premium",  f"${flag.premium_paid * flag.qty:,.2f}"),
+                ("Days Open",      f"{days_open:,} days"),
+                ("CGT Discount",   "Eligible (>12 months)" if disc_eligible else f"Not yet — {days_open} days held"),
+            ]
+            if flag.broker:
+                detail_rows.append(("Broker", flag.broker))
+            for lbl, val in detail_rows:
+                a, b = st.columns([1, 1])
+                a.caption(lbl)
+                b.markdown(f"**{val}**")
+
+        with right_col:
+            st.markdown("**Select Outcome**")
+            st.selectbox(
+                "What happened to this position?",
+                options=_OPT_OUTCOMES,
+                key=_opt_key(code_key, "outcome"),
+                label_visibility="collapsed",
+            )
+            outcome = st.session_state.get(_opt_key(code_key, "outcome"), "— select outcome —")
+
+            if outcome in _OPT_OUTCOME_HELP:
+                st.caption(_OPT_OUTCOME_HELP[outcome])
+
+            close_price = 0.0
+            if outcome == "Sold / Closed (enter close price)":
+                st.markdown("Net proceeds per contract ($)")
+                close_price = st.number_input(
+                    "close_price",
+                    min_value=0.0, step=0.01, format="%.4f",
+                    key=_opt_key(code_key, "close_price"),
+                    label_visibility="collapsed",
+                )
+
+            if outcome not in ("— select outcome —", "", None):
+                st.markdown("**Est. CGT Impact**")
+                lbl, gain, loss = _opt_cgt_preview(flag, outcome, close_price)
+                if gain > 0:
+                    st.success(lbl)
+                elif loss > 0:
+                    st.error(lbl)
+                else:
+                    st.info(lbl)
+            else:
+                st.caption("Select an outcome above to preview the tax impact.")
+
+
+def _render_options_tab(result: TradingPipelineResult) -> None:
+    flags = result.option_flags
+    txns  = getattr(result, "option_transactions", [])
+
+    # ── Transaction log (collapsible) ─────────────────────────────────────────
+    if txns:
+        unresolved_codes = {f.code for f in flags}
+        txn_label = {"OB": "Buy (OB)", "OS": "Sell / Close (OS)", "OPT": "Exercise (OPT)"}
+        rows = []
+        for t in txns:
+            if t.txn_type == "OB":
+                status = "⚠ Unresolved" if t.code in unresolved_codes else "✅ Matched"
+            else:
+                status = "📋 Closed"
+            rows.append({
+                "Status":             status,
+                "Type":               txn_label.get(t.txn_type, t.txn_type),
+                "Date":               t.trade_date.strftime("%d/%m/%Y"),
+                "Option Code":        t.code,
+                "Underlying":         t.underlying,
+                "Contracts":          int(t.qty),
+                "Price/Contract ($)": round(t.price_per_unit, 4),
+                "Total Value ($)":    round(t.total_value, 2),
+                "Broker":             t.broker or "—",
+            })
+        txn_df = pd.DataFrame(rows)
+
+        n_unresolved = sum(1 for r in rows if "Unresolved" in r["Status"])
+        n_matched    = sum(1 for r in rows if "Matched"    in r["Status"])
+        n_closed     = sum(1 for r in rows if "Closed"     in r["Status"])
+
+        with st.expander(
+            f"📋  All Detected Option Transactions  ({len(txns)} total · "
+            f"{n_unresolved} unresolved · {n_matched} matched · {n_closed} closed)",
+            expanded=False,
+        ):
+            def _status_colour(v: str) -> str:
+                if "Unresolved" in str(v): return "color:#b45309;font-weight:600"
+                if "Matched"    in str(v): return "color:#16a34a;font-weight:600"
+                if "Closed"     in str(v): return "color:#2563eb"
+                return ""
+            try:
+                st.dataframe(
+                    txn_df.style.map(_status_colour, subset=["Status"]),
+                    use_container_width=True, hide_index=True,
+                )
+            except Exception:
+                st.dataframe(txn_df, use_container_width=True, hide_index=True)
+
+    if not flags:
+        st.success("All option transactions are matched — no positions need resolution.")
+        return
+
+    st.divider()
+
+    # ── Overview metrics ───────────────────────────────────────────────────────
+    by_underlying: dict[str, list] = {}
+    for f in flags:
+        by_underlying.setdefault(f.underlying, []).append(f)
+    underlyings = sorted(by_underlying.keys())
+
+    total_contracts = sum(f.qty for f in flags)
+    total_at_risk   = sum(f.premium_paid * f.qty for f in flags)
+
+    # Count globally resolved
+    all_resolved = sum(
+        1 for f in flags
+        for i, ff in enumerate(by_underlying[f.underlying])
+        if ff is f and st.session_state.get(
+            _opt_key(f"{f.code}_{i}", "outcome"), "— select outcome —"
+        ) not in ("— select outcome —", "", None)
+    )
+
+    m1, m2, m3, m4 = st.columns(4)
+    m1.metric("Open Positions",     len(flags))
+    m2.metric("Underlying Assets",  len(underlyings))
+    m3.metric("Total Contracts",    f"{total_contracts:,.0f}")
+    m4.metric("Premium at Risk",    f"${total_at_risk:,.2f}")
+
+    resolved_underlyings = sum(
+        1 for u in underlyings
+        if all(
+            st.session_state.get(_opt_key(f"{f.code}_{i}", "outcome"), "— select outcome —")
+            not in ("— select outcome —", "", None)
+            for i, f in enumerate(by_underlying[u])
+        )
+    )
+    st.progress(
+        resolved_underlyings / len(underlyings),
+        text=f"{resolved_underlyings} of {len(underlyings)} underlying(s) fully resolved",
+    )
+
+    st.caption(
+        "Select what happened to each open position. "
+        "**Expired worthless** → capital loss (full premium). "
+        "**Sold / Closed** → enter proceeds to calculate gain or loss. "
+        "**Exercised into shares** → no CGT event now, premium rolls into the share cost base. "
+        "**Still held** → no event yet."
+    )
+    st.divider()
+
+    # ── Two-panel resolver ─────────────────────────────────────────────────────
+    sel_key = f"{_P}opt_selected_underlying"
+    if not st.session_state.get(sel_key) or st.session_state[sel_key] not in underlyings:
+        first_unresolved = next(
+            (u for u in underlyings
+             if any(
+                 st.session_state.get(_opt_key(f"{f.code}_{i}", "outcome"), "— select outcome —")
+                 in ("— select outcome —", "", None)
+                 for i, f in enumerate(by_underlying[u])
+             )),
+            underlyings[0],
+        )
+        st.session_state[sel_key] = first_unresolved
+
+    nav_col, entry_col = st.columns([1, 3], gap="large")
+
+    with nav_col:
+        st.markdown("**Underlyings**")
+        for u in underlyings:
+            positions  = by_underlying[u]
+            n          = len(positions)
+            res_u      = sum(
+                1 for i, f in enumerate(positions)
+                if st.session_state.get(_opt_key(f"{f.code}_{i}", "outcome"), "— select outcome —")
+                   not in ("— select outcome —", "", None)
+            )
+            u_icon = "✅" if res_u == n else ("⚠️" if res_u > 0 else "⬜")
+            # Estimate total impact for this underlying
+            u_gain = u_loss = 0.0
+            for i, f in enumerate(positions):
+                ck = f"{f.code}_{i}"
+                oc = st.session_state.get(_opt_key(ck, "outcome"), "")
+                cp = float(st.session_state.get(_opt_key(ck, "close_price"), 0) or 0)
+                _, g, l = _opt_cgt_preview(f, oc, cp)
+                u_gain += g; u_loss += l
+            impact = (f"  +${u_gain:,.0f}" if u_gain else "") + (f"  −${u_loss:,.0f}" if u_loss else "")
+
+            is_sel = st.session_state.get(sel_key) == u
+            btn_label = f"{u_icon}  {u}  ({res_u}/{n}){impact}"
+            if st.button(btn_label, key=f"{_P}optnav_{u}", use_container_width=True,
+                         type="primary" if is_sel else "secondary"):
+                st.session_state[sel_key] = u
+                st.rerun()
+
+    with entry_col:
+        sel = st.session_state.get(sel_key)
+        if sel and sel in by_underlying:
+            positions = by_underlying[sel]
+            res_count = sum(
+                1 for i, f in enumerate(positions)
+                if st.session_state.get(_opt_key(f"{f.code}_{i}", "outcome"), "— select outcome —")
+                   not in ("— select outcome —", "", None)
+            )
+            st.markdown(
+                f"### {sel} &nbsp; "
+                f"<span style='font-size:0.9rem;font-weight:400;color:gray'>"
+                f"{res_count} / {len(positions)} resolved</span>",
+                unsafe_allow_html=True,
+            )
+
+            for i, flag in enumerate(positions):
+                _render_option_entry(flag, i)
+
+            # ── Subtotal ───────────────────────────────────────────────────────
+            st.divider()
+            sub_gain = sub_loss = 0.0
+            for i, flag in enumerate(positions):
+                ck = f"{flag.code}_{i}"
+                oc = st.session_state.get(_opt_key(ck, "outcome"), "")
+                cp = float(st.session_state.get(_opt_key(ck, "close_price"), 0) or 0)
+                _, g, l = _opt_cgt_preview(flag, oc, cp)
+                sub_gain += g; sub_loss += l
+
+            if sub_gain or sub_loss:
+                st.markdown(f"**Estimated CGT impact for {sel}**")
+                s1, s2, s3 = st.columns(3)
+                if sub_gain:
+                    s1.success(f"Est. gain  +${sub_gain:,.2f}")
+                if sub_loss:
+                    s2.error(f"Est. loss  −${sub_loss:,.2f}")
+                net = sub_gain - sub_loss
+                if sub_gain and sub_loss:
+                    (s3.success if net >= 0 else s3.error)(
+                        f"Net  {'+'if net>=0 else '−'}${abs(net):,.2f}"
+                    )
 
 
 # ── Tab renderers ─────────────────────────────────────────────────────────────
@@ -288,17 +603,32 @@ def _render_summary_tab(result: TradingPipelineResult) -> None:
         st.info("No FY summary data. Ensure the selected financial year matches your transaction dates.")
 
 
-def _render_disposals_tab(result: TradingPipelineResult) -> None:
+def _render_disposals_tab(result: TradingPipelineResult, key_suffix: str = "preview") -> None:
     df = result.disposals_df
     if df.empty:
         st.info("No disposal events found.")
         return
     tickers = ["All"] + sorted(df["Asset Code"].dropna().unique().tolist())
-    sel = st.selectbox("Filter by asset", tickers, key=f"{_P}disp_filter")
+    sel = st.selectbox("Filter by asset", tickers, key=f"{_P}disp_filter_{key_suffix}")
     if sel != "All":
         df = df[df["Asset Code"] == sel]
     st.caption(f"{len(df)} disposal row(s)")
-    st.dataframe(df, use_container_width=True, hide_index=True)
+    _gl_cols = [c for c in df.columns if c in ("Gross Gain/Loss ($)", "Discounted Gain ($)")]
+    if _gl_cols:
+        def _colour_disp(v):
+            try:
+                n = float(v)
+                if n > 0: return "color: #16a34a; font-weight:600"
+                if n < 0: return "color: #dc2626; font-weight:600"
+            except (TypeError, ValueError):
+                pass
+            return ""
+        try:
+            st.dataframe(df.style.map(_colour_disp, subset=_gl_cols), use_container_width=True, hide_index=True)
+        except Exception:
+            st.dataframe(df, use_container_width=True, hide_index=True)
+    else:
+        st.dataframe(df, use_container_width=True, hide_index=True)
 
 
 def _render_income_tab(result: TradingPipelineResult) -> None:
@@ -308,7 +638,15 @@ def _render_income_tab(result: TradingPipelineResult) -> None:
         return
     total = df["Amount ($)"].sum() if "Amount ($)" in df.columns else 0
     st.metric("Total Income", f"${total:,.2f}")
-    st.dataframe(df, use_container_width=True, hide_index=True)
+    _TYPE_LABELS = {"DIV": "Dividends", "INT": "Interest", "LND": "Lending Income", "INC": "Other Income"}
+    if "Income Type" in df.columns and df["Income Type"].nunique() > 1:
+        for itype, grp in df.groupby("Income Type"):
+            subtotal = grp["Amount ($)"].sum() if "Amount ($)" in grp.columns else 0
+            label = _TYPE_LABELS.get(str(itype).upper(), str(itype))
+            with st.expander(f"{label}  ·  {len(grp)} event(s)  ·  ${subtotal:,.2f}", expanded=True):
+                st.dataframe(grp, use_container_width=True, hide_index=True)
+    else:
+        st.dataframe(df, use_container_width=True, hide_index=True)
 
 
 def _render_open_positions_tab(result: TradingPipelineResult) -> None:
@@ -330,7 +668,10 @@ def _render_open_positions_tab(result: TradingPipelineResult) -> None:
                 "Broker":                 lot.broker,
             })
     st.dataframe(pd.DataFrame(rows), use_container_width=True, hide_index=True)
-    st.caption(f"{len(rows)} open lot(s) across {len(result.open_positions)} asset(s)")
+    total_cost_basis = sum(r["Total Cost ($)"] for r in rows)
+    _oc1, _oc2 = st.columns(2)
+    _oc1.metric("Total Cost Basis", f"${total_cost_basis:,.2f}")
+    _oc2.caption(f"{len(rows)} open lot(s) across {len(result.open_positions)} asset(s)")
 
 
 def _render_ticker_entry(ticker: str, sells: list[dict]) -> None:
@@ -423,14 +764,15 @@ def _render_ticker_entry(ticker: str, sells: list[dict]) -> None:
 
     sc1, sc2, sc3 = st.columns(3)
     sc1.info(f"Coverage: {icon} {status}")
+    disc_rows = matched[matched["CGT Discount"] == "Yes (50%)"].shape[0] if "CGT Discount" in matched.columns else 0
     if est_gain:
-        sc2.success(f"Est. gain: ${est_gain:,.2f}")
+        gain_label = "Est. taxable gain (after 50% CGT discount)" if disc_rows else "Est. gain"
+        sc2.success(f"{gain_label}: ${est_gain:,.2f}")
     if est_loss:
         sc3.error(f"Est. loss: ${est_loss:,.2f}")
 
-    disc_rows = matched[matched["CGT Discount"] == "Yes (50%)"].shape[0] if "CGT Discount" in matched.columns else 0
     if disc_rows:
-        st.caption(f"50% CGT discount applies to {disc_rows} lot(s) held over 12 months.")
+        st.caption(f"50% CGT discount applied to {disc_rows} lot(s) held >12 months — shown in 'After Discount ($)' column. Est. taxable gain reflects this reduction.")
 
 
 def _render_missing_buys_tab(result: TradingPipelineResult) -> None:
@@ -477,7 +819,8 @@ def _render_missing_buys_tab(result: TradingPipelineResult) -> None:
             icon, _ = _coverage(t, by_ticker[t])
             n = len(by_ticker[t])
             label = f"{icon} {t} ({n} sell{'s' if n > 1 else ''})"
-            if st.button(label, key=f"{_P}nav_{t}", use_container_width=True):
+            if st.button(label, key=f"{_P}nav_{t}", use_container_width=True,
+                         type="primary" if st.session_state.get(sel_key) == t else "secondary"):
                 st.session_state[sel_key] = t
 
     with right:
@@ -545,10 +888,28 @@ def render() -> None:
             key=f"stt_uploader_{_get('uploader_key')}",
             label_visibility="collapsed",
         )
+        if uploaded:
+            _det_rows = []
+            for _uf in uploaded:
+                _d = _quick_detect(_uf)
+                _icon = "✅" if _d["confidence"] >= 0.5 else "⚠️"
+                _broker = _d["broker"].title() if _d["confidence"] >= 0.5 else "Unknown"
+                _det_rows.append({
+                    "": _icon,
+                    "File": _uf.name,
+                    "Detected Broker": _broker,
+                    "Confidence": f"{_d['confidence']:.0%}",
+                })
+            st.dataframe(pd.DataFrame(_det_rows), use_container_width=True, hide_index=True)
 
     with col_cfg:
         st.markdown("**Financial Year**")
-        fy_options = ["2024-25", "2023-24", "2022-23", "All years"]
+        _prev_result = _get("result")
+        if _prev_result and _prev_result.fy_summaries:
+            _det_fys = sorted(_prev_result.fy_summaries.keys(), reverse=True)
+            fy_options = _det_fys + ["All years"]
+        else:
+            fy_options = ["2024-25", "2023-24", "2022-23", "All years"]
         fy_sel = st.selectbox("FY", fy_options, index=0, label_visibility="collapsed", key=f"{_P}fy_sel")
         target_fy: str | None = None if fy_sel == "All years" else fy_sel
 
@@ -580,9 +941,12 @@ def render() -> None:
 
     # ── Process ───────────────────────────────────────────────────────────────
     if process_btn and uploaded:
-        with st.spinner(f"Saving {len(uploaded)} file(s) and running FIFO CGT engine…"):
+        with st.status(f"Processing {len(uploaded)} file(s)…", expanded=True) as _proc_status:
+            st.write("Saving uploads to workspace…")
             source_dir = _save_uploads(uploaded)
+            st.write("Running FIFO CGT engine…")
             result = _run_pipeline(source_dir, target_fy)
+            _proc_status.update(label="Processing complete!", state="complete", expanded=False)
 
         _set("result", result)
         _set("stored_fy", target_fy)
@@ -604,6 +968,7 @@ def render() -> None:
 
     stored_fy: str | None = _get("stored_fy")
     missing_count = len(result.missing_flags)
+    options_count = len(result.option_flags)
 
     # ── Key metrics ────────────────────────────────────────────────────────────
     st.divider()
@@ -621,20 +986,33 @@ def render() -> None:
     m2.metric("Gross Capital Gains",    f"${total_gains:,.2f}")
     m3.metric("Gross Capital Losses",   f"${total_losses:,.2f}")
     m4.metric("CGT Discount Applied",   f"${cgt_discount:,.2f}")
-    m5.metric("Net Taxable Gain",       f"${net_taxable:,.2f}")
+    m5.metric(
+        "Net Taxable Gain",
+        f"${net_taxable:,.2f}",
+        delta=round(net_taxable, 2),
+        delta_color="normal",
+    )
 
+    # ── Action required callout ────────────────────────────────────────────────
     if missing_count > 0:
-        st.warning(
-            f"⚠ {missing_count} sell transaction(s) have no matching buy record. "
-            "Open the **Missing Buys** tab below to enter historical purchase details."
+        st.error(
+            f"**Action required — {missing_count} unmatched sell(s):** open the **Missing Buys** tab "
+            "and enter the original purchase details for each flagged ticker."
         )
-    else:
-        st.success("All sell transactions are matched to historical buy records.")
+    if options_count > 0:
+        st.warning(
+            f"**{options_count} open option position(s):** open the **Options** tab "
+            "and select what happened (expired, sold, exercised, or still held)."
+        )
+    if not missing_count and not options_count:
+        st.success("All transactions matched — ready to generate your final tax report.")
 
     # ── Results tabs ───────────────────────────────────────────────────────────
     tab_names = ["📊 Summary", "📋 CGT Disposals", "💰 Income", "📂 Open Positions"]
     if missing_count > 0:
         tab_names.append(f"⚠ Missing Buys ({missing_count})")
+    if options_count > 0:
+        tab_names.append(f"⚙ Options ({options_count})")
 
     tabs = st.tabs(tab_names)
 
@@ -646,9 +1024,15 @@ def render() -> None:
         _render_income_tab(result)
     with tabs[3]:
         _render_open_positions_tab(result)
-    if missing_count > 0 and len(tabs) > 4:
-        with tabs[4]:
+
+    tab_idx = 4
+    if missing_count > 0:
+        with tabs[tab_idx]:
             _render_missing_buys_tab(result)
+        tab_idx += 1
+    if options_count > 0:
+        with tabs[tab_idx]:
+            _render_options_tab(result)
 
     # ── Generate final report ──────────────────────────────────────────────────
     st.divider()
@@ -678,8 +1062,10 @@ def render() -> None:
         )
 
     if gen_clicked or partial_clicked:
-        with st.spinner("Applying purchase records and recalculating CGT…"):
+        with st.status("Generating final tax report…", expanded=True) as _fin_status:
+            st.write("Merging manual purchase records…")
             final = _run_final_pipeline(source_dir, stored_fy)
+            _fin_status.update(label="Final report ready!", state="complete", expanded=False)
         _set("final_result", final)
         _set("report_generated", True)
 
@@ -708,7 +1094,7 @@ def render() -> None:
 
         final_tabs = st.tabs(["📊 Summary", "📋 CGT Disposals", "💰 Income", "📂 Open Positions"])
         with final_tabs[0]: _render_summary_tab(final)
-        with final_tabs[1]: _render_disposals_tab(final)
+        with final_tabs[1]: _render_disposals_tab(final, key_suffix="final")
         with final_tabs[2]: _render_income_tab(final)
         with final_tabs[3]: _render_open_positions_tab(final)
 
@@ -718,5 +1104,6 @@ def render() -> None:
     # ── Pipeline debug log ─────────────────────────────────────────────────────
     log = _get("log")
     if log:
-        with st.expander("Pipeline log", expanded=False):
+        _log_lines = log.count("\n") + 1
+        with st.expander(f"Pipeline log  ({_log_lines} lines)", expanded=False):
             st.code(log, language="text")

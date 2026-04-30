@@ -16,7 +16,6 @@ if not exist "reconciliation.db" (
         exit /b 1
     )
 )
-
 start "HSLedger Backend" cmd /k "cd /d ""%~dp0"" && python -m uvicorn main:app --reload"
 start "HSLedger Frontend" cmd /k "cd /d ""%~dp0streamlit_frontend"" && streamlit run app.py"
 

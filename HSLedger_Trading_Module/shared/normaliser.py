@@ -197,11 +197,36 @@ def _fingerprint(trade_date: date | None, code: str, qty: float, price: float) -
 
 
 def _normalise_txn(raw: str, qty: float) -> str:
-    """Resolve raw transaction label to canonical type. TXN uses qty sign."""
+    """Resolve raw transaction label to canonical type. TXN and OPT use qty sign."""
     t = str(raw).strip().upper()
     if t == "TXN":
         return "BUY" if qty > 0 else "SELL"
+    # OPT with positive qty = opening buy (OB); negative/zero = close/lapse/exercise (OPT)
+    if t == "OPT":
+        return "OB" if qty > 0 else "OPT"
     return TXN_NORM.get(t, t)
+
+
+_OPT_DESC_BUY  = {"option buy", "buy option", "option open", "open option", "option purchase"}
+_OPT_DESC_SELL = {"option sell", "sell option", "option close", "close option", "option expired", "expired worthless"}
+_OPT_DESC_EXE  = {"exercised", "exercise", "option exercise"}
+
+def _detect_option_from_desc(txn: str, desc: str) -> str:
+    """
+    Upgrade a generic BUY/SELL classification to OB/OS/OPT when the row
+    description contains option-specific keywords.  Only fires for rows that
+    are already classified as BUY or SELL so we never override explicit labels.
+    """
+    if txn not in ("BUY", "SELL"):
+        return txn
+    dl = desc.lower()
+    if any(k in dl for k in _OPT_DESC_EXE):
+        return "OPT"
+    if any(k in dl for k in _OPT_DESC_SELL):
+        return "OS"
+    if any(k in dl for k in _OPT_DESC_BUY):
+        return "OB"
+    return txn
 
 
 def _direction(txn: str) -> str:
@@ -282,6 +307,7 @@ def normalise(
             continue
 
         txn  = _normalise_txn(raw_txn, raw_qty)
+        txn  = _detect_option_from_desc(txn, desc)
         qty  = abs(raw_qty)
         sett = sett_d if sett_d else (_t2(trade_d) if trade_d else None)
 

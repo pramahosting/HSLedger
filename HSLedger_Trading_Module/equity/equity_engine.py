@@ -104,10 +104,26 @@ class OptionFlag:
     """An option lot with no corresponding close/exercise event."""
     option_date:   date
     code:          str
+    underlying:    str       # e.g. "BHP" extracted from "BHP_PUT_25_JUN2025"
     qty:           float
     premium_paid:  float   # premium per unit paid at open
     broker:        str = ""
     row_index:     int = 0
+
+
+@dataclass
+class OptionTransaction:
+    """Every OB/OS/OPT row found in the broker data — full audit trail."""
+    txn_type:       str     # "OB" | "OS" | "OPT"
+    trade_date:     date
+    code:           str
+    underlying:     str
+    qty:            float
+    price_per_unit: float   # premium paid (OB) or proceeds received (OS/OPT)
+    total_value:    float   # qty * price_per_unit
+    broker:         str
+    source_file:    str
+    row_index:      int
 
 
 @dataclass
@@ -221,11 +237,12 @@ def compute_cgt(
     option_flags   : list[OptionFlag]       — option lots with no close event
     """
     cf_losses = carry_forward_losses or {}
-    queues:        dict[str, deque[Lot]]       = defaultdict(deque)
-    option_queues: dict[str, deque[OptionLot]] = defaultdict(deque)
-    disposals:     list[DisposalRow]           = []
-    income_events: list[IncomeRow]             = []
-    missing_flags: list[MissingBuyFlag]        = []
+    queues:         dict[str, deque[Lot]]       = defaultdict(deque)
+    option_queues:  dict[str, deque[OptionLot]] = defaultdict(deque)
+    disposals:      list[DisposalRow]           = []
+    income_events:  list[IncomeRow]             = []
+    missing_flags:  list[MissingBuyFlag]        = []
+    option_txns:    list[OptionTransaction]     = []
 
     # Merge in pre-populated historical queues
     if initial_queues:
@@ -340,37 +357,60 @@ def compute_cgt(
         elif txn == "OB":
             if qty <= 0:
                 continue
-            ppu = price + (brok + gst) / qty
+            # Prefer net_proceeds for cost basis — it already includes the contract
+            # multiplier (ASX ETOs: price is per underlying share, not per contract).
+            if net_proc and abs(net_proc) > 0:
+                ppu = abs(net_proc) / qty
+            else:
+                ppu = price + (brok + gst) / qty
+            underlying = code.split("_")[0] if "_" in code else code
             ol = OptionLot(
-                code=code, underlying=code.split("_")[0] if "_" in code else code,
+                code=code, underlying=underlying,
                 qty=qty, premium_per_unit=ppu, trade_date=trade_d, broker=broker,
             )
             ol._row_index = row_pos + 2   # stash for OptionFlag later
             option_queues[code].append(ol)
+            option_txns.append(OptionTransaction(
+                txn_type="OB", trade_date=trade_d, code=code, underlying=underlying,
+                qty=qty, price_per_unit=round(ppu, 6),
+                total_value=round(ppu * qty, 2),
+                broker=broker, source_file=src, row_index=row_pos + 2,
+            ))
 
         # ── OPTION SELL / EXERCISE ────────────────────────────────────────────
         elif txn in ("OS", "OPT"):
             if qty <= 0 or not option_queues[code]:
                 continue
-            opt     = option_queues[code][0]
-            npt     = abs(net_proc) if net_proc else price * qty - brok - gst
-            npp     = npt / qty
-            held    = (trade_d - opt.trade_date).days
-            disc    = held > 365
-            gross   = (npp - opt.premium_per_unit) * qty
-            dg      = gross * 0.5 if (disc and gross > 0) else gross
-            disposals.append(DisposalRow(
-                disposal_date=trade_d, settlement_date=sett_d if pd.notna(sett_d) else None,
-                code=code, name=name, qty_disposed=qty,
-                proceeds_per_unit=npp, cost_per_unit=opt.premium_per_unit,
-                acquisition_date=opt.trade_date, acquisition_settlement=None,
-                held_days=held, discount_eligible=disc,
-                gross_gain=round(gross, 6), discounted_gain=round(dg, 6),
-                broker=broker, reference=ref, event_type="OPTION_CLOSE", source_file=src,
+            npt           = abs(net_proc) if net_proc else price * qty - brok - gst
+            npp           = npt / qty
+            underlying_os = code.split("_")[0] if "_" in code else code
+            option_txns.append(OptionTransaction(
+                txn_type=txn, trade_date=trade_d, code=code, underlying=underlying_os,
+                qty=qty, price_per_unit=round(npp, 6),
+                total_value=round(npp * qty, 2),
+                broker=broker, source_file=src, row_index=row_pos + 2,
             ))
-            opt.qty -= qty
-            if opt.qty < 1e-9:
-                option_queues[code].popleft()
+            remaining_opt = qty
+            while remaining_opt > 1e-9 and option_queues[code]:
+                opt  = option_queues[code][0]
+                take = min(opt.qty, remaining_opt)
+                held = (trade_d - opt.trade_date).days
+                disc = held > 365
+                gross = (npp - opt.premium_per_unit) * take
+                dg    = gross * 0.5 if (disc and gross > 0) else gross
+                disposals.append(DisposalRow(
+                    disposal_date=trade_d, settlement_date=sett_d if pd.notna(sett_d) else None,
+                    code=code, name=name, qty_disposed=take,
+                    proceeds_per_unit=npp, cost_per_unit=opt.premium_per_unit,
+                    acquisition_date=opt.trade_date, acquisition_settlement=None,
+                    held_days=held, discount_eligible=disc,
+                    gross_gain=round(gross, 6), discounted_gain=round(dg, 6),
+                    broker=broker, reference=ref, event_type="OPTION_CLOSE", source_file=src,
+                ))
+                opt.qty       -= take
+                remaining_opt -= take
+                if opt.qty < 1e-9:
+                    option_queues[code].popleft()
 
         # ── INCOME ───────────────────────────────────────────────────────────
         elif txn in ("DIV", "INT", "LND", "INC"):
@@ -454,13 +494,14 @@ def compute_cgt(
             option_flags.append(OptionFlag(
                 option_date  = opt.trade_date,
                 code         = opt.code,
+                underlying   = opt.underlying,
                 qty          = opt.qty,
                 premium_paid = opt.premium_per_unit,
                 broker       = opt.broker,
                 row_index    = getattr(opt, "_row_index", 0),
             ))
 
-    return disposals, income_events, fy_summaries, dict(queues), missing_flags, option_flags
+    return disposals, income_events, fy_summaries, dict(queues), missing_flags, option_flags, option_txns
 
 
 # ── DataFrame converters ──────────────────────────────────────────────────────
@@ -548,12 +589,12 @@ def option_flags_to_df(option_flags: list[OptionFlag]) -> pd.DataFrame:
     if not option_flags:
         return pd.DataFrame()
     return pd.DataFrame([{
-        "Asset Code":       f.code,
-        "Option Date":      f.option_date,
-        "Qty":              f.qty,
+        "Underlying":            f.underlying,
+        "Option Code":           f.code,
+        "Open Date":             f.option_date,
+        "Contracts":             f.qty,
         "Premium Paid/Unit ($)": round(f.premium_paid, 4),
-        "Total Premium ($)": round(f.premium_paid * f.qty, 2),
-        "Broker":           f.broker,
-        "Row":              f.row_index,
-        "Status":           "Unresolved — specify outcome",
+        "Total Premium at Risk ($)": round(f.premium_paid * f.qty, 2),
+        "Broker":                f.broker,
+        "Status":                "Unresolved — specify outcome",
     } for f in option_flags])

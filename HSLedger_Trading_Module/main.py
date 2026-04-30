@@ -70,7 +70,7 @@ from shared.local_cost_base_db import (
 from equity.equity_engine import (
     compute_cgt, disposals_to_df, income_to_df, missing_to_df, summary_to_df,
     option_flags_to_df,
-    DisposalRow, IncomeRow, FYSummary, MissingBuyFlag, OptionFlag, Lot, _fy,
+    DisposalRow, IncomeRow, FYSummary, MissingBuyFlag, OptionFlag, OptionTransaction, Lot, _fy,
 )
 from output.excel_exporter import export_to_excel
 from config import (
@@ -90,12 +90,13 @@ from config import (
 @dataclass
 class TradingPipelineResult:
     """All outputs from a completed pipeline run."""
-    disposals:       list[DisposalRow]         = field(default_factory=list)
-    income_events:   list[IncomeRow]           = field(default_factory=list)
-    fy_summaries:    dict[str, FYSummary]      = field(default_factory=dict)
-    missing_flags:   list[MissingBuyFlag]      = field(default_factory=list)
-    option_flags:    list[OptionFlag]          = field(default_factory=list)
-    open_positions:  dict[str, deque[Lot]]     = field(default_factory=dict)
+    disposals:           list[DisposalRow]         = field(default_factory=list)
+    income_events:       list[IncomeRow]           = field(default_factory=list)
+    fy_summaries:        dict[str, FYSummary]      = field(default_factory=dict)
+    missing_flags:       list[MissingBuyFlag]      = field(default_factory=list)
+    option_flags:        list[OptionFlag]          = field(default_factory=list)
+    option_transactions: list[OptionTransaction]   = field(default_factory=list)
+    open_positions:      dict[str, deque[Lot]]     = field(default_factory=dict)
     duplicates_df:   pd.DataFrame              = field(default_factory=pd.DataFrame)
     load_report:     LoadReport | None         = None
     excel_bytes:     bytes | None              = None
@@ -296,19 +297,20 @@ def run_trading_pipeline(
     # ── Step 5: Run CGT engine ────────────────────────────────────────────────
     print(f"[pipeline] Running CGT engine on {len(equity_df)} broker rows...")
 
-    disposals, income_events, fy_summaries, open_queues, missing_flags, option_flags = compute_cgt(
+    disposals, income_events, fy_summaries, open_queues, missing_flags, option_flags, option_txns = compute_cgt(
         df                   = equity_df,
         carry_forward_losses = carry_forward_losses,
         initial_queues       = initial_queues or None,
         interactive_missing  = interactive_missing,
     )
 
-    result.disposals      = disposals
-    result.income_events  = income_events
-    result.fy_summaries   = fy_summaries
-    result.missing_flags  = missing_flags
-    result.option_flags   = option_flags
-    result.open_positions = open_queues
+    result.disposals           = disposals
+    result.income_events       = income_events
+    result.fy_summaries        = fy_summaries
+    result.missing_flags       = missing_flags
+    result.option_flags        = option_flags
+    result.option_transactions = option_txns
+    result.open_positions      = open_queues
 
     # ── Step 6: Report missing buys and option flags ──────────────────────────
     if missing_flags:
