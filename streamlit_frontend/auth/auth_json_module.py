@@ -64,10 +64,15 @@ def login_tab(cookie_manager):
                 return
             
             if user:
-                role_names = [str(r).strip().lower() for r in user.get("roles", [])]
-                user["is_admin"] = "admin" in role_names
-                st.session_state.logged_in = True
-                st.session_state.user = user
+                # Login now returns {"token": "...", "user": {...}}.
+                # Extract both pieces; fall back to flat dict for graceful degradation.
+                auth_token = user.get("token", "")
+                user_data  = user.get("user", user)
+                role_names = [str(r).strip().lower() for r in user_data.get("roles", [])]
+                user_data["is_admin"] = "admin" in role_names
+                st.session_state.logged_in  = True
+                st.session_state.user       = user_data
+                st.session_state.auth_token = auth_token
                 if remember_me:
                     cookie_manager.set("auth_email", email, expires_at=datetime.now() + timedelta(days=30))
                     cookie_manager.set("auth_password", password, expires_at=datetime.now() + timedelta(days=30))

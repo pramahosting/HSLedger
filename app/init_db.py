@@ -11,6 +11,9 @@ from app.models.role import Role
 from app.models.transaction import Transaction
 from app.models.permission import Permission
 from app.models.invoice import BusinessDetail, Customer, Invoice, InvoiceItem
+from app.models.session_token import SessionToken
+from app.models.manual_purchase_lot import ManualPurchaseLot
+from app.models.tax_report import TaxReport
 from app.models import association
 
 PERMISSIONS = [

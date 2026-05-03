@@ -1,8 +1,10 @@
+import uuid
+
 from fastapi import APIRouter, Body, Depends, HTTPException, Query, status
-from sqlalchemy import or_
-from sqlalchemy import text
+from sqlalchemy import or_, text
 from sqlalchemy.orm import Session
 from app.models import Role, User
+from app.models.session_token import SessionToken
 import bcrypt
 from pydantic import BaseModel
 from app.database import get_db
@@ -29,6 +31,12 @@ class UserResponse(BaseModel):
     email: str
     roles: list[str]
     permissions: list[str]
+
+
+class LoginResponse(BaseModel):
+    """Wraps user data with a session token returned on successful login."""
+    token: str
+    user: UserResponse
 
 
 def build_user_response(user: User) -> UserResponse:
@@ -74,10 +82,10 @@ def ensure_users_full_name_column(db: Session):
 
 
 # login endpoint
-def authenticate_user(email: str, password: str, db: Session) -> UserResponse:
+def authenticate_user(email: str, password: str, db: Session) -> User:
+    """Validate credentials and return the User ORM object (raises 401 on failure)."""
     ensure_users_full_name_column(db)
 
-    # Keep request schema stable but allow email or username in this field.
     login_value = email.strip()
     user = (
         db.query(User)
@@ -87,34 +95,40 @@ def authenticate_user(email: str, password: str, db: Session) -> UserResponse:
 
     if not user:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid email or password")
-    
+
     if not bcrypt.checkpw(password.encode(), user.password.encode()):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid email or password")
-    
-    return build_user_response(user)
+
+    return user
 
 
-@router.post("/login", response_model=UserResponse)
+def _create_session_token(user: User, db: Session) -> str:
+    """Generate a UUID session token, persist it, and return the token string."""
+    token = str(uuid.uuid4())
+    db.add(SessionToken(token=token, user_id=user.id, expires_at=SessionToken.make_expiry()))
+    db.commit()
+    return token
+
+
+@router.post("/login", response_model=LoginResponse)
 def login_post(
     request: LoginRequest = Body(...),
     db: Session = Depends(get_db),
 ):
-    if request is not None:
-        return authenticate_user(request.email, request.password, db)
-
-    raise HTTPException(
-            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-            detail="Provide email and password in JSON body or query params",
-        )
+    user  = authenticate_user(request.email, request.password, db)
+    token = _create_session_token(user, db)
+    return LoginResponse(token=token, user=build_user_response(user))
 
 
-@router.get("/login", response_model=UserResponse)
+@router.get("/login", response_model=LoginResponse)
 def login_get(
-    email: str = Query(...),
-    password: str = Query(...),
-    db: Session = Depends(get_db),
+    email:    str     = Query(...),
+    password: str     = Query(...),
+    db:       Session = Depends(get_db),
 ):
-    return authenticate_user(email, password, db)
+    user  = authenticate_user(email, password, db)
+    token = _create_session_token(user, db)
+    return LoginResponse(token=token, user=build_user_response(user))
 
 @router.post("/register", response_model=UserResponse)
 def register(

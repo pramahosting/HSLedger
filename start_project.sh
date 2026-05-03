@@ -15,7 +15,20 @@ if [ ! -f "reconciliation.db" ]; then
     fi
 fi
 
-gnome-terminal --title="HSLedger Backend" -- bash -c "cd '$(pwd)' && python -m uvicorn main:app --reload; exec bash" &
-gnome-terminal --title="HSLedger Frontend" -- bash -c "cd '$(pwd)/streamlit_frontend' && streamlit run app.py; exec bash" &
+SCRIPT_DIR="$(pwd)"
 
-echo "HSLedger backend and frontend are starting in separate windows."
+echo "Starting HSLedger Backend..."
+python -m uvicorn main:app --reload > "$SCRIPT_DIR/backend.log" 2>&1 &
+BACKEND_PID=$!
+echo "Backend PID: $BACKEND_PID (logs: backend.log)"
+
+echo "Starting HSLedger Frontend..."
+cd "$SCRIPT_DIR/streamlit_frontend" && streamlit run app.py > "$SCRIPT_DIR/frontend.log" 2>&1 &
+FRONTEND_PID=$!
+echo "Frontend PID: $FRONTEND_PID (logs: frontend.log)"
+
+echo ""
+echo "HSLedger backend and frontend are running in the background."
+echo "  Stop backend:  kill $BACKEND_PID"
+echo "  Stop frontend: kill $FRONTEND_PID"
+echo "  View logs:     tail -f backend.log  |  tail -f frontend.log"

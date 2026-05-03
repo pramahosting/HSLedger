@@ -67,6 +67,7 @@ def _init() -> None:
         f"{_P}buy_records":       {},
         f"{_P}uploader_key":      0,
         f"{_P}selected_ticker":   None,
+        f"{_P}lots_loaded":       False,   # True after we've synced saved lots for this FY
     }
     for k, v in defaults.items():
         if k not in st.session_state:
@@ -292,6 +293,94 @@ def _coverage(ticker: str, sells: list[dict]) -> tuple[str, str]:
     if total_buy >= total_sell - 1e-6:
         return "✅", f"Covered {total_sell:,.0f} / {total_sell:,.0f} shares"
     return "⚠️", f"Partial {total_buy:,.0f} / {total_sell:,.0f} shares"
+
+
+# ── API persistence helpers ───────────────────────────────────────────────────
+# All functions degrade gracefully when the backend is unavailable or the user
+# is not logged in — they never raise exceptions visible to the user.
+
+def _auth_token() -> str | None:
+    """Return the session token stored at login, or None if not logged in."""
+    return st.session_state.get("auth_token")
+
+
+def _load_lots_from_api(fy: str) -> None:
+    """
+    Fetch saved purchase lots for the current user + FY from the backend,
+    then merge them into stt_buy_records.  Called once per process-files run.
+    """
+    from auth.api_client import load_purchase_lots
+    token = _auth_token()
+    if not token or not fy:
+        return
+    try:
+        lots = load_purchase_lots(token=token, financial_year=fy)
+        if not lots:
+            return
+        # Group fetched lots by ticker into DataFrames matching _empty_buy_df() schema.
+        buy_records: dict = (_get("buy_records") or {}).copy()
+        for lot in lots:
+            ticker = lot["ticker"]
+            new_row = pd.DataFrame([{
+                "Purchase Date (dd/mm/yyyy)": lot["purchase_date"],
+                "Quantity":       float(lot["qty"]),
+                "Unit Price ($)": float(lot["unit_price"]),
+                "Brokerage ($)":  float(lot["brokerage"]),
+                "GST ($)":        float(lot["gst"]),
+            }])
+            prev = buy_records.get(ticker, _empty_buy_df())
+            buy_records[ticker] = pd.concat([prev, new_row], ignore_index=True)
+        _set("buy_records", buy_records)
+    except Exception:
+        pass  # backend unavailable — continue with empty state
+
+
+def _save_lot_to_api(ticker: str, fy: str, row: dict) -> None:
+    """
+    Persist one validated purchase lot to the backend.
+    row keys: "Purchase Date (dd/mm/yyyy)", "Quantity", "Unit Price ($)", etc.
+    Silently ignored if the backend is unavailable.
+    """
+    from auth.api_client import save_purchase_lot
+    token = _auth_token()
+    if not token or not fy:
+        return
+    try:
+        save_purchase_lot(
+            token          = token,
+            financial_year = fy,
+            ticker         = ticker,
+            purchase_date  = row.get("Purchase Date (dd/mm/yyyy)", ""),
+            qty            = float(row.get("Quantity", 0)),
+            unit_price     = float(row.get("Unit Price ($)", 0)),
+            brokerage      = float(row.get("Brokerage ($)", 0)),
+            gst            = float(row.get("GST ($)", 0)),
+        )
+    except Exception:
+        pass
+
+
+def _save_report_to_api(result: "TradingPipelineResult", fy: str) -> None:
+    """
+    Persist a generated final tax report summary to the backend.
+    Silently ignored if the backend is unavailable or no FY is set.
+    """
+    from auth.api_client import save_tax_report
+    token = _auth_token()
+    if not token or not fy:
+        return
+    try:
+        sums = list(result.fy_summaries.values())
+        save_tax_report(
+            token                = token,
+            financial_year       = fy,
+            net_taxable_gain     = round(sum(s.net_after_carryforward for s in sums), 2),
+            gross_capital_gains  = round(sum(s.gross_gains for s in sums), 2),
+            gross_capital_losses = round(sum(s.gross_losses for s in sums), 2),
+            cgt_discount_applied = round(sum(s.cgt_discount_applied for s in sums), 2),
+        )
+    except Exception:
+        pass
 
 
 # ── Options resolver helpers ──────────────────────────────────────────────────
@@ -690,34 +779,107 @@ def _render_ticker_entry(ticker: str, sells: list[dict]) -> None:
     st.markdown(f"**Enter purchase history for {ticker}:**")
     st.caption("One row per purchase lot · date format: dd/mm/yyyy · FIFO applies oldest buy first")
 
+    # Load confirmed (saved) purchase rows for this ticker.
     buy_records: dict = _get("buy_records") or {}
-    existing = buy_records.get(ticker)
-    if existing is None or (hasattr(existing, "empty") and existing.empty):
-        existing = _empty_buy_df()
+    saved_df = buy_records.get(ticker, _empty_buy_df())
+    if saved_df is None or (hasattr(saved_df, "empty") and saved_df.empty):
+        saved_df = _empty_buy_df()
 
-    edited = st.data_editor(
-        existing,
-        key=f"{_P}editor_{ticker}",
-        num_rows="dynamic",
-        use_container_width=True,
-        column_config={
-            "Purchase Date (dd/mm/yyyy)": st.column_config.TextColumn(
-                "Purchase Date", help="Format: dd/mm/yyyy  e.g. 01/07/2022", width="medium"
-            ),
-            "Quantity":     st.column_config.NumberColumn("Qty (shares)", min_value=0.0001, step=1.0, format="%.4f"),
-            "Unit Price ($)": st.column_config.NumberColumn("Unit Price ($)", min_value=0.0001, step=0.01, format="%.4f"),
-            "Brokerage ($)": st.column_config.NumberColumn("Brokerage ($)", min_value=0.0, step=0.01, format="%.2f"),
-            "GST ($)":       st.column_config.NumberColumn("GST ($)",       min_value=0.0, step=0.01, format="%.2f"),
-        },
-    )
+    # --- Saved purchase rows (read-only display) ---
+    # Rows are only added through the draft form below. Keeping display separate from
+    # entry prevents the "type twice" bug caused by data_editor rerunning on every keystroke.
+    col_labels = {
+        "Purchase Date (dd/mm/yyyy)": "Purchase Date",
+        "Quantity":       "Qty (shares)",
+        "Unit Price ($)": "Unit Price ($)",
+        "Brokerage ($)":  "Brokerage ($)",
+        "GST ($)":        "GST ($)",
+    }
+    if not saved_df.empty:
+        st.dataframe(saved_df.rename(columns=col_labels), use_container_width=True, hide_index=True)
+    else:
+        st.caption("No purchase rows added yet.")
 
-    # Persist edited data
-    updated = (buy_records or {}).copy()
-    updated[ticker] = edited
-    _set("buy_records", updated)
+    # --- Draft entry form ---
+    # st.form batches all widget interactions so keystrokes do NOT trigger rerenders.
+    # The draft values live only in the form's local state until "Add Data" is clicked.
+    # Validation and FIFO recalculation happen only after the row is confirmed.
+    #
+    # A per-ticker counter is used as a form key suffix so that a successful add
+    # always renders a fresh (empty) form, while a validation failure keeps the
+    # user's typed values in place (counter is not incremented on failure).
+    err_key     = f"{_P}draft_err_{ticker}"
+    counter_key = f"{_P}draft_ctr_{ticker}"
+    if err_key     not in st.session_state:
+        st.session_state[err_key]     = {}
+    if counter_key not in st.session_state:
+        st.session_state[counter_key] = 0
 
-    # FIFO preview
-    lots = _parse_buy_df(edited, ticker)
+    form_key = f"{_P}draft_{ticker}_{st.session_state[counter_key]}"
+    with st.form(key=form_key, clear_on_submit=False):
+        fc1, fc2, fc3, fc4, fc5 = st.columns([2, 1, 1, 1, 1])
+        d_date  = fc1.text_input("Purchase Date", placeholder="dd/mm/yyyy")
+        d_qty   = fc2.number_input("Qty (shares)",   min_value=0.0, step=1.0,  format="%.4f", value=0.0)
+        d_price = fc3.number_input("Unit Price ($)", min_value=0.0, step=0.01, format="%.4f", value=0.0)
+        d_brok  = fc4.number_input("Brokerage ($)",  min_value=0.0, step=0.01, format="%.2f", value=0.0)
+        d_gst   = fc5.number_input("GST ($)",        min_value=0.0, step=0.01, format="%.2f", value=0.0)
+        submitted = st.form_submit_button("Add Data")
+
+        if submitted:
+            # Validate all fields before touching any shared state
+            errors: dict[str, str] = {}
+
+            if not d_date.strip():
+                errors["date"] = "Purchase Date is required."
+            else:
+                try:
+                    datetime.strptime(d_date.strip(), "%d/%m/%Y")
+                except ValueError:
+                    errors["date"] = "Invalid date — use dd/mm/yyyy (e.g. 01/07/2022)."
+
+            if d_qty <= 0:
+                errors["qty"]   = "Qty must be a positive number."
+            if d_price <= 0:
+                errors["price"] = "Unit Price must be a positive number."
+            # Brokerage and GST may be 0 — only reject negatives (min_value=0 already blocks them,
+            # but guard explicitly in case the widget is bypassed)
+            if d_brok < 0:
+                errors["brok"]  = "Brokerage cannot be negative."
+            if d_gst < 0:
+                errors["gst"]   = "GST cannot be negative."
+
+            if not errors:
+                lot_row = {
+                    "Purchase Date (dd/mm/yyyy)": d_date.strip(),
+                    "Quantity":       d_qty,
+                    "Unit Price ($)": d_price,
+                    "Brokerage ($)":  d_brok,
+                    "GST ($)":        d_gst,
+                }
+                # Append validated row using an immutable update (never mutate existing array)
+                new_row = pd.DataFrame([lot_row])
+                br   = (_get("buy_records") or {}).copy()
+                prev = br.get(ticker, _empty_buy_df())
+                br[ticker] = pd.concat([prev, new_row], ignore_index=True)
+                _set("buy_records", br)
+                # Persist to backend; uses stored FY from the current pipeline run
+                _save_lot_to_api(ticker, _get("stored_fy") or "", lot_row)
+                # Increment counter so the next render uses a fresh form key (clears inputs)
+                st.session_state[counter_key] += 1
+                st.session_state[err_key]      = {}
+                st.rerun()
+            else:
+                # Store errors for display below the form; do NOT increment counter so
+                # the form re-renders with the user's typed values still intact
+                st.session_state[err_key] = errors
+
+    # Show field-level validation errors beneath the form
+    for msg in st.session_state.get(err_key, {}).values():
+        st.error(msg)
+
+    # --- FIFO preview ---
+    # Runs only on confirmed/saved rows — draft state is never fed into the FIFO engine.
+    lots = _parse_buy_df(saved_df, ticker)
     if not lots:
         st.info("Add at least one valid purchase row to see the FIFO tax estimate.")
         return
@@ -829,6 +991,45 @@ def _render_missing_buys_tab(result: TradingPipelineResult) -> None:
             _render_ticker_entry(sel, by_ticker[sel])
 
 
+# ── Past Reports ──────────────────────────────────────────────────────────────
+
+def _render_past_reports(fy: str) -> None:
+    """
+    Show a collapsible list of previously generated tax reports for the current
+    user and financial year.  Loaded from the backend via X-Auth-Token header.
+    Only rendered when the user is logged in (auth_token present).
+    """
+    from auth.api_client import list_tax_reports
+    token = _auth_token()
+    if not token:
+        return
+    try:
+        reports = list_tax_reports(token=token, financial_year=fy)
+    except Exception:
+        reports = []
+
+    if not reports:
+        return
+
+    with st.expander(f"📁  Past Reports — FY {fy}  ({len(reports)} saved)", expanded=False):
+        rows = []
+        for r in reports:
+            created = r.get("created_at", "")
+            try:
+                created = datetime.fromisoformat(created).strftime("%d %b %Y %H:%M")
+            except Exception:
+                pass
+            rows.append({
+                "Generated":          created,
+                "Net Taxable Gain":   f"${r.get('net_taxable_gain', 0):,.2f}",
+                "Gross Gains":        f"${r.get('gross_capital_gains', 0):,.2f}",
+                "Gross Losses":       f"${r.get('gross_capital_losses', 0):,.2f}",
+                "CGT Discount":       f"${r.get('cgt_discount_applied', 0):,.2f}",
+            })
+        st.dataframe(pd.DataFrame(rows), use_container_width=True, hide_index=True)
+        st.caption("Re-process your files and click **Generate Final Tax Report** to create a new entry.")
+
+
 # ── Export ─────────────────────────────────────────────────────────────────────
 
 def _render_export(result: TradingPipelineResult, fy: str | None) -> None:
@@ -936,6 +1137,7 @@ def render() -> None:
         _set("stored_fy",        None)
         _set("buy_records",      {})
         _set("selected_ticker",  None)
+        _set("lots_loaded",      False)
         _set("uploader_key",     (_get("uploader_key") or 0) + 1)
         st.rerun()
 
@@ -954,9 +1156,17 @@ def render() -> None:
         _set("report_generated", False)
         _set("buy_records", {})
         _set("selected_ticker", None)
+        _set("lots_loaded", False)   # trigger reload of saved lots for this FY
         st.success(f"Processed {len(uploaded)} file(s) successfully.")
 
     result: TradingPipelineResult | None = _get("result")
+
+    # ── Past Reports (shown even before files are processed) ───────────────────
+    stored_fy_for_reports: str | None = _get("stored_fy") or (
+        fy_options[0] if fy_options and fy_options[0] != "All years" else None
+    )
+    if _auth_token() and stored_fy_for_reports:
+        _render_past_reports(stored_fy_for_reports)
 
     if result is None:
         st.info(
@@ -967,6 +1177,12 @@ def render() -> None:
         return
 
     stored_fy: str | None = _get("stored_fy")
+
+    # Load saved purchase lots once per FY/process run so returning users see
+    # their previously entered data without having to re-enter it.
+    if not _get("lots_loaded") and stored_fy:
+        _load_lots_from_api(stored_fy)
+        _set("lots_loaded", True)
     missing_count = len(result.missing_flags)
     options_count = len(result.option_flags)
 
@@ -1068,6 +1284,8 @@ def render() -> None:
             _fin_status.update(label="Final report ready!", state="complete", expanded=False)
         _set("final_result", final)
         _set("report_generated", True)
+        # Persist report summary so it appears in Past Reports on future visits
+        _save_report_to_api(final, stored_fy)
 
         still_missing = len(final.missing_flags)
         if still_missing:
