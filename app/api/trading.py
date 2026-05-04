@@ -25,25 +25,35 @@ router = APIRouter()
 # ── Request / Response schemas ────────────────────────────────────────────────
 
 class LotCreate(BaseModel):
-    financial_year: str
-    ticker:         str
-    purchase_date:  str       # "dd/mm/yyyy" — matches the UI format
-    qty:            float
-    unit_price:     float
-    brokerage:      float = 0.0
-    gst:            float = 0.0
+    financial_year:   str
+    ticker:           str
+    purchase_date:    str       # "dd/mm/yyyy" — matches the UI format
+    qty:              float
+    unit_price:       float
+    brokerage:        float = 0.0
+    gst:              float = 0.0
+    trading_batch_id: Optional[str] = None   # UUID scoping this lot to one upload session
+
+
+class LotUpdate(BaseModel):
+    purchase_date: Optional[str]   = None
+    qty:           Optional[float] = None
+    unit_price:    Optional[float] = None
+    brokerage:     Optional[float] = None
+    gst:           Optional[float] = None
 
 
 class LotResponse(BaseModel):
-    id:             int
-    financial_year: str
-    ticker:         str
-    purchase_date:  str
-    qty:            float
-    unit_price:     float
-    brokerage:      float
-    gst:            float
-    created_at:     datetime
+    id:               int
+    financial_year:   str
+    ticker:           str
+    purchase_date:    str
+    qty:              float
+    unit_price:       float
+    brokerage:        float
+    gst:              float
+    trading_batch_id: Optional[str]
+    created_at:       datetime
 
     class Config:
         from_attributes = True
@@ -80,14 +90,15 @@ def save_lot(
     db:           Session = Depends(get_db),
 ):
     lot = ManualPurchaseLot(
-        user_id        = current_user.id,   # from auth token — never from body
-        financial_year = body.financial_year,
-        ticker         = body.ticker,
-        purchase_date  = body.purchase_date,
-        qty            = body.qty,
-        unit_price     = body.unit_price,
-        brokerage      = body.brokerage,
-        gst            = body.gst,
+        user_id          = current_user.id,   # from auth token — never from body
+        financial_year   = body.financial_year,
+        ticker           = body.ticker,
+        purchase_date    = body.purchase_date,
+        qty              = body.qty,
+        unit_price       = body.unit_price,
+        brokerage        = body.brokerage,
+        gst              = body.gst,
+        trading_batch_id = body.trading_batch_id,
     )
     db.add(lot)
     db.commit()
@@ -97,10 +108,11 @@ def save_lot(
 
 @router.get("/lots", response_model=list[LotResponse])
 def get_lots(
-    financial_year: str           = Query(...),
-    ticker:         Optional[str] = Query(None),
-    current_user:   User          = Depends(get_current_user),
-    db:             Session       = Depends(get_db),
+    financial_year:   str           = Query(...),
+    ticker:           Optional[str] = Query(None),
+    trading_batch_id: Optional[str] = Query(None),
+    current_user:     User          = Depends(get_current_user),
+    db:               Session       = Depends(get_db),
 ):
     q = db.query(ManualPurchaseLot).filter(
         ManualPurchaseLot.user_id        == current_user.id,
@@ -108,7 +120,54 @@ def get_lots(
     )
     if ticker:
         q = q.filter(ManualPurchaseLot.ticker == ticker)
+    if trading_batch_id:
+        q = q.filter(ManualPurchaseLot.trading_batch_id == trading_batch_id)
     return q.order_by(ManualPurchaseLot.ticker, ManualPurchaseLot.purchase_date).all()
+
+
+@router.put("/lots/{lot_id}", response_model=LotResponse)
+def update_lot(
+    lot_id:       int,
+    body:         LotUpdate,
+    current_user: User    = Depends(get_current_user),
+    db:           Session = Depends(get_db),
+):
+    # Filter by BOTH id AND user_id so a user cannot edit another user's lot.
+    lot = db.query(ManualPurchaseLot).filter(
+        ManualPurchaseLot.id      == lot_id,
+        ManualPurchaseLot.user_id == current_user.id,
+    ).first()
+    if not lot:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Lot not found")
+    if body.purchase_date is not None:
+        lot.purchase_date = body.purchase_date
+    if body.qty is not None:
+        lot.qty = body.qty
+    if body.unit_price is not None:
+        lot.unit_price = body.unit_price
+    if body.brokerage is not None:
+        lot.brokerage = body.brokerage
+    if body.gst is not None:
+        lot.gst = body.gst
+    db.commit()
+    db.refresh(lot)
+    return lot
+
+
+@router.delete("/lots", status_code=status.HTTP_204_NO_CONTENT)
+def delete_lots_batch(
+    financial_year:   str = Query(...),
+    trading_batch_id: str = Query(...),
+    current_user:     User    = Depends(get_current_user),
+    db:               Session = Depends(get_db),
+):
+    """Delete all lots for the current user + FY + trading_batch_id (clear upload batch)."""
+    db.query(ManualPurchaseLot).filter(
+        ManualPurchaseLot.user_id          == current_user.id,
+        ManualPurchaseLot.financial_year   == financial_year,
+        ManualPurchaseLot.trading_batch_id == trading_batch_id,
+    ).delete(synchronize_session=False)
+    db.commit()
 
 
 @router.delete("/lots/{lot_id}", status_code=status.HTTP_204_NO_CONTENT)
