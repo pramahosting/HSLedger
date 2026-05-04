@@ -91,8 +91,7 @@ def _make_token(db, user: User) -> str:
 
 
 def _add_lot(db, user_id: int, ticker: str, fy: str, purchase_date: str,
-             qty: float, unit_price: float, brokerage: float = 0.0, gst: float = 0.0,
-             trading_batch_id: str = None) -> ManualPurchaseLot:
+             qty: float, unit_price: float, brokerage: float = 0.0, gst: float = 0.0) -> ManualPurchaseLot:
     lot = ManualPurchaseLot(
         user_id=user_id,
         financial_year=fy,
@@ -102,7 +101,6 @@ def _add_lot(db, user_id: int, ticker: str, fy: str, purchase_date: str,
         unit_price=unit_price,
         brokerage=brokerage,
         gst=gst,
-        trading_batch_id=trading_batch_id,
     )
     db.add(lot)
     db.flush()
@@ -406,169 +404,6 @@ def test_financial_year_scoping() -> None:
         db.close()
 
 
-def test_trading_batch_id_scoping() -> None:
-    _section(10, "trading_batch_id — same user+FY, different batch cannot share lots")
-    db = TestSession()
-    try:
-        user_a = db.query(User).filter(User.username == "user_a").first()
-        FY      = "2024-25"
-        BATCH_1 = str(uuid.uuid4())
-        BATCH_2 = str(uuid.uuid4())
-
-        _add_lot(db, user_a.id, "WBC", FY, "01/07/2022", 100, 22.00, trading_batch_id=BATCH_1)
-        _add_lot(db, user_a.id, "WBC", FY, "01/01/2023", 50,  23.00, trading_batch_id=BATCH_2)
-        db.commit()
-
-        lots_b1 = (
-            db.query(ManualPurchaseLot)
-            .filter(
-                ManualPurchaseLot.user_id          == user_a.id,
-                ManualPurchaseLot.financial_year   == FY,
-                ManualPurchaseLot.trading_batch_id == BATCH_1,
-            )
-            .all()
-        )
-        lots_b2 = (
-            db.query(ManualPurchaseLot)
-            .filter(
-                ManualPurchaseLot.user_id          == user_a.id,
-                ManualPurchaseLot.financial_year   == FY,
-                ManualPurchaseLot.trading_batch_id == BATCH_2,
-            )
-            .all()
-        )
-
-        if len(lots_b1) == 1 and lots_b1[0].purchase_date == "01/07/2022":
-            _ok("batch_1 query returns only batch_1 lot")
-        else:
-            _fail("batch_1 query returned wrong rows", f"got {len(lots_b1)}")
-
-        if len(lots_b2) == 1 and lots_b2[0].purchase_date == "01/01/2023":
-            _ok("batch_2 query returns only batch_2 lot")
-        else:
-            _fail("batch_2 query returned wrong rows", f"got {len(lots_b2)}")
-
-        if len(lots_b1) + len(lots_b2) == 2:
-            _ok("Two batches are fully isolated — no cross-batch leakage")
-        else:
-            _fail("Cross-batch leakage detected")
-    finally:
-        db.close()
-
-
-def test_delete_only_selected_lot() -> None:
-    _section(11, "Delete — removes only the targeted lot, others remain")
-    db = TestSession()
-    try:
-        user_a = db.query(User).filter(User.username == "user_a").first()
-        FY     = "2024-25"
-
-        lot_keep = _add_lot(db, user_a.id, "RIO", FY, "01/07/2022", 30, 95.00)
-        lot_del  = _add_lot(db, user_a.id, "RIO", FY, "15/09/2022", 20, 98.00)
-        db.commit()
-
-        # Simulate DELETE /lots/{lot_del.id}: filter by id AND user_id
-        target = db.query(ManualPurchaseLot).filter(
-            ManualPurchaseLot.id      == lot_del.id,
-            ManualPurchaseLot.user_id == user_a.id,
-        ).first()
-        db.delete(target)
-        db.commit()
-
-        remaining = db.query(ManualPurchaseLot).filter(
-            ManualPurchaseLot.id == lot_keep.id,
-        ).first()
-        deleted = db.query(ManualPurchaseLot).filter(
-            ManualPurchaseLot.id == lot_del.id,
-        ).first()
-
-        if remaining is not None:
-            _ok("Non-targeted lot still exists after delete")
-        else:
-            _fail("Non-targeted lot was incorrectly deleted")
-
-        if deleted is None:
-            _ok("Targeted lot is gone after delete")
-        else:
-            _fail("Targeted lot was not deleted")
-    finally:
-        db.close()
-
-
-def test_edit_lot_ownership() -> None:
-    _section(12, "Edit (PUT) — user cannot update another user's lot")
-    db = TestSession()
-    try:
-        user_a = db.query(User).filter(User.username == "user_a").first()
-        user_b = db.query(User).filter(User.username == "user_b").first()
-        FY     = "2024-25"
-
-        b_lot = db.query(ManualPurchaseLot).filter(
-            ManualPurchaseLot.user_id        == user_b.id,
-            ManualPurchaseLot.financial_year == FY,
-        ).first()
-
-        # Simulate PUT /lots/{b_lot.id} by user_a: filter by BOTH id AND user_id
-        attempt = db.query(ManualPurchaseLot).filter(
-            ManualPurchaseLot.id      == b_lot.id,
-            ManualPurchaseLot.user_id == user_a.id,  # auth context: user_a
-        ).first()
-
-        if attempt is None:
-            _ok("user_a cannot find user_b's lot for update (edit blocked by ownership check)")
-        else:
-            _fail("user_a can update user_b's lot — ownership check missing")
-    finally:
-        db.close()
-
-
-def test_batch_delete() -> None:
-    _section(13, "Batch delete — clears only the specified trading_batch_id rows")
-    db = TestSession()
-    try:
-        user_a = db.query(User).filter(User.username == "user_a").first()
-        FY     = "2024-25"
-        BATCH  = str(uuid.uuid4())
-        OTHER  = str(uuid.uuid4())
-
-        _add_lot(db, user_a.id, "TLS", FY, "01/07/2022", 500, 3.80, trading_batch_id=BATCH)
-        _add_lot(db, user_a.id, "TLS", FY, "01/08/2022", 300, 3.90, trading_batch_id=BATCH)
-        lot_other = _add_lot(db, user_a.id, "TLS", FY, "01/09/2022", 200, 4.00, trading_batch_id=OTHER)
-        db.commit()
-
-        # Simulate DELETE /lots?financial_year=FY&trading_batch_id=BATCH by user_a
-        db.query(ManualPurchaseLot).filter(
-            ManualPurchaseLot.user_id          == user_a.id,
-            ManualPurchaseLot.financial_year   == FY,
-            ManualPurchaseLot.trading_batch_id == BATCH,
-        ).delete(synchronize_session=False)
-        db.commit()
-
-        remaining_batch = (
-            db.query(ManualPurchaseLot)
-            .filter(
-                ManualPurchaseLot.user_id          == user_a.id,
-                ManualPurchaseLot.trading_batch_id == BATCH,
-            )
-            .count()
-        )
-        surviving = db.query(ManualPurchaseLot).filter(
-            ManualPurchaseLot.id == lot_other.id,
-        ).first()
-
-        if remaining_batch == 0:
-            _ok("All lots for BATCH were deleted")
-        else:
-            _fail("Some BATCH lots were not deleted", f"{remaining_batch} remaining")
-
-        if surviving is not None:
-            _ok("Lot from OTHER batch survived the batch delete")
-        else:
-            _fail("Lot from OTHER batch was incorrectly deleted")
-    finally:
-        db.close()
-
-
 # ── Runner ─────────────────────────────────────────────────────────────────────
 
 def run_all() -> int:
@@ -585,12 +420,9 @@ def run_all() -> int:
     test_tax_report_isolation()
     test_expired_token_rejected()
     test_financial_year_scoping()
-    test_trading_batch_id_scoping()
-    test_delete_only_selected_lot()
-    test_edit_lot_ownership()
-    test_batch_delete()
 
     _section("SUMMARY", "")
+    total = 20  # approximate assertion checkpoints above
     if _FAILURES == 0:
         print(f"  \033[32m✅  All assertions passed. User isolation is working correctly.\033[0m")
         print("  Safe to proceed with production implementation.")

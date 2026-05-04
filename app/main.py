@@ -1,25 +1,10 @@
-from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from app.api import auth
 from app.api import invoice
 from app.api import transactions
 from app.api import trading
 
-
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    # Run idempotent schema migrations on every startup.
-    from app.database import SessionLocal
-    from app.init_db import _migrate_add_trading_batch_id
-    db = SessionLocal()
-    try:
-        _migrate_add_trading_batch_id(db)
-    finally:
-        db.close()
-    yield
-
-
-app = FastAPI(lifespan=lifespan)
+app = FastAPI()
 
 app.include_router(auth.router,         prefix="/auth",         tags=["auth"])
 app.include_router(transactions.router, prefix="/transactions", tags=["transactions"])

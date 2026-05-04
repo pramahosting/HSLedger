@@ -146,9 +146,7 @@ def _run_final_pipeline(source: str, fy: str | None) -> TradingPipelineResult:
     buy_records: dict = _get("buy_records") or {}
     all_rows = []
 
-    for buy_key, df in buy_records.items():
-        # buy_key may be "account/ticker" or just "ticker"
-        _, ticker = _parse_key(buy_key)
+    for ticker, df in buy_records.items():
         for lot in _parse_buy_df(df, ticker):
             all_rows.append({
                 "stock_code":    ticker,
@@ -273,13 +271,9 @@ def _fifo_preview(sells: list[dict], buy_lots: list[dict]) -> pd.DataFrame:
 
 
 def _group_flags(flags) -> dict[str, list[dict]]:
-    """Group missing-buy flags by account+code key so different accounts stay isolated."""
     grouped: dict[str, list[dict]] = {}
     for f in flags:
-        account_id = getattr(f, "account_id", "") or ""
-        # Use "account/code" as key when there's an account, otherwise just code
-        key = f"{account_id}/{f.code}" if account_id else f.code
-        grouped.setdefault(key, []).append({
+        grouped.setdefault(f.code, []).append({
             "date":              f.disposal_date,
             "qty":               f.qty_unmatched,
             "broker":            f.broker or "—",
@@ -288,18 +282,9 @@ def _group_flags(flags) -> dict[str, list[dict]]:
     return grouped
 
 
-def _parse_key(key: str) -> tuple[str, str]:
-    """Split an 'account/code' key into (account_label, ticker). Falls back to ('', key)."""
-    if "/" in key:
-        account_label, ticker = key.split("/", 1)
-        return account_label, ticker
-    return "", key
-
-
-def _coverage(key: str, sells: list[dict]) -> tuple[str, str]:
+def _coverage(ticker: str, sells: list[dict]) -> tuple[str, str]:
     buy_records: dict = _get("buy_records") or {}
-    _, ticker = _parse_key(key)
-    df   = buy_records.get(key, _empty_buy_df())
+    df   = buy_records.get(ticker, _empty_buy_df())
     lots = _parse_buy_df(df, ticker)
     total_sell = sum(s["qty"] for s in sells)
     total_buy  = sum(l["qty"] for l in lots)
@@ -336,7 +321,6 @@ def _load_lots_from_api(fy: str) -> None:
         buy_records: dict = (_get("buy_records") or {}).copy()
         for lot in lots:
             ticker = lot["ticker"]
-            # API lots have no account prefix — store under bare ticker key
             new_row = pd.DataFrame([{
                 "Purchase Date (dd/mm/yyyy)": lot["purchase_date"],
                 "Quantity":       float(lot["qty"]),
@@ -713,18 +697,10 @@ def _render_disposals_tab(result: TradingPipelineResult, key_suffix: str = "prev
     if df.empty:
         st.info("No disposal events found.")
         return
-
-    fc1, fc2 = st.columns(2)
-    accounts = ["All"] + sorted(df["Account"].dropna().unique().tolist()) if "Account" in df.columns else ["All"]
-    tickers  = ["All"] + sorted(df["Asset Code"].dropna().unique().tolist())
-    sel_acc  = fc1.selectbox("Filter by account", accounts, key=f"{_P}disp_acc_{key_suffix}")
-    sel_tkr  = fc2.selectbox("Filter by asset",   tickers,  key=f"{_P}disp_filter_{key_suffix}")
-
-    if sel_acc != "All":
-        df = df[df["Account"] == sel_acc]
-    if sel_tkr != "All":
-        df = df[df["Asset Code"] == sel_tkr]
-
+    tickers = ["All"] + sorted(df["Asset Code"].dropna().unique().tolist())
+    sel = st.selectbox("Filter by asset", tickers, key=f"{_P}disp_filter_{key_suffix}")
+    if sel != "All":
+        df = df[df["Asset Code"] == sel]
     st.caption(f"{len(df)} disposal row(s)")
     _gl_cols = [c for c in df.columns if c in ("Gross Gain/Loss ($)", "Discounted Gain ($)")]
     if _gl_cols:
@@ -744,33 +720,14 @@ def _render_disposals_tab(result: TradingPipelineResult, key_suffix: str = "prev
         st.dataframe(df, use_container_width=True, hide_index=True)
 
 
-def _render_income_tab(result: TradingPipelineResult, key_suffix: str = "preview") -> None:
+def _render_income_tab(result: TradingPipelineResult) -> None:
     df = result.income_df
     if df.empty:
         st.info("No income events (dividends, interest, lending) found.")
         return
-
-    _TYPE_LABELS = {"DIV": "Dividends", "INT": "Interest", "LND": "Lending Income", "INC": "Other Income"}
-
-    fc1, fc2, fc3 = st.columns(3)
-    accounts   = ["All"] + sorted(df["Account"].dropna().unique().tolist()) if "Account" in df.columns else ["All"]
-    assets     = ["All"] + sorted(df["Asset Code"].dropna().unique().tolist())
-    inc_types  = ["All"] + [_TYPE_LABELS.get(t, t) for t in sorted(df["Income Type"].dropna().unique().tolist())] if "Income Type" in df.columns else ["All"]
-    sel_acc    = fc1.selectbox("Filter by account",      accounts,  key=f"{_P}inc_acc_{key_suffix}")
-    sel_asset  = fc2.selectbox("Filter by asset",        assets,    key=f"{_P}inc_asset_{key_suffix}")
-    sel_type   = fc3.selectbox("Filter by income type",  inc_types, key=f"{_P}inc_type_{key_suffix}")
-
-    if sel_acc != "All":
-        df = df[df["Account"] == sel_acc]
-    if sel_asset != "All":
-        df = df[df["Asset Code"] == sel_asset]
-    if sel_type != "All":
-        _rev_labels = {v: k for k, v in _TYPE_LABELS.items()}
-        df = df[df["Income Type"] == _rev_labels.get(sel_type, sel_type)]
-
     total = df["Amount ($)"].sum() if "Amount ($)" in df.columns else 0
-    st.metric("Total Income (filtered)", f"${total:,.2f}")
-
+    st.metric("Total Income", f"${total:,.2f}")
+    _TYPE_LABELS = {"DIV": "Dividends", "INT": "Interest", "LND": "Lending Income", "INC": "Other Income"}
     if "Income Type" in df.columns and df["Income Type"].nunique() > 1:
         for itype, grp in df.groupby("Income Type"):
             subtotal = grp["Amount ($)"].sum() if "Amount ($)" in grp.columns else 0
@@ -781,61 +738,33 @@ def _render_income_tab(result: TradingPipelineResult, key_suffix: str = "preview
         st.dataframe(df, use_container_width=True, hide_index=True)
 
 
-def _render_open_positions_tab(result: TradingPipelineResult, key_suffix: str = "preview") -> None:
+def _render_open_positions_tab(result: TradingPipelineResult) -> None:
     if not result.open_positions:
         st.info("No open positions — all lots were fully disposed of.")
         return
-
-    # Build full rows list first so filters have complete option lists
-    all_rows = []
-    for key, queue in result.open_positions.items():
-        if "::" in key:
-            account_label, code = key.split("::", 1)
-        else:
-            account_label, code = "—", key
+    rows = []
+    for code, queue in result.open_positions.items():
         for lot in queue:
             held = (date.today() - lot.trade_date).days
-            all_rows.append({
-                "Account":               account_label or "—",
-                "Asset":                 code,
-                "Qty":                   round(lot.qty, 4),
-                "Cost/Unit ($)":         round(lot.cost_per_unit, 4),
-                "Total Cost ($)":        round(lot.qty * lot.cost_per_unit, 2),
-                "Acquired":              lot.trade_date,
-                "Days Held":             held,
-                "CGT Discount Eligible": "Yes" if held > 365 else "No",
-                "Broker":                lot.broker,
+            rows.append({
+                "Asset":                  code,
+                "Qty":                    round(lot.qty, 4),
+                "Cost/Unit ($)":          round(lot.cost_per_unit, 4),
+                "Total Cost ($)":         round(lot.qty * lot.cost_per_unit, 2),
+                "Acquired":               lot.trade_date,
+                "Days Held":              held,
+                "CGT Discount Eligible":  "Yes" if held > 365 else "No",
+                "Broker":                 lot.broker,
             })
-
-    full_df = pd.DataFrame(all_rows)
-
-    fc1, fc2 = st.columns(2)
-    accounts = ["All"] + sorted(full_df["Account"].dropna().unique().tolist())
-    assets   = ["All"] + sorted(full_df["Asset"].dropna().unique().tolist())
-    sel_acc  = fc1.selectbox("Filter by account", accounts, key=f"{_P}op_acc_{key_suffix}")
-    sel_ast  = fc2.selectbox("Filter by asset",   assets,   key=f"{_P}op_asset_{key_suffix}")
-
-    df = full_df.copy()
-    if sel_acc != "All":
-        df = df[df["Account"] == sel_acc]
-    if sel_ast != "All":
-        df = df[df["Asset"] == sel_ast]
-
-    st.dataframe(df, use_container_width=True, hide_index=True)
-
-    total_cost_basis = df["Total Cost ($)"].sum() if not df.empty else 0.0
-    unique_codes = df["Asset"].nunique() if not df.empty else 0
+    st.dataframe(pd.DataFrame(rows), use_container_width=True, hide_index=True)
+    total_cost_basis = sum(r["Total Cost ($)"] for r in rows)
     _oc1, _oc2 = st.columns(2)
-    _oc1.metric("Total Cost Basis (filtered)", f"${total_cost_basis:,.2f}")
-    _oc2.caption(f"{len(df)} lot(s) across {unique_codes} asset(s)")
+    _oc1.metric("Total Cost Basis", f"${total_cost_basis:,.2f}")
+    _oc2.caption(f"{len(rows)} open lot(s) across {len(result.open_positions)} asset(s)")
 
 
-def _render_ticker_entry(key: str, sells: list[dict]) -> None:
-    account_label, ticker = _parse_key(key)
-    if account_label:
-        st.subheader(f"{ticker}  —  {account_label}")
-    else:
-        st.subheader(ticker)
+def _render_ticker_entry(ticker: str, sells: list[dict]) -> None:
+    st.subheader(ticker)
     total_qty = sum(s["qty"] for s in sells)
     st.caption(f"{len(sells)} unmatched sell event(s) · {total_qty:,.0f} total shares")
 
@@ -850,12 +779,15 @@ def _render_ticker_entry(key: str, sells: list[dict]) -> None:
     st.markdown(f"**Enter purchase history for {ticker}:**")
     st.caption("One row per purchase lot · date format: dd/mm/yyyy · FIFO applies oldest buy first")
 
-    # buy_records is keyed by the full "account/ticker" key for per-account isolation
+    # Load confirmed (saved) purchase rows for this ticker.
     buy_records: dict = _get("buy_records") or {}
-    saved_df = buy_records.get(key, _empty_buy_df())
+    saved_df = buy_records.get(ticker, _empty_buy_df())
     if saved_df is None or (hasattr(saved_df, "empty") and saved_df.empty):
         saved_df = _empty_buy_df()
 
+    # --- Saved purchase rows (read-only display) ---
+    # Rows are only added through the draft form below. Keeping display separate from
+    # entry prevents the "type twice" bug caused by data_editor rerunning on every keystroke.
     col_labels = {
         "Purchase Date (dd/mm/yyyy)": "Purchase Date",
         "Quantity":       "Qty (shares)",
@@ -868,16 +800,22 @@ def _render_ticker_entry(key: str, sells: list[dict]) -> None:
     else:
         st.caption("No purchase rows added yet.")
 
-    # Use a safe slug for widget keys (strip special chars from the full key)
-    _key_slug = key.replace("/", "_").replace(".", "_")
-    err_key     = f"{_P}draft_err_{_key_slug}"
-    counter_key = f"{_P}draft_ctr_{_key_slug}"
+    # --- Draft entry form ---
+    # st.form batches all widget interactions so keystrokes do NOT trigger rerenders.
+    # The draft values live only in the form's local state until "Add Data" is clicked.
+    # Validation and FIFO recalculation happen only after the row is confirmed.
+    #
+    # A per-ticker counter is used as a form key suffix so that a successful add
+    # always renders a fresh (empty) form, while a validation failure keeps the
+    # user's typed values in place (counter is not incremented on failure).
+    err_key     = f"{_P}draft_err_{ticker}"
+    counter_key = f"{_P}draft_ctr_{ticker}"
     if err_key     not in st.session_state:
         st.session_state[err_key]     = {}
     if counter_key not in st.session_state:
         st.session_state[counter_key] = 0
 
-    form_key = f"{_P}draft_{_key_slug}_{st.session_state[counter_key]}"
+    form_key = f"{_P}draft_{ticker}_{st.session_state[counter_key]}"
     with st.form(key=form_key, clear_on_submit=False):
         fc1, fc2, fc3, fc4, fc5 = st.columns([2, 1, 1, 1, 1])
         d_date  = fc1.text_input("Purchase Date", placeholder="dd/mm/yyyy")
@@ -888,6 +826,7 @@ def _render_ticker_entry(key: str, sells: list[dict]) -> None:
         submitted = st.form_submit_button("Add Data")
 
         if submitted:
+            # Validate all fields before touching any shared state
             errors: dict[str, str] = {}
 
             if not d_date.strip():
@@ -902,6 +841,8 @@ def _render_ticker_entry(key: str, sells: list[dict]) -> None:
                 errors["qty"]   = "Qty must be a positive number."
             if d_price <= 0:
                 errors["price"] = "Unit Price must be a positive number."
+            # Brokerage and GST may be 0 — only reject negatives (min_value=0 already blocks them,
+            # but guard explicitly in case the widget is bypassed)
             if d_brok < 0:
                 errors["brok"]  = "Brokerage cannot be negative."
             if d_gst < 0:
@@ -915,22 +856,29 @@ def _render_ticker_entry(key: str, sells: list[dict]) -> None:
                     "Brokerage ($)":  d_brok,
                     "GST ($)":        d_gst,
                 }
+                # Append validated row using an immutable update (never mutate existing array)
                 new_row = pd.DataFrame([lot_row])
                 br   = (_get("buy_records") or {}).copy()
-                prev = br.get(key, _empty_buy_df())
-                br[key] = pd.concat([prev, new_row], ignore_index=True)
+                prev = br.get(ticker, _empty_buy_df())
+                br[ticker] = pd.concat([prev, new_row], ignore_index=True)
                 _set("buy_records", br)
+                # Persist to backend; uses stored FY from the current pipeline run
                 _save_lot_to_api(ticker, _get("stored_fy") or "", lot_row)
+                # Increment counter so the next render uses a fresh form key (clears inputs)
                 st.session_state[counter_key] += 1
                 st.session_state[err_key]      = {}
                 st.rerun()
             else:
+                # Store errors for display below the form; do NOT increment counter so
+                # the form re-renders with the user's typed values still intact
                 st.session_state[err_key] = errors
 
+    # Show field-level validation errors beneath the form
     for msg in st.session_state.get(err_key, {}).values():
         st.error(msg)
 
-    # FIFO preview using confirmed rows only
+    # --- FIFO preview ---
+    # Runs only on confirmed/saved rows — draft state is never fed into the FIFO engine.
     lots = _parse_buy_df(saved_df, ticker)
     if not lots:
         st.info("Add at least one valid purchase row to see the FIFO tax estimate.")
@@ -964,6 +912,7 @@ def _render_ticker_entry(key: str, sells: list[dict]) -> None:
     if not unmatched.empty:
         st.warning(f"{len(unmatched)} sell event(s) still unmatched — add more purchase rows above.")
 
+    # Summary
     after_vals = []
     for v in matched.get("After Discount ($)", []):
         try:
@@ -973,7 +922,7 @@ def _render_ticker_entry(key: str, sells: list[dict]) -> None:
 
     est_gain = round(sum(v for v in after_vals if v > 0), 2)
     est_loss = round(sum(abs(v) for v in after_vals if v < 0), 2)
-    icon, status = _coverage(key, sells)
+    icon, status = _coverage(ticker, sells)
 
     sc1, sc2, sc3 = st.columns(3)
     sc1.info(f"Coverage: {icon} {status}")
@@ -994,24 +943,8 @@ def _render_missing_buys_tab(result: TradingPipelineResult) -> None:
         st.success("All sell transactions are fully matched — no missing buy records.")
         return
 
-    by_ticker   = _group_flags(flags)
-    all_tickers = sorted(by_ticker.keys())
-
-    # Collect unique account labels for the filter
-    _all_accounts = sorted({_parse_key(t)[0] for t in all_tickers if _parse_key(t)[0]})
-    sel_mb_acc = "All"
-    if _all_accounts:
-        sel_mb_acc = st.selectbox(
-            "Filter by account",
-            ["All"] + _all_accounts,
-            key=f"{_P}mb_acc_filter",
-        )
-
-    # Apply account filter to the visible ticker list
-    if sel_mb_acc != "All":
-        tickers = [t for t in all_tickers if _parse_key(t)[0] == sel_mb_acc]
-    else:
-        tickers = all_tickers
+    by_ticker = _group_flags(flags)
+    tickers   = sorted(by_ticker.keys())
 
     full    = [t for t in tickers if _coverage(t, by_ticker[t])[0] == "✅"]
     partial = [t for t in tickers if _coverage(t, by_ticker[t])[0] == "⚠️"]
@@ -1034,10 +967,6 @@ def _render_missing_buys_tab(result: TradingPipelineResult) -> None:
     )
     st.divider()
 
-    if not tickers:
-        st.info("No unmatched sells for the selected account.")
-        return
-
     # Initialise selected ticker
     sel_key = f"{_P}selected_ticker"
     if not st.session_state.get(sel_key) or st.session_state[sel_key] not in tickers:
@@ -1051,11 +980,8 @@ def _render_missing_buys_tab(result: TradingPipelineResult) -> None:
         for t in tickers:
             icon, _ = _coverage(t, by_ticker[t])
             n = len(by_ticker[t])
-            _acc, _tkr = _parse_key(t)
-            display = f"{_acc}/{_tkr}" if _acc else _tkr
-            label = f"{icon} {display} ({n} sell{'s' if n > 1 else ''})"
-            _nav_slug = t.replace("/", "_").replace(".", "_")
-            if st.button(label, key=f"{_P}nav_{_nav_slug}", use_container_width=True,
+            label = f"{icon} {t} ({n} sell{'s' if n > 1 else ''})"
+            if st.button(label, key=f"{_P}nav_{t}", use_container_width=True,
                          type="primary" if st.session_state.get(sel_key) == t else "secondary"):
                 st.session_state[sel_key] = t
 
@@ -1220,7 +1146,7 @@ def render() -> None:
         with st.status(f"Processing {len(uploaded)} file(s)…", expanded=True) as _proc_status:
             st.write("Saving uploads to workspace…")
             source_dir = _save_uploads(uploaded)
-            st.write(f"Running FIFO CGT engine on {len(uploaded)} file(s)…")
+            st.write("Running FIFO CGT engine…")
             result = _run_pipeline(source_dir, target_fy)
             _proc_status.update(label="Processing complete!", state="complete", expanded=False)
 
@@ -1231,46 +1157,7 @@ def render() -> None:
         _set("buy_records", {})
         _set("selected_ticker", None)
         _set("lots_loaded", False)   # trigger reload of saved lots for this FY
-
-        # ── Per-file load status ───────────────────────────────────────────────
-        lr = result.load_report
-        n_loaded  = len(lr.loaded_files)  if lr else 0
-        n_skipped = len(lr.skipped_files) if lr else 0
-
-        if n_loaded == len(uploaded):
-            st.success(f"All {n_loaded} file(s) loaded and merged successfully.")
-        elif n_loaded > 0:
-            st.warning(
-                f"{n_loaded} of {len(uploaded)} file(s) loaded. "
-                f"{n_skipped} skipped — see details below or check the pipeline log."
-            )
-        else:
-            st.error(
-                f"No files could be loaded ({n_skipped} skipped). "
-                "Check that your files are valid broker exports."
-            )
-
-        if lr and (lr.loaded_files or lr.skipped_files):
-            _status_rows = []
-            for f in lr.loaded_files:
-                _status_rows.append({
-                    "": "✅",
-                    "File": f["filename"],
-                    "Broker": f["broker"].title(),
-                    "Rows": f["rows"],
-                    "Confidence": f"{f['confidence']:.0%}",
-                    "Note": "Loaded",
-                })
-            for f in lr.skipped_files:
-                _status_rows.append({
-                    "": "⚠️",
-                    "File": f["filename"],
-                    "Broker": "—",
-                    "Rows": 0,
-                    "Confidence": "—",
-                    "Note": f["reason"][:80],
-                })
-            st.dataframe(pd.DataFrame(_status_rows), use_container_width=True, hide_index=True)
+        st.success(f"Processed {len(uploaded)} file(s) successfully.")
 
     result: TradingPipelineResult | None = _get("result")
 
@@ -1426,8 +1313,8 @@ def render() -> None:
         final_tabs = st.tabs(["📊 Summary", "📋 CGT Disposals", "💰 Income", "📂 Open Positions"])
         with final_tabs[0]: _render_summary_tab(final)
         with final_tabs[1]: _render_disposals_tab(final, key_suffix="final")
-        with final_tabs[2]: _render_income_tab(final, key_suffix="final")
-        with final_tabs[3]: _render_open_positions_tab(final, key_suffix="final")
+        with final_tabs[2]: _render_income_tab(final)
+        with final_tabs[3]: _render_open_positions_tab(final)
 
         st.divider()
         _render_export(final, stored_fy)
