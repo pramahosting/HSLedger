@@ -20,4 +20,4 @@ start "HSLedger Backend" cmd /k "cd /d ""%~dp0"" && python -m uvicorn main:app -
 start "HSLedger Frontend" cmd /k "cd /d ""%~dp0streamlit_frontend"" && streamlit run app.py"
 
 echo HSLedger backend and frontend are starting in separate windows.
-endlocal
+endloca

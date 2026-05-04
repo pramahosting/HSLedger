@@ -16,11 +16,14 @@ Applies full ATO rules:
   - Options (OB/OS/OPT) tracked in separate queue
   - Short sells (SS/SC) tracked in separate short queue; profit = short price − cover price
   - Missing buy lots → flagged with code/qty/date for user resolution
+  - Multi-account isolation: FIFO queues are keyed by (account_id, code) so buys and sells
+    from different accounts/files never cross-contaminate each other
 """
 
 from __future__ import annotations
 
 from collections import defaultdict, deque
+from copy import deepcopy
 from dataclasses import dataclass, field
 from datetime import date
 from typing import Any
@@ -64,6 +67,7 @@ class ShortFlag:
     proceeds_per_unit: float
     broker:            str = ""
     row_index:         int = 0
+    account_id:        str = ""
 
 
 @dataclass
@@ -95,6 +99,7 @@ class DisposalRow:
     reference:          str = ""
     event_type:         str = "SELL"
     source_file:        str = ""
+    account_id:         str = ""
 
 
 @dataclass
@@ -107,6 +112,7 @@ class IncomeRow:
     broker:       str = ""
     description:  str = ""
     source_file:  str = ""
+    account_id:   str = ""
 
 
 @dataclass
@@ -119,6 +125,7 @@ class MissingBuyFlag:
     reference:         str = ""
     row_index:         int = 0    # 1-based row number in the merged input data
     proceeds_per_unit: float = 0.0  # sell price per unit (for tax estimate UI)
+    account_id:        str = ""
 
 
 @dataclass
@@ -131,6 +138,7 @@ class OptionFlag:
     premium_paid:  float   # premium per unit paid at open
     broker:        str = ""
     row_index:     int = 0
+    account_id:    str = ""
 
 
 @dataclass
@@ -175,6 +183,11 @@ def _fy(d: date) -> str:
     return f"{d.year - 1}-{str(d.year)[2:]}"
 
 
+def _account_queue_key(account_id: str, code: str) -> str:
+    """Build a composite queue key that isolates FIFO queues per account."""
+    return f"{account_id}::{code}" if account_id else code
+
+
 def _fifo_consume(
     queue:                deque[Lot],
     qty_needed:           float,
@@ -186,6 +199,7 @@ def _fifo_consume(
     broker:               str,
     reference:            str,
     source_file:          str,
+    account_id:           str = "",
     event_type:           str = "SELL",
 ) -> tuple[list[DisposalRow], float]:
     """
@@ -221,6 +235,7 @@ def _fifo_consume(
             reference               = reference,
             event_type              = event_type,
             source_file             = source_file,
+            account_id              = account_id,
         ))
         lot.qty -= take
         remaining -= take
@@ -242,11 +257,16 @@ def compute_cgt(
     """
     Run FIFO CGT engine over a canonical normalised DataFrame.
 
+    Each unique source_file value is treated as a separate trading account.
+    FIFO queues are keyed by 'account_id::code' so buys/sells in one account
+    never match against lots from a different account.
+
     Parameters
     ----------
     df                    : Canonical DataFrame from normaliser.py
     carry_forward_losses  : dict FY → loss amount carried in from prior FY
-    initial_queues        : Pre-populated FIFO queues (from cost_base_loader)
+    initial_queues        : Pre-populated FIFO queues (from cost_base_loader).
+                            These are distributed to every account found in df.
     interactive_missing   : If True, prompt user on stdin for missing buys
 
     Returns
@@ -268,10 +288,16 @@ def compute_cgt(
     missing_flags:  list[MissingBuyFlag]        = []
     option_txns:    list[OptionTransaction]     = []
 
-    # Merge in pre-populated historical queues
+    # Distribute historical queues to every account present in the data.
+    # Each account gets an independent deep-copy so their lots don't interfere.
     if initial_queues:
-        for code, q in initial_queues.items():
-            queues[code].extend(q)
+        _acc_ids = sorted(df["source_file"].dropna().unique().tolist()) if "source_file" in df.columns else [""]
+        if not _acc_ids:
+            _acc_ids = [""]
+        for _acc in _acc_ids:
+            for _hist_code, _hist_q in initial_queues.items():
+                _key = _account_queue_key(_acc, _hist_code)
+                queues[_key].extend(deepcopy(_lot) for _lot in _hist_q)
 
     # Sort by trade_date ascending — critical for correct FIFO
     df = df.copy().sort_values("trade_date").reset_index(drop=True)
@@ -292,12 +318,15 @@ def compute_cgt(
         src      = str(row.get("source_file", "")).strip()
         broker   = str(row.get("broker", "")).strip()
 
+        # Composite queue key — isolates FIFO per account
+        ak = _account_queue_key(src, code)
+
         # ── BUY ──────────────────────────────────────────────────────────────
         if txn == "BUY":
             if qty <= 0 or price <= 0:
                 continue
             cpu = price + (brok + gst) / qty   # cost per unit incl. all costs
-            queues[code].append(Lot(
+            queues[ak].append(Lot(
                 code            = code,
                 qty             = qty,
                 cost_per_unit   = cpu,
@@ -321,7 +350,7 @@ def compute_cgt(
                 npp = max(price - (brok + gst) / qty, 0)
 
             rows, unmatched = _fifo_consume(
-                queue                 = queues[code],
+                queue                 = queues[ak],
                 qty_needed            = qty,
                 disposal_date         = trade_d,
                 settlement_date       = sett_d if pd.notna(sett_d) else None,
@@ -331,6 +360,7 @@ def compute_cgt(
                 broker                = broker,
                 reference             = ref,
                 source_file           = src,
+                account_id            = src,
             )
             disposals.extend(rows)
 
@@ -343,6 +373,7 @@ def compute_cgt(
                     reference         = ref,
                     row_index         = row_pos + 2,
                     proceeds_per_unit = round(npp, 6),
+                    account_id        = src,
                 )
                 missing_flags.append(flag)
 
@@ -358,7 +389,7 @@ def compute_cgt(
                         mbrok  = float(mrow["brokerage"])
                         mgst   = float(mrow["gst"])
                         mcpu   = mprice + (mbrok + mgst) / float(mrow["qty"])
-                        queues[code].appendleft(Lot(
+                        queues[ak].appendleft(Lot(
                             code          = code,
                             qty           = float(mrow["qty"]),
                             cost_per_unit = mcpu,
@@ -367,12 +398,13 @@ def compute_cgt(
                         ))
                         # Re-run consume for the newly added lot
                         extra, _ = _fifo_consume(
-                            queue=queues[code], qty_needed=unmatched,
+                            queue=queues[ak], qty_needed=unmatched,
                             disposal_date=trade_d,
                             settlement_date=sett_d if pd.notna(sett_d) else None,
                             code=code, name=name,
                             net_proceeds_per_unit=npp,
                             broker=broker, reference=ref, source_file=src,
+                            account_id=src,
                         )
                         disposals.extend(extra)
                         missing_flags.pop()   # resolved
@@ -393,7 +425,7 @@ def compute_cgt(
                 qty=qty, premium_per_unit=ppu, trade_date=trade_d, broker=broker,
             )
             ol._row_index = row_pos + 2   # stash for OptionFlag later
-            option_queues[code].append(ol)
+            option_queues[ak].append(ol)
             option_txns.append(OptionTransaction(
                 txn_type="OB", trade_date=trade_d, code=code, underlying=underlying,
                 qty=qty, price_per_unit=round(ppu, 6),
@@ -403,7 +435,7 @@ def compute_cgt(
 
         # ── OPTION SELL / EXERCISE ────────────────────────────────────────────
         elif txn in ("OS", "OPT"):
-            if qty <= 0 or not option_queues[code]:
+            if qty <= 0 or not option_queues[ak]:
                 continue
             npt           = abs(net_proc) if net_proc else price * qty - brok - gst
             npp           = npt / qty
@@ -415,8 +447,8 @@ def compute_cgt(
                 broker=broker, source_file=src, row_index=row_pos + 2,
             ))
             remaining_opt = qty
-            while remaining_opt > 1e-9 and option_queues[code]:
-                opt  = option_queues[code][0]
+            while remaining_opt > 1e-9 and option_queues[ak]:
+                opt  = option_queues[ak][0]
                 take = min(opt.qty, remaining_opt)
                 held = (trade_d - opt.trade_date).days
                 disc = held > 365
@@ -430,11 +462,12 @@ def compute_cgt(
                     held_days=held, discount_eligible=disc,
                     gross_gain=round(gross, 6), discounted_gain=round(dg, 6),
                     broker=broker, reference=ref, event_type="OPTION_CLOSE", source_file=src,
+                    account_id=src,
                 ))
                 opt.qty       -= take
                 remaining_opt -= take
                 if opt.qty < 1e-9:
-                    option_queues[code].popleft()
+                    option_queues[ak].popleft()
 
         # ── SHORT SELL (open short position) ─────────────────────────────────
         elif txn == "SS":
@@ -451,17 +484,17 @@ def compute_cgt(
                 trade_date=trade_d, broker=broker, reference=ref,
             )
             sl._row_index = row_pos + 2
-            short_queues[code].append(sl)
+            short_queues[ak].append(sl)
 
         # ── SHORT COVER (close short position) ───────────────────────────────
         elif txn == "SC":
             if qty <= 0:
                 continue
-            if not short_queues[code]:
+            if not short_queues[ak]:
                 # No open short — treat as a regular buy
                 if price > 0:
                     cpu = price + (brok + gst) / qty
-                    queues[code].append(Lot(
+                    queues[ak].append(Lot(
                         code=code, qty=qty, cost_per_unit=cpu,
                         trade_date=trade_d,
                         settlement_date=sett_d if pd.notna(sett_d) else None,
@@ -471,8 +504,8 @@ def compute_cgt(
             cover_cpu = (abs(net_proc) / qty) if (net_proc and abs(net_proc) > 0) \
                         else price + (brok + gst) / qty
             remaining_sc = qty
-            while remaining_sc > 1e-9 and short_queues[code]:
-                sl   = short_queues[code][0]
+            while remaining_sc > 1e-9 and short_queues[ak]:
+                sl   = short_queues[ak][0]
                 take = min(sl.qty, remaining_sc)
                 gross = (sl.proceeds_per_unit - cover_cpu) * take
                 disposals.append(DisposalRow(
@@ -493,11 +526,12 @@ def compute_cgt(
                     reference               = ref,
                     event_type              = "SHORT_COVER",
                     source_file             = src,
+                    account_id              = src,
                 ))
                 sl.qty        -= take
                 remaining_sc  -= take
                 if sl.qty < 1e-9:
-                    short_queues[code].popleft()
+                    short_queues[ak].popleft()
 
         # ── INCOME ───────────────────────────────────────────────────────────
         elif txn in ("DIV", "INT", "LND", "INC"):
@@ -511,6 +545,29 @@ def compute_cgt(
                 broker      = broker,
                 description = str(row.get("description", "")),
                 source_file = src,
+                account_id  = src,
+            ))
+
+        # ── DRP (Dividend Reinvestment Plan) — treated as a BUY ──────────────
+        elif txn == "DRP":
+            if qty <= 0:
+                continue
+            # Use net_proceeds as cost base if available (it equals the dividend
+            # amount reinvested); otherwise fall back to price.
+            if net_proc and abs(net_proc) > 0:
+                cpu = abs(net_proc) / qty
+            else:
+                cpu = price if price > 0 else 0.0
+            if cpu <= 0:
+                continue
+            queues[ak].append(Lot(
+                code            = code,
+                qty             = qty,
+                cost_per_unit   = cpu,
+                trade_date      = trade_d,
+                settlement_date = sett_d if pd.notna(sett_d) else None,
+                broker          = broker,
+                reference       = ref,
             ))
 
         # ── CASH — ignore ─────────────────────────────────────────────────────
@@ -550,7 +607,6 @@ def compute_cgt(
 
         disc_gains   = [r.discounted_gain for r in rows if r.discounted_gain > 0]
         disc_losses  = [r.discounted_gain for r in rows if r.discounted_gain < 0]
-        gross_gains  = [r.gross_gain      for r in rows if r.gross_gain > 0]
 
         s.gross_gains  = round(sum(disc_gains),  2)
         s.gross_losses = round(abs(sum(disc_losses)), 2)
@@ -576,7 +632,8 @@ def compute_cgt(
 
     # Collect any option lots that were never closed/exercised
     option_flags: list[OptionFlag] = []
-    for code, oq in option_queues.items():
+    for _ak, oq in option_queues.items():
+        _acc = _ak.split("::", 1)[0] if "::" in _ak else ""
         for opt in oq:
             option_flags.append(OptionFlag(
                 option_date  = opt.trade_date,
@@ -586,11 +643,13 @@ def compute_cgt(
                 premium_paid = opt.premium_per_unit,
                 broker       = opt.broker,
                 row_index    = getattr(opt, "_row_index", 0),
+                account_id   = _acc,
             ))
 
     # Collect any short positions that were never covered
     short_flags: list[ShortFlag] = []
-    for code, sq in short_queues.items():
+    for _ak, sq in short_queues.items():
+        _acc = _ak.split("::", 1)[0] if "::" in _ak else ""
         for sl in sq:
             short_flags.append(ShortFlag(
                 short_date        = sl.trade_date,
@@ -599,9 +658,12 @@ def compute_cgt(
                 proceeds_per_unit = sl.proceeds_per_unit,
                 broker            = sl.broker,
                 row_index         = getattr(sl, "_row_index", 0),
+                account_id        = _acc,
             ))
 
-    return disposals, income_events, fy_summaries, dict(queues), missing_flags, option_flags, option_txns, short_flags
+    # Only return queues that still hold lots (defaultdict access on empty sells creates empty deques)
+    final_queues = {k: v for k, v in queues.items() if len(v) > 0}
+    return disposals, income_events, fy_summaries, final_queues, missing_flags, option_flags, option_txns, short_flags
 
 
 # ── DataFrame converters ──────────────────────────────────────────────────────
@@ -611,6 +673,7 @@ def disposals_to_df(disposals: list[DisposalRow]) -> pd.DataFrame:
         return pd.DataFrame()
     return pd.DataFrame([{
         "FY":                   _fy(d.disposal_date),
+        "Account":              d.account_id or "—",
         "Disposal Date":        d.disposal_date,
         "Settlement Date":      d.settlement_date,
         "Asset Code":           d.code,
@@ -638,6 +701,7 @@ def income_to_df(income_events: list[IncomeRow]) -> pd.DataFrame:
         return pd.DataFrame()
     return pd.DataFrame([{
         "FY":           _fy(i.event_date),
+        "Account":      i.account_id or "—",
         "Event Date":   i.event_date,
         "Asset Code":   i.code,
         "Asset Name":   i.name,
@@ -654,6 +718,7 @@ def missing_to_df(missing_flags: list[MissingBuyFlag]) -> pd.DataFrame:
         return pd.DataFrame()
     return pd.DataFrame([{
         "FY":                   _fy(m.disposal_date),
+        "Account":              m.account_id or "—",
         "Disposal Date":        m.disposal_date,
         "Asset Code":           m.code,
         "Qty Unmatched":        m.qty_unmatched,
@@ -689,6 +754,7 @@ def option_flags_to_df(option_flags: list[OptionFlag]) -> pd.DataFrame:
     if not option_flags:
         return pd.DataFrame()
     return pd.DataFrame([{
+        "Account":               f.account_id or "—",
         "Underlying":            f.underlying,
         "Option Code":           f.code,
         "Open Date":             f.option_date,
@@ -704,6 +770,7 @@ def short_flags_to_df(short_flags: list[ShortFlag]) -> pd.DataFrame:
     if not short_flags:
         return pd.DataFrame()
     return pd.DataFrame([{
+        "Account":               f.account_id or "—",
         "Asset Code":            f.code,
         "Short Date":            f.short_date,
         "Qty Short":             f.qty,

@@ -142,6 +142,8 @@ TXN_NORM: dict[str, str] = {
     # Income
     "DIV": "DIV", "INT": "INT", "LND": "LND",
     "INC": "INC", "INCOME": "INC",
+    # DRP (Dividend Reinvestment Plan)
+    "DRP": "DRP", "DRIP": "DRP", "DIVIDEND REINVESTMENT": "DRP",
     # Cash
     "DEP": "DEP", "WD": "WD",
     "DEPOSIT": "DEP", "WITHDRAWAL": "WD",
@@ -153,7 +155,7 @@ TXN_NORM: dict[str, str] = {
 
 INCOME_TYPES = {"DIV", "INT", "LND", "INC"}
 CASH_TYPES   = {"DEP", "WD"}
-BUY_TYPES    = {"BUY", "OB", "SC"}
+BUY_TYPES    = {"BUY", "OB", "SC", "DRP"}
 SELL_TYPES   = {"SELL", "OS", "OPT", "SS"}
 
 
@@ -379,13 +381,18 @@ def load_and_normalise(path: str, col_map_override: dict[str, str] | None = None
 
     broker      = det["broker"]
     asset_class = det["asset_class"]
+    header_row  = det.get("header_row", 0)
+    # col_format is the column-layout broker (may differ from broker when the
+    # reference-prefix override fires — e.g. a NABtrade file using CommSec cols)
+    col_format  = det.get("col_format", broker)
     ext         = os.path.splitext(path)[1].lower()
 
     if ext in (".xlsx", ".xlsm", ".xls"):
-        df = pd.read_excel(path)
+        df = pd.read_excel(path, header=header_row)
     elif ext == ".csv":
         df = pd.read_csv(path)
     else:
         raise ValueError(f"Unsupported file type: {ext}")
 
-    return normalise(df, broker, asset_class, source_file=path, col_map_override=col_map_override)
+    effective_col_map = col_map_override or BROKER_COL_MAPS.get(col_format, BROKER_COL_MAPS["standard"])
+    return normalise(df, broker, asset_class, source_file=path, col_map_override=effective_col_map)

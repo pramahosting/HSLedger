@@ -308,7 +308,8 @@ def export_to_excel(
         def disp_fill(row_idx: int):
             row_data = list(ws_disp.iter_rows(min_row=row_idx, max_row=row_idx))[0]
             # Green if discount eligible, normal alt otherwise
-            disc_val = row_data[13].value   # "Discount Eligible" column index
+            # "Discount Eligible" is column index 14 (0-based) after the "Account" column was added
+            disc_val = row_data[14].value   # "Discount Eligible" column index
             if disc_val is True:
                 return GREEN_FILL
             return ALT_FILL if row_idx % 2 == 0 else PatternFill()
@@ -350,9 +351,15 @@ def export_to_excel(
     ws_open = wb.create_sheet("Open Positions")
     if open_positions:
         rows_op = []
-        for code, queue in open_positions.items():
+        for key, queue in open_positions.items():
+            # Keys are "account_id::code" when multiple accounts are present
+            if "::" in key:
+                account_label, code = key.split("::", 1)
+            else:
+                account_label, code = "—", key
             for lot in queue:
                 rows_op.append({
+                    "Account":          account_label or "—",
                     "Asset Code":       code,
                     "Qty Held":         round(lot.qty, 4),
                     "Cost/Unit ($)":    round(lot.cost_per_unit, 4),

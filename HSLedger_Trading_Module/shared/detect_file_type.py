@@ -15,6 +15,18 @@ import pandas as pd
 # ── Confidence threshold ──────────────────────────────────────────────────────
 CONFIDENCE_THRESHOLD = 0.50   # below this → unsupported broker fallback
 
+# ── Reference-number broker prefixes ─────────────────────────────────────────
+# When multiple broker files share the same column layout (e.g., custom exports
+# that all use CommSec headers), the contract note / reference number prefix
+# disambiguates the actual broker.  Checked as a secondary signal after column
+# fingerprints, so real broker-specific column files are never affected.
+REFERENCE_BROKER_PREFIXES: dict[str, str] = {
+    "CN": "commsec",       # CommSec contract notes: CN...
+    "NT": "nabtrade",      # NABtrade reference numbers: NT...
+    "SH": "superhero",     # Superhero reference numbers: SH...
+    "SW": "selfwealth",    # SelfWealth: SW...
+}
+
 # ── Broker column fingerprints ────────────────────────────────────────────────
 # Maps broker_id → set of column substrings that strongly identify it.
 # Matching is case-insensitive partial match.
@@ -110,6 +122,69 @@ CRYPTO_EVENT_TYPES = {
 }
 
 
+def _find_best_header_row(path: str, ext: str) -> tuple[pd.DataFrame, int]:
+    """
+    Try header rows 0-3 for Excel files and return the (df, header_row) pair
+    whose column names score highest against broker fingerprints.
+    Handles broker files that have 1-3 metadata rows above the real headers.
+    CSV files always use header=0.
+    """
+    if ext == ".csv":
+        return pd.read_csv(path, nrows=10), 0
+
+    best_df: pd.DataFrame | None = None
+    best_row = 0
+    best_score = -1
+
+    for row in range(4):
+        try:
+            df = pd.read_excel(path, header=row, nrows=10)
+            cols_lower = [str(c).lower() for c in df.columns]
+            score = sum(
+                1 for fp in BROKER_FINGERPRINTS.values()
+                for req in fp["required"]
+                if any(req.lower() in c for c in cols_lower)
+            )
+            if score > best_score:
+                best_score = score
+                best_df = df
+                best_row = row
+        except Exception:
+            continue
+
+    if best_df is None:
+        return pd.read_excel(path, nrows=10), 0
+    return best_df, best_row
+
+
+def _detect_broker_from_ref_prefix(df: pd.DataFrame) -> str | None:
+    """
+    Scan string columns for values whose first 2 chars match a known broker
+    reference-number prefix (CN/NT/SH/SW).  Returns the broker id or None.
+    Only looks at columns whose name contains a reference-like keyword.
+    """
+    ref_keywords = ("reference", "contract", "ref", "note", "transaction ref")
+    candidate_cols = [
+        c for c in df.columns
+        if any(kw in str(c).lower() for kw in ref_keywords)
+    ]
+    # Fall back to all string columns if no labelled reference column found
+    if not candidate_cols:
+        candidate_cols = [c for c in df.columns if df[c].dtype == object]
+
+    prefix_votes: dict[str, int] = {}
+    for col in candidate_cols:
+        for val in df[col].dropna().astype(str):
+            prefix = val.strip()[:2].upper()
+            if prefix in REFERENCE_BROKER_PREFIXES:
+                broker_id = REFERENCE_BROKER_PREFIXES[prefix]
+                prefix_votes[broker_id] = prefix_votes.get(broker_id, 0) + 1
+
+    if not prefix_votes:
+        return None
+    return max(prefix_votes, key=lambda b: prefix_votes[b])
+
+
 def detect(path: str) -> dict[str, Any]:
     """
     Detect asset class and broker from a file.
@@ -118,8 +193,10 @@ def detect(path: str) -> dict[str, Any]:
     -------
     {
         "asset_class":  "equity" | "crypto" | "unknown",
-        "broker":       str,
+        "broker":       str,   # actual broker (may be overridden by ref prefix)
+        "col_format":   str,   # column-layout broker (use this to pick column map)
         "confidence":   float (0.0–1.0),
+        "header_row":   int,         # 0-based row index used as column header
         "signals":      list[str],   # what matched
         "warnings":     list[str],   # issues found
         "fallback_suggestion": str | None,
@@ -130,7 +207,9 @@ def detect(path: str) -> dict[str, Any]:
     result: dict[str, Any] = {
         "asset_class":        "unknown",
         "broker":             "unknown",
+        "col_format":         "unknown",
         "confidence":         0.0,
+        "header_row":         0,
         "signals":            [],
         "warnings":           [],
         "fallback_suggestion": None,
@@ -142,13 +221,14 @@ def detect(path: str) -> dict[str, Any]:
         result["warnings"].append(f"File not found: {path}")
         return result
 
-    # ── Load file ──────────────────────────────────────────────────────────────
+    # ── Load file, auto-detecting the correct header row ───────────────────────
     ext = os.path.splitext(path)[1].lower()
     try:
         if ext in (".xlsx", ".xlsm", ".xls"):
-            df = pd.read_excel(path, nrows=5)
+            df, header_row = _find_best_header_row(path, ext)
+            result["header_row"] = header_row
         elif ext == ".csv":
-            df = pd.read_csv(path, nrows=5)
+            df = pd.read_csv(path, nrows=10)
         else:
             result["warnings"].append(f"Unsupported file type: {ext}")
             return result
@@ -221,8 +301,23 @@ def detect(path: str) -> dict[str, Any]:
 
     result["signals"].extend([f"Matched column: '{s}'" for s in matched_signals[best_broker]])
     result["broker"]      = best_broker
+    result["col_format"]  = best_broker
     result["confidence"]  = round(best_score, 3)
     result["asset_class"] = BROKER_FINGERPRINTS[best_broker]["asset_class"]
+
+    # ── Reference-number prefix override ─────────────────────────────────────
+    # When multiple broker files share the same column layout (e.g. all use
+    # CommSec headers), the contract note / reference prefix disambiguates the
+    # actual broker.  col_format keeps the column-layout broker so the normaliser
+    # can still select the right column map.
+    if best_score >= CONFIDENCE_THRESHOLD:
+        ref_broker = _detect_broker_from_ref_prefix(df)
+        if ref_broker and ref_broker != best_broker:
+            result["col_format"] = best_broker   # column layout stays as-is
+            result["broker"]     = ref_broker
+            result["signals"].append(
+                f"Reference prefix → broker override: {best_broker} → {ref_broker}"
+            )
 
     # ── Low-confidence fallback ───────────────────────────────────────────────
     if best_score < CONFIDENCE_THRESHOLD:
