@@ -108,6 +108,7 @@ def save_purchase_lot(
     unit_price: float,
     brokerage: float = 0.0,
     gst: float = 0.0,
+    trading_batch_id: Optional[str] = None,
 ) -> Optional[dict]:
     """Save one manual purchase lot. Returns the saved lot dict (with id) or None."""
     try:
@@ -115,13 +116,14 @@ def save_purchase_lot(
             f"{FASTAPI_BASE_URL}/trading/lots",
             headers=_auth_headers(token),
             json={
-                "financial_year": financial_year,
-                "ticker":         ticker,
-                "purchase_date":  purchase_date,
-                "qty":            qty,
-                "unit_price":     unit_price,
-                "brokerage":      brokerage,
-                "gst":            gst,
+                "financial_year":   financial_year,
+                "ticker":           ticker,
+                "purchase_date":    purchase_date,
+                "qty":              qty,
+                "unit_price":       unit_price,
+                "brokerage":        brokerage,
+                "gst":              gst,
+                "trading_batch_id": trading_batch_id,
             },
             timeout=10.0,
         )
@@ -132,12 +134,19 @@ def save_purchase_lot(
         return None
 
 
-def load_purchase_lots(token: str, financial_year: str, ticker: Optional[str] = None) -> list[dict]:
-    """Fetch all saved lots for the current user and FY. Returns [] on any failure."""
+def load_purchase_lots(
+    token: str,
+    financial_year: str,
+    ticker: Optional[str] = None,
+    trading_batch_id: Optional[str] = None,
+) -> list[dict]:
+    """Fetch saved lots for the current user, FY, and (optionally) upload batch."""
     try:
         params: dict = {"financial_year": financial_year}
         if ticker:
             params["ticker"] = ticker
+        if trading_batch_id:
+            params["trading_batch_id"] = trading_batch_id
         response = httpx.get(
             f"{FASTAPI_BASE_URL}/trading/lots",
             headers=_auth_headers(token),
@@ -157,6 +166,50 @@ def delete_purchase_lot(token: str, lot_id: int) -> bool:
         response = httpx.delete(
             f"{FASTAPI_BASE_URL}/trading/lots/{lot_id}",
             headers=_auth_headers(token),
+            timeout=10.0,
+        )
+        return response.status_code == 204
+    except Exception:
+        return False
+
+
+def update_purchase_lot(
+    token: str,
+    lot_id: int,
+    purchase_date: Optional[str] = None,
+    qty: Optional[float] = None,
+    unit_price: Optional[float] = None,
+    brokerage: Optional[float] = None,
+    gst: Optional[float] = None,
+) -> Optional[dict]:
+    """Edit a saved lot. Returns the updated lot dict or None on failure."""
+    try:
+        body: dict = {}
+        if purchase_date is not None: body["purchase_date"] = purchase_date
+        if qty           is not None: body["qty"]           = qty
+        if unit_price    is not None: body["unit_price"]    = unit_price
+        if brokerage     is not None: body["brokerage"]     = brokerage
+        if gst           is not None: body["gst"]           = gst
+        response = httpx.put(
+            f"{FASTAPI_BASE_URL}/trading/lots/{lot_id}",
+            headers=_auth_headers(token),
+            json=body,
+            timeout=10.0,
+        )
+        if response.status_code == 200:
+            return response.json()
+        return None
+    except Exception:
+        return None
+
+
+def delete_lots_by_batch(token: str, financial_year: str, trading_batch_id: str) -> bool:
+    """Delete all lots for the current user + FY + trading_batch_id. Returns True on success."""
+    try:
+        response = httpx.delete(
+            f"{FASTAPI_BASE_URL}/trading/lots",
+            headers=_auth_headers(token),
+            params={"financial_year": financial_year, "trading_batch_id": trading_batch_id},
             timeout=10.0,
         )
         return response.status_code == 204
