@@ -52,6 +52,18 @@ ROLE_PERMISSIONS = {
     ],
 }
 
+def _migrate_add_trading_batch_id(db):
+    """Add trading_batch_id column to manual_purchase_lots if it doesn't exist yet."""
+    from sqlalchemy import inspect, text
+    cols = [c["name"] for c in inspect(engine).get_columns("manual_purchase_lots")]
+    if "trading_batch_id" not in cols:
+        db.execute(text(
+            "ALTER TABLE manual_purchase_lots ADD COLUMN trading_batch_id TEXT"
+        ))
+        db.commit()
+        print("Migration: added trading_batch_id column to manual_purchase_lots.")
+
+
 def init_db():
     print("Initializing database...")
     Base.metadata.create_all(bind=engine)
@@ -60,6 +72,7 @@ def init_db():
     db = SessionLocal()
 
     try:
+        _migrate_add_trading_batch_id(db)
 
         if db.query(User).count() > 0:
             print("Users already exist. Skipping user creation.")

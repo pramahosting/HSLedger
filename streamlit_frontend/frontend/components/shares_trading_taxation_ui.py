@@ -17,6 +17,7 @@ import os
 import shutil
 import sys
 import tempfile
+import uuid
 from collections import deque
 from datetime import date, datetime
 
@@ -68,6 +69,7 @@ def _init() -> None:
         f"{_P}uploader_key":      0,
         f"{_P}selected_ticker":   None,
         f"{_P}lots_loaded":       False,   # True after we've synced saved lots for this FY
+        f"{_P}trading_batch_id":  None,    # UUID generated per upload session for lot scoping
     }
     for k, v in defaults.items():
         if k not in st.session_state:
@@ -190,6 +192,7 @@ def _empty_buy_df() -> pd.DataFrame:
         "Unit Price ($)":             pd.Series([], dtype=float),
         "Brokerage ($)":              pd.Series([], dtype=float),
         "GST ($)":                    pd.Series([], dtype=float),
+        "_lot_id":                    pd.Series([], dtype=object),  # DB row id for edit/delete
     })
 
 
@@ -306,58 +309,61 @@ def _auth_token() -> str | None:
 
 def _load_lots_from_api(fy: str) -> None:
     """
-    Fetch saved purchase lots for the current user + FY from the backend,
-    then merge them into stt_buy_records.  Called once per process-files run.
+    Fetch saved lots for the current user + FY + trading_batch_id and merge into
+    stt_buy_records.  Scoping by trading_batch_id prevents lots from a previous
+    upload appearing in a new session.
     """
     from auth.api_client import load_purchase_lots
-    token = _auth_token()
-    if not token or not fy:
+    token            = _auth_token()
+    trading_batch_id = _get("trading_batch_id")
+    if not token or not fy or not trading_batch_id:
         return
     try:
-        lots = load_purchase_lots(token=token, financial_year=fy)
+        lots = load_purchase_lots(token=token, financial_year=fy, trading_batch_id=trading_batch_id)
         if not lots:
             return
-        # Group fetched lots by ticker into DataFrames matching _empty_buy_df() schema.
         buy_records: dict = (_get("buy_records") or {}).copy()
         for lot in lots:
-            ticker = lot["ticker"]
+            ticker  = lot["ticker"]
             new_row = pd.DataFrame([{
                 "Purchase Date (dd/mm/yyyy)": lot["purchase_date"],
                 "Quantity":       float(lot["qty"]),
                 "Unit Price ($)": float(lot["unit_price"]),
                 "Brokerage ($)":  float(lot["brokerage"]),
                 "GST ($)":        float(lot["gst"]),
+                "_lot_id":        lot.get("id"),
             }])
             prev = buy_records.get(ticker, _empty_buy_df())
             buy_records[ticker] = pd.concat([prev, new_row], ignore_index=True)
         _set("buy_records", buy_records)
     except Exception:
-        pass  # backend unavailable — continue with empty state
+        pass
 
 
-def _save_lot_to_api(ticker: str, fy: str, row: dict) -> None:
+def _save_lot_to_api(ticker: str, fy: str, row: dict) -> "dict | None":
     """
     Persist one validated purchase lot to the backend.
-    row keys: "Purchase Date (dd/mm/yyyy)", "Quantity", "Unit Price ($)", etc.
-    Silently ignored if the backend is unavailable.
+    Returns the saved lot dict (including id) so the caller can track the DB row id.
     """
     from auth.api_client import save_purchase_lot
-    token = _auth_token()
+    token            = _auth_token()
+    trading_batch_id = _get("trading_batch_id")
     if not token or not fy:
-        return
+        return None
     try:
-        save_purchase_lot(
-            token          = token,
-            financial_year = fy,
-            ticker         = ticker,
-            purchase_date  = row.get("Purchase Date (dd/mm/yyyy)", ""),
-            qty            = float(row.get("Quantity", 0)),
-            unit_price     = float(row.get("Unit Price ($)", 0)),
-            brokerage      = float(row.get("Brokerage ($)", 0)),
-            gst            = float(row.get("GST ($)", 0)),
+        return save_purchase_lot(
+            token            = token,
+            financial_year   = fy,
+            ticker           = ticker,
+            purchase_date    = row.get("Purchase Date (dd/mm/yyyy)", ""),
+            qty              = float(row.get("Quantity", 0)),
+            unit_price       = float(row.get("Unit Price ($)", 0)),
+            brokerage        = float(row.get("Brokerage ($)", 0)),
+            gst              = float(row.get("GST ($)", 0)),
+            trading_batch_id = trading_batch_id,
         )
     except Exception:
-        pass
+        return None
 
 
 def _save_report_to_api(result: "TradingPipelineResult", fy: str) -> None:
@@ -381,6 +387,57 @@ def _save_report_to_api(result: "TradingPipelineResult", fy: str) -> None:
         )
     except Exception:
         pass
+
+
+def _delete_lot_from_api(lot_id: int) -> bool:
+    """Delete a single saved lot by id. Returns True on success."""
+    from auth.api_client import delete_purchase_lot
+    token = _auth_token()
+    if not token:
+        return False
+    try:
+        return delete_purchase_lot(token=token, lot_id=lot_id)
+    except Exception:
+        return False
+
+
+def _update_lot_in_api(
+    lot_id: int,
+    purchase_date: str,
+    qty: float,
+    unit_price: float,
+    brokerage: float,
+    gst: float,
+) -> "dict | None":
+    """Edit a saved lot. Returns updated lot dict or None on failure."""
+    from auth.api_client import update_purchase_lot
+    token = _auth_token()
+    if not token:
+        return None
+    try:
+        return update_purchase_lot(
+            token         = token,
+            lot_id        = lot_id,
+            purchase_date = purchase_date,
+            qty           = qty,
+            unit_price    = unit_price,
+            brokerage     = brokerage,
+            gst           = gst,
+        )
+    except Exception:
+        return None
+
+
+def _delete_batch_lots_from_api(fy: str, trading_batch_id: str) -> bool:
+    """Delete all lots for the current user + FY + trading_batch_id. Returns True on success."""
+    from auth.api_client import delete_lots_by_batch
+    token = _auth_token()
+    if not token:
+        return False
+    try:
+        return delete_lots_by_batch(token=token, financial_year=fy, trading_batch_id=trading_batch_id)
+    except Exception:
+        return False
 
 
 # ── Options resolver helpers ──────────────────────────────────────────────────
@@ -785,20 +842,128 @@ def _render_ticker_entry(ticker: str, sells: list[dict]) -> None:
     if saved_df is None or (hasattr(saved_df, "empty") and saved_df.empty):
         saved_df = _empty_buy_df()
 
-    # --- Saved purchase rows (read-only display) ---
-    # Rows are only added through the draft form below. Keeping display separate from
-    # entry prevents the "type twice" bug caused by data_editor rerunning on every keystroke.
-    col_labels = {
-        "Purchase Date (dd/mm/yyyy)": "Purchase Date",
-        "Quantity":       "Qty (shares)",
-        "Unit Price ($)": "Unit Price ($)",
-        "Brokerage ($)":  "Brokerage ($)",
-        "GST ($)":        "GST ($)",
-    }
-    if not saved_df.empty:
-        st.dataframe(saved_df.rename(columns=col_labels), use_container_width=True, hide_index=True)
-    else:
+    # --- Saved purchase rows with per-row Edit / Remove actions ---
+    edit_mode_key = f"{_P}edit_{ticker}"
+    edit_ctr_key  = f"{_P}edit_ctr_{ticker}"
+    edit_err_key  = f"{_P}edit_err_{ticker}"
+    if edit_err_key not in st.session_state:
+        st.session_state[edit_err_key] = {}
+
+    has_ids = "_lot_id" in saved_df.columns
+
+    def _safe_lot_id(raw) -> "int | None":
+        if raw is None:
+            return None
+        try:
+            import pandas as _pd
+            if isinstance(raw, float) and _pd.isna(raw):
+                return None
+            return int(raw)
+        except (TypeError, ValueError):
+            return None
+
+    if saved_df.empty:
         st.caption("No purchase rows added yet.")
+    else:
+        hc = st.columns([2.5, 1.2, 1.5, 1.5, 1.2, 0.55, 0.55])
+        for lbl, col in zip(
+            ["Purchase Date", "Qty", "Unit Price ($)", "Brokerage ($)", "GST ($)", "✏", "🗑"],
+            hc,
+        ):
+            col.caption(f"**{lbl}**")
+
+        for idx in range(len(saved_df)):
+            row    = saved_df.iloc[idx]
+            lot_id = _safe_lot_id(row["_lot_id"] if has_ids else None)
+
+            rc = st.columns([2.5, 1.2, 1.5, 1.5, 1.2, 0.55, 0.55])
+            rc[0].write(str(row.get("Purchase Date (dd/mm/yyyy)", "")))
+            rc[1].write(f"{float(row.get('Quantity', 0)):,.0f}")
+            rc[2].write(f"${float(row.get('Unit Price ($)', 0)):.4f}")
+            rc[3].write(f"${float(row.get('Brokerage ($)', 0)):.2f}")
+            rc[4].write(f"${float(row.get('GST ($)', 0)):.2f}")
+
+            if rc[5].button("✏", key=f"{_P}editbtn_{ticker}_{idx}",
+                            disabled=lot_id is None, help="Edit this lot"):
+                st.session_state[edit_mode_key] = idx
+                st.session_state[edit_ctr_key]  = (st.session_state.get(edit_ctr_key, 0) + 1)
+                st.session_state[edit_err_key]  = {}
+                st.rerun()
+
+            if rc[6].button("🗑", key=f"{_P}delbtn_{ticker}_{idx}",
+                            disabled=lot_id is None, help="Remove this lot"):
+                if _delete_lot_from_api(lot_id):
+                    br = (_get("buy_records") or {}).copy()
+                    df = br.get(ticker, _empty_buy_df())
+                    df = df.drop(df.index[idx]).reset_index(drop=True)
+                    br[ticker] = df
+                    _set("buy_records", br)
+                    if st.session_state.get(edit_mode_key) == idx:
+                        st.session_state[edit_mode_key] = None
+                else:
+                    st.error("Delete failed — backend may be unavailable.")
+                st.rerun()
+
+    # --- Inline edit form (shown when a row's ✏ button was clicked) ---
+    edit_idx = st.session_state.get(edit_mode_key)
+    if edit_idx is not None and not saved_df.empty and edit_idx < len(saved_df):
+        edit_row    = saved_df.iloc[edit_idx]
+        edit_lot_id = _safe_lot_id(edit_row["_lot_id"] if "_lot_id" in saved_df.columns else None)
+        ctr         = st.session_state.get(edit_ctr_key, 0)
+
+        st.markdown(f"**Editing row {edit_idx + 1}:**")
+        with st.form(key=f"{_P}editform_{ticker}_{edit_idx}_{ctr}"):
+            ef1, ef2, ef3, ef4, ef5 = st.columns([2, 1, 1, 1, 1])
+            e_date  = ef1.text_input("Purchase Date",   value=str(edit_row.get("Purchase Date (dd/mm/yyyy)", "")))
+            e_qty   = ef2.number_input("Qty",           value=float(edit_row.get("Quantity", 0)),    min_value=0.0, step=1.0,  format="%.4f")
+            e_price = ef3.number_input("Unit Price ($)", value=float(edit_row.get("Unit Price ($)", 0)), min_value=0.0, step=0.01, format="%.4f")
+            e_brok  = ef4.number_input("Brokerage ($)", value=float(edit_row.get("Brokerage ($)", 0)), min_value=0.0, step=0.01, format="%.2f")
+            e_gst   = ef5.number_input("GST ($)",       value=float(edit_row.get("GST ($)", 0)),     min_value=0.0, step=0.01, format="%.2f")
+            btn1, btn2 = st.columns(2)
+            save_edit   = btn1.form_submit_button("Save Changes", type="primary")
+            cancel_edit = btn2.form_submit_button("Cancel")
+
+        if cancel_edit:
+            st.session_state[edit_mode_key] = None
+            st.session_state[edit_err_key]  = {}
+            st.rerun()
+
+        if save_edit:
+            edit_errs: dict = {}
+            if not e_date.strip():
+                edit_errs["date"] = "Purchase Date is required."
+            else:
+                try:
+                    datetime.strptime(e_date.strip(), "%d/%m/%Y")
+                except ValueError:
+                    edit_errs["date"] = "Invalid date — use dd/mm/yyyy."
+            if e_qty <= 0:
+                edit_errs["qty"] = "Qty must be positive."
+            if e_price <= 0:
+                edit_errs["price"] = "Unit Price must be positive."
+
+            if not edit_errs and edit_lot_id is not None:
+                updated = _update_lot_in_api(edit_lot_id, e_date.strip(), e_qty, e_price, e_brok, e_gst)
+                if updated is not None:
+                    br = (_get("buy_records") or {}).copy()
+                    df = br.get(ticker, _empty_buy_df()).copy()
+                    df.at[df.index[edit_idx], "Purchase Date (dd/mm/yyyy)"] = e_date.strip()
+                    df.at[df.index[edit_idx], "Quantity"]       = e_qty
+                    df.at[df.index[edit_idx], "Unit Price ($)"] = e_price
+                    df.at[df.index[edit_idx], "Brokerage ($)"]  = e_brok
+                    df.at[df.index[edit_idx], "GST ($)"]        = e_gst
+                    br[ticker] = df
+                    _set("buy_records", br)
+                    st.session_state[edit_mode_key] = None
+                    st.session_state[edit_err_key]  = {}
+                    st.rerun()
+                else:
+                    edit_errs["api"] = "Save failed — backend may be unavailable."
+
+            st.session_state[edit_err_key] = edit_errs
+
+        for msg in st.session_state.get(edit_err_key, {}).values():
+            st.error(msg)
 
     # --- Draft entry form ---
     # st.form batches all widget interactions so keystrokes do NOT trigger rerenders.
@@ -856,15 +1021,14 @@ def _render_ticker_entry(ticker: str, sells: list[dict]) -> None:
                     "Brokerage ($)":  d_brok,
                     "GST ($)":        d_gst,
                 }
-                # Append validated row using an immutable update (never mutate existing array)
+                # Persist to backend and capture the returned DB id for remove/edit
+                saved = _save_lot_to_api(ticker, _get("stored_fy") or "", lot_row)
+                lot_row["_lot_id"] = saved.get("id") if saved else None
                 new_row = pd.DataFrame([lot_row])
                 br   = (_get("buy_records") or {}).copy()
                 prev = br.get(ticker, _empty_buy_df())
                 br[ticker] = pd.concat([prev, new_row], ignore_index=True)
                 _set("buy_records", br)
-                # Persist to backend; uses stored FY from the current pipeline run
-                _save_lot_to_api(ticker, _get("stored_fy") or "", lot_row)
-                # Increment counter so the next render uses a fresh form key (clears inputs)
                 st.session_state[counter_key] += 1
                 st.session_state[err_key]      = {}
                 st.rerun()
@@ -965,6 +1129,21 @@ def _render_missing_buys_tab(result: TradingPipelineResult) -> None:
         "automatically applies the 50% CGT discount to lots held over 12 months. "
         "Click **Generate Final Tax Report** below once done."
     )
+
+    _batch_id = _get("trading_batch_id")
+    _fy_now   = _get("stored_fy")
+    if _batch_id and _auth_token() and _fy_now:
+        if st.button(
+            "🗑 Clear all lots for this upload",
+            type="secondary",
+            help="Permanently delete all manually entered lots for the current upload batch.",
+        ):
+            if _delete_batch_lots_from_api(_fy_now, _batch_id):
+                _set("buy_records", {})
+                st.rerun()
+            else:
+                st.error("Clear failed — backend may be unavailable.")
+
     st.divider()
 
     # Initialise selected ticker
@@ -1138,6 +1317,7 @@ def render() -> None:
         _set("buy_records",      {})
         _set("selected_ticker",  None)
         _set("lots_loaded",      False)
+        _set("trading_batch_id", None)
         _set("uploader_key",     (_get("uploader_key") or 0) + 1)
         st.rerun()
 
@@ -1156,7 +1336,8 @@ def render() -> None:
         _set("report_generated", False)
         _set("buy_records", {})
         _set("selected_ticker", None)
-        _set("lots_loaded", False)   # trigger reload of saved lots for this FY
+        _set("trading_batch_id", str(uuid.uuid4()))  # new scope per upload session
+        _set("lots_loaded", False)
         st.success(f"Processed {len(uploaded)} file(s) successfully.")
 
     result: TradingPipelineResult | None = _get("result")
