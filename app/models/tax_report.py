@@ -14,4 +14,5 @@ class TaxReport(Base):
     gross_capital_losses = Column(Float, default=0.0)
     cgt_discount_applied = Column(Float, default=0.0)
     report_json          = Column(Text, nullable=True)          # full serialised report
+    report_type          = Column(String(20), nullable=True, default="stocks")  # "stocks" | "crypto"
     created_at           = Column(DateTime, default=datetime.utcnow)

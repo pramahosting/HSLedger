@@ -151,3 +151,49 @@ reconciliation.db
 /test_data/TF2_CBA_Savings_Aug_Sep_2025.csv
 /test_data/TF3_CBA_Current_Aug_Sep_2025.csv
 /test_data/TF4_NAB_Business_Aug_Sep_2025.csv
+/UPDATES_2026-05-05.txt
+/Crypto-Trading-Testing-Area_only_Fake_dataset/Extras from main folder/Fake dataset/binance-fake.py
+/Crypto-Trading-Testing-Area_only_Fake_dataset/Extras from main folder/Raw_and_combined_Dataset/EDA/cardinality_report.csv
+/Crypto-Trading-Testing-Area_only_Fake_dataset/V1/cgt_engine.py
+/Crypto-Trading-Testing-Area_only_Fake_dataset/cgt_engine.py
+/Crypto-Trading-Testing-Area_only_Fake_dataset/Extras from main folder/Fake dataset/coinspot-fake.py
+/Crypto-Trading-Testing-Area_only_Fake_dataset/V1/coinspot_ledger_v2_4_classified.csv
+/Crypto-Trading-Testing-Area_only_Fake_dataset/coinspot_ledger_v2_4_classified.csv
+/Crypto-Trading-Testing-Area_only_Fake_dataset/Extras from main folder/Raw_and_combined_Dataset/v1/combined_ledger.csv
+/Crypto-Trading-Testing-Area_only_Fake_dataset/Extras from main folder/Raw_and_combined_Dataset/v1/combined_ledger_preprocessed.csv
+/Crypto-Trading-Testing-Area_only_Fake_dataset/Extras from main folder/Raw_and_combined_Dataset/archive/Crypto.com.Deposit&Withdrawal.csv
+/Crypto-Trading-Testing-Area_only_Fake_dataset/Extras from main folder/Raw_and_combined_Dataset/archive/Crypto.com.iiDeposit&Withdrawal.csv
+/Crypto-Trading-Testing-Area_only_Fake_dataset/Extras from main folder/Raw_and_combined_Dataset/Documents/Crypto Trading Rules.docx
+/streamlit_frontend/backend/trading/crypto_cgt_engine.py
+/Crypto-Trading-Testing-Area_only_Fake_dataset/crypto_event_rules.json
+/Crypto-Trading-Testing-Area_only_Fake_dataset/crypto_rules.py
+/streamlit_frontend/backend/trading/crypto_rules_engine.py
+/streamlit_frontend/frontend/components/crypto_trading_taxation_ui.py
+/Crypto-Trading-Testing-Area_only_Fake_dataset/Extras from main folder/Raw_and_combined_Dataset/EDA/dataset_report.txt
+/Crypto-Trading-Testing-Area_only_Fake_dataset/Extras from main folder/Fake dataset/fake_binance_transactions_1000.csv
+/Crypto-Trading-Testing-Area_only_Fake_dataset/Extras from main folder/Fake dataset/fake_coinspot_transactions_1000.csv
+/Crypto-Trading-Testing-Area_only_Fake_dataset/V1/generate_cgt_test_dataset.py
+/Crypto-Trading-Testing-Area_only_Fake_dataset/Extras from main folder/Raw_and_combined_Dataset/EDA/matched_transfers_all.csv
+/Crypto-Trading-Testing-Area_only_Fake_dataset/Extras from main folder/Raw_and_combined_Dataset/EDA/matched_transfers_by_time_amount.csv
+/Crypto-Trading-Testing-Area_only_Fake_dataset/Extras from main folder/Raw_and_combined_Dataset/EDA/matched_transfers_by_txid.csv
+/Crypto-Trading-Testing-Area_only_Fake_dataset/Extras from main folder/Raw_and_combined_Dataset/EDA/missing_report.csv
+/Crypto-Trading-Testing-Area_only_Fake_dataset/V1/Outputs/performance-metrics/OUT_au_financial_year_summary.csv
+/Crypto-Trading-Testing-Area_only_Fake_dataset/Outputs/run_coinspot_cgt_rules/OUT_cgt_disposals_fifo.csv
+/Crypto-Trading-Testing-Area_only_Fake_dataset/V1/Outputs/run_coinspot_cgt/OUT_cgt_disposals_fifo.csv
+/Crypto-Trading-Testing-Area_only_Fake_dataset/V1/Outputs/performance-metrics/OUT_cgt_engine_scorecard.txt
+/Crypto-Trading-Testing-Area_only_Fake_dataset/Outputs/run_coinspot_cgt_rules/OUT_cgt_summary.txt
+/Crypto-Trading-Testing-Area_only_Fake_dataset/V1/Outputs/run_coinspot_cgt/OUT_cgt_summary.txt
+/Crypto-Trading-Testing-Area_only_Fake_dataset/V1/Outputs/performance-metrics/OUT_holding_period_buckets.csv
+/Crypto-Trading-Testing-Area_only_Fake_dataset/Outputs/run_coinspot_cgt_rules/OUT_rules_applied_preview.csv
+/Crypto-Trading-Testing-Area_only_Fake_dataset/V1/Outputs/performance-metrics/OUT_top_assets_by_abs_net_gain.csv
+/Crypto-Trading-Testing-Area_only_Fake_dataset/Outputs/run_coinspot_cgt_rules/OUT_validation_report.txt
+/Crypto-Trading-Testing-Area_only_Fake_dataset/V1/Outputs/run_coinspot_cgt/OUT_validation_report.txt
+/Crypto-Trading-Testing-Area_only_Fake_dataset/V1/performance-metrics.py
+/Crypto-Trading-Testing-Area_only_Fake_dataset/rdr_ui_crypto.py
+/Crypto-Trading-Testing-Area_only_Fake_dataset/V1/run_coinspot_cgt.py
+/Crypto-Trading-Testing-Area_only_Fake_dataset/run_coinspot_cgt.py
+/Crypto-Trading-Testing-Area_only_Fake_dataset/run_coinspot_cgt_rules.py
+/Crypto-Trading-Testing-Area_only_Fake_dataset/Extras from main folder/Raw_and_combined_Dataset/EDA/transfer_map.csv
+/Crypto-Trading-Testing-Area_only_Fake_dataset/Extras from main folder/Raw_and_combined_Dataset/EDA/unmatched_transfer_rows.csv
+/Crypto-Trading-Testing-Area_only_Fake_dataset/Extras from main folder/Raw_and_combined_Dataset/v1/v-1-detect_transfer.py
+/Crypto-Trading-Testing-Area_only_Fake_dataset/Extras from main folder/Raw_and_combined_Dataset/v1/v-1-unify.py

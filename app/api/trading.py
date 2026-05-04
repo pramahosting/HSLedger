@@ -222,6 +222,52 @@ def list_reports(
         .filter(
             TaxReport.user_id        == current_user.id,
             TaxReport.financial_year == financial_year,
+            # Exclude crypto reports from the stocks endpoint
+            TaxReport.report_type    != "crypto",
+        )
+        .order_by(TaxReport.created_at.desc())
+        .all()
+    )
+
+
+# ── Crypto Tax report routes ──────────────────────────────────────────────────
+# Stored in the same tax_reports table but namespaced with report_type="crypto".
+# Never mixed with stock reports — each endpoint filters strictly by report_type.
+
+@router.post("/crypto/reports", response_model=ReportResponse, status_code=status.HTTP_201_CREATED)
+def save_crypto_report(
+    body:         ReportCreate,
+    current_user: User    = Depends(get_current_user),
+    db:           Session = Depends(get_db),
+):
+    report = TaxReport(
+        user_id              = current_user.id,
+        financial_year       = body.financial_year,
+        net_taxable_gain     = body.net_taxable_gain,
+        gross_capital_gains  = body.gross_capital_gains,
+        gross_capital_losses = body.gross_capital_losses,
+        cgt_discount_applied = body.cgt_discount_applied,
+        report_json          = body.report_json,
+        report_type          = "crypto",
+    )
+    db.add(report)
+    db.commit()
+    db.refresh(report)
+    return report
+
+
+@router.get("/crypto/reports", response_model=list[ReportResponse])
+def list_crypto_reports(
+    financial_year: str     = Query(...),
+    current_user:   User    = Depends(get_current_user),
+    db:             Session = Depends(get_db),
+):
+    return (
+        db.query(TaxReport)
+        .filter(
+            TaxReport.user_id        == current_user.id,
+            TaxReport.financial_year == financial_year,
+            TaxReport.report_type    == "crypto",
         )
         .order_by(TaxReport.created_at.desc())
         .all()

@@ -64,6 +64,18 @@ def _migrate_add_trading_batch_id(db):
         print("Migration: added trading_batch_id column to manual_purchase_lots.")
 
 
+def _migrate_add_report_type(db):
+    """Add report_type column to tax_reports to separate stocks vs crypto reports."""
+    from sqlalchemy import inspect, text
+    cols = [c["name"] for c in inspect(engine).get_columns("tax_reports")]
+    if "report_type" not in cols:
+        db.execute(text(
+            "ALTER TABLE tax_reports ADD COLUMN report_type TEXT DEFAULT 'stocks'"
+        ))
+        db.commit()
+        print("Migration: added report_type column to tax_reports.")
+
+
 def init_db():
     print("Initializing database...")
     Base.metadata.create_all(bind=engine)
@@ -73,6 +85,7 @@ def init_db():
 
     try:
         _migrate_add_trading_batch_id(db)
+        _migrate_add_report_type(db)
 
         if db.query(User).count() > 0:
             print("Users already exist. Skipping user creation.")

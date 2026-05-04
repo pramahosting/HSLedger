@@ -262,3 +262,53 @@ def list_tax_reports(token: str, financial_year: str) -> list[dict]:
         return []
     except Exception:
         return []
+
+
+# ── Crypto tax report persistence ─────────────────────────────────────────────
+# Separate endpoints — never reuse stock report storage.
+
+def save_crypto_tax_report(
+    token: str,
+    financial_year: str,
+    net_taxable_gain: float,
+    gross_capital_gains: float,
+    gross_capital_losses: float,
+    cgt_discount_applied: float,
+    report_json: Optional[str] = None,
+) -> Optional[dict]:
+    """Persist a crypto CGT report summary to /trading/crypto/reports. Returns saved record or None."""
+    try:
+        response = httpx.post(
+            f"{FASTAPI_BASE_URL}/trading/crypto/reports",
+            headers=_auth_headers(token),
+            json={
+                "financial_year":       financial_year,
+                "net_taxable_gain":     net_taxable_gain,
+                "gross_capital_gains":  gross_capital_gains,
+                "gross_capital_losses": gross_capital_losses,
+                "cgt_discount_applied": cgt_discount_applied,
+                "report_json":          report_json,
+            },
+            timeout=10.0,
+        )
+        if response.status_code == 201:
+            return response.json()
+        return None
+    except Exception:
+        return None
+
+
+def list_crypto_tax_reports(token: str, financial_year: str) -> list[dict]:
+    """List past crypto tax reports for the current user and FY, newest first."""
+    try:
+        response = httpx.get(
+            f"{FASTAPI_BASE_URL}/trading/crypto/reports",
+            headers=_auth_headers(token),
+            params={"financial_year": financial_year},
+            timeout=10.0,
+        )
+        if response.status_code == 200:
+            return response.json()
+        return []
+    except Exception:
+        return []
