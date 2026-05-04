@@ -14,6 +14,7 @@ Applies full ATO rules:
   - Carry-forward losses propagate across FYs automatically
   - Income events (DIV/INT/LND/INC) collected separately — not CGT events
   - Options (OB/OS/OPT) tracked in separate queue
+  - Short sells (SS/SC) tracked in separate short queue; profit = short price − cover price
   - Missing buy lots → flagged with code/qty/date for user resolution
 """
 
@@ -42,6 +43,27 @@ class Lot:
     @property
     def total_cost(self) -> float:
         return self.qty * self.cost_per_unit
+
+
+@dataclass
+class ShortLot:
+    code:              str
+    qty:               float
+    proceeds_per_unit: float   # net proceeds per share received when shorting
+    trade_date:        date
+    broker:            str = ""
+    reference:         str = ""
+
+
+@dataclass
+class ShortFlag:
+    """An open short position with no corresponding cover event."""
+    short_date:        date
+    code:              str
+    qty:               float
+    proceeds_per_unit: float
+    broker:            str = ""
+    row_index:         int = 0
 
 
 @dataclass
@@ -216,7 +238,7 @@ def compute_cgt(
     initial_queues:       dict[str, deque[Lot]] | None = None,
     interactive_missing:  bool = False,
 ) -> tuple[list[DisposalRow], list[IncomeRow], dict[str, FYSummary],
-           dict[str, deque[Lot]], list[MissingBuyFlag], list[OptionFlag]]:
+           dict[str, deque[Lot]], list[MissingBuyFlag], list[OptionFlag], list[OptionTransaction], list[ShortFlag]]:
     """
     Run FIFO CGT engine over a canonical normalised DataFrame.
 
@@ -235,10 +257,12 @@ def compute_cgt(
     final_queues   : dict[str, deque[Lot]]  — remaining equity open positions
     missing_flags  : list[MissingBuyFlag]   — sells with no matching buy
     option_flags   : list[OptionFlag]       — option lots with no close event
+    short_flags    : list[ShortFlag]        — short positions with no cover event
     """
     cf_losses = carry_forward_losses or {}
     queues:         dict[str, deque[Lot]]       = defaultdict(deque)
     option_queues:  dict[str, deque[OptionLot]] = defaultdict(deque)
+    short_queues:   dict[str, deque[ShortLot]]  = defaultdict(deque)
     disposals:      list[DisposalRow]           = []
     income_events:  list[IncomeRow]             = []
     missing_flags:  list[MissingBuyFlag]        = []
@@ -412,6 +436,69 @@ def compute_cgt(
                 if opt.qty < 1e-9:
                     option_queues[code].popleft()
 
+        # ── SHORT SELL (open short position) ─────────────────────────────────
+        elif txn == "SS":
+            if qty <= 0:
+                continue
+            if net_proc and abs(net_proc) > 0:
+                ppu = abs(net_proc) / qty
+            elif cv and abs(cv) > 0:
+                ppu = (abs(cv) - brok - gst) / qty
+            else:
+                ppu = max(price - (brok + gst) / qty, 0)
+            sl = ShortLot(
+                code=code, qty=qty, proceeds_per_unit=ppu,
+                trade_date=trade_d, broker=broker, reference=ref,
+            )
+            sl._row_index = row_pos + 2
+            short_queues[code].append(sl)
+
+        # ── SHORT COVER (close short position) ───────────────────────────────
+        elif txn == "SC":
+            if qty <= 0:
+                continue
+            if not short_queues[code]:
+                # No open short — treat as a regular buy
+                if price > 0:
+                    cpu = price + (brok + gst) / qty
+                    queues[code].append(Lot(
+                        code=code, qty=qty, cost_per_unit=cpu,
+                        trade_date=trade_d,
+                        settlement_date=sett_d if pd.notna(sett_d) else None,
+                        broker=broker, reference=ref,
+                    ))
+                continue
+            cover_cpu = (abs(net_proc) / qty) if (net_proc and abs(net_proc) > 0) \
+                        else price + (brok + gst) / qty
+            remaining_sc = qty
+            while remaining_sc > 1e-9 and short_queues[code]:
+                sl   = short_queues[code][0]
+                take = min(sl.qty, remaining_sc)
+                gross = (sl.proceeds_per_unit - cover_cpu) * take
+                disposals.append(DisposalRow(
+                    disposal_date           = sl.trade_date,
+                    settlement_date         = None,
+                    code                    = code,
+                    name                    = name,
+                    qty_disposed            = take,
+                    proceeds_per_unit       = sl.proceeds_per_unit,
+                    cost_per_unit           = cover_cpu,
+                    acquisition_date        = trade_d,
+                    acquisition_settlement  = sett_d if pd.notna(sett_d) else None,
+                    held_days               = (trade_d - sl.trade_date).days,
+                    discount_eligible       = False,
+                    gross_gain              = round(gross, 6),
+                    discounted_gain         = round(gross, 6),
+                    broker                  = broker,
+                    reference               = ref,
+                    event_type              = "SHORT_COVER",
+                    source_file             = src,
+                ))
+                sl.qty        -= take
+                remaining_sc  -= take
+                if sl.qty < 1e-9:
+                    short_queues[code].popleft()
+
         # ── INCOME ───────────────────────────────────────────────────────────
         elif txn in ("DIV", "INT", "LND", "INC"):
             amt = abs(net_proc) if net_proc else abs(price * qty) if price else cv
@@ -501,7 +588,20 @@ def compute_cgt(
                 row_index    = getattr(opt, "_row_index", 0),
             ))
 
-    return disposals, income_events, fy_summaries, dict(queues), missing_flags, option_flags, option_txns
+    # Collect any short positions that were never covered
+    short_flags: list[ShortFlag] = []
+    for code, sq in short_queues.items():
+        for sl in sq:
+            short_flags.append(ShortFlag(
+                short_date        = sl.trade_date,
+                code              = sl.code,
+                qty               = sl.qty,
+                proceeds_per_unit = sl.proceeds_per_unit,
+                broker            = sl.broker,
+                row_index         = getattr(sl, "_row_index", 0),
+            ))
+
+    return disposals, income_events, fy_summaries, dict(queues), missing_flags, option_flags, option_txns, short_flags
 
 
 # ── DataFrame converters ──────────────────────────────────────────────────────
@@ -598,3 +698,17 @@ def option_flags_to_df(option_flags: list[OptionFlag]) -> pd.DataFrame:
         "Broker":                f.broker,
         "Status":                "Unresolved — specify outcome",
     } for f in option_flags])
+
+
+def short_flags_to_df(short_flags: list[ShortFlag]) -> pd.DataFrame:
+    if not short_flags:
+        return pd.DataFrame()
+    return pd.DataFrame([{
+        "Asset Code":            f.code,
+        "Short Date":            f.short_date,
+        "Qty Short":             f.qty,
+        "Proceeds/Unit ($)":     round(f.proceeds_per_unit, 4),
+        "Total Proceeds ($)":    round(f.proceeds_per_unit * f.qty, 2),
+        "Broker":                f.broker,
+        "Status":                "Open short — no cover (SC) event found",
+    } for f in short_flags])

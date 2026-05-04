@@ -69,8 +69,8 @@ from shared.local_cost_base_db import (
 )
 from equity.equity_engine import (
     compute_cgt, disposals_to_df, income_to_df, missing_to_df, summary_to_df,
-    option_flags_to_df,
-    DisposalRow, IncomeRow, FYSummary, MissingBuyFlag, OptionFlag, OptionTransaction, Lot, _fy,
+    option_flags_to_df, short_flags_to_df,
+    DisposalRow, IncomeRow, FYSummary, MissingBuyFlag, OptionFlag, OptionTransaction, ShortFlag, Lot, _fy,
 )
 from output.excel_exporter import export_to_excel
 from config import (
@@ -96,6 +96,7 @@ class TradingPipelineResult:
     missing_flags:       list[MissingBuyFlag]      = field(default_factory=list)
     option_flags:        list[OptionFlag]          = field(default_factory=list)
     option_transactions: list[OptionTransaction]   = field(default_factory=list)
+    short_flags:         list[ShortFlag]           = field(default_factory=list)
     open_positions:      dict[str, deque[Lot]]     = field(default_factory=dict)
     duplicates_df:   pd.DataFrame              = field(default_factory=pd.DataFrame)
     load_report:     LoadReport | None         = None
@@ -117,6 +118,10 @@ class TradingPipelineResult:
     @property
     def option_flags_df(self) -> pd.DataFrame:
         return option_flags_to_df(self.option_flags)
+
+    @property
+    def short_flags_df(self) -> pd.DataFrame:
+        return short_flags_to_df(self.short_flags)
 
     @property
     def summary_df(self) -> pd.DataFrame:
@@ -297,7 +302,7 @@ def run_trading_pipeline(
     # ── Step 5: Run CGT engine ────────────────────────────────────────────────
     print(f"[pipeline] Running CGT engine on {len(equity_df)} broker rows...")
 
-    disposals, income_events, fy_summaries, open_queues, missing_flags, option_flags, option_txns = compute_cgt(
+    disposals, income_events, fy_summaries, open_queues, missing_flags, option_flags, option_txns, short_flags = compute_cgt(
         df                   = equity_df,
         carry_forward_losses = carry_forward_losses,
         initial_queues       = initial_queues or None,
@@ -310,6 +315,7 @@ def run_trading_pipeline(
     result.missing_flags       = missing_flags
     result.option_flags        = option_flags
     result.option_transactions = option_txns
+    result.short_flags         = short_flags
     result.open_positions      = open_queues
 
     # ── Step 6: Report missing buys and option flags ──────────────────────────
@@ -325,6 +331,11 @@ def run_trading_pipeline(
         for o in option_flags:
             print(f"  {o.option_date} | {o.code} | qty={o.qty:.0f} | premium=${o.premium_paid:.4f}")
         print(f"\n  -> Specify outcome (expired/sold/exercised) via the Streamlit UI")
+    if short_flags:
+        print(f"\n[pipeline] !  {len(short_flags)} short position(s) with no cover event:")
+        for sf in short_flags:
+            print(f"  {sf.short_date} | {sf.code} | qty={sf.qty:.0f} | proceeds=${sf.proceeds_per_unit:.4f}/unit")
+        print(f"\n  -> Add a SC (short cover) row to your broker file or resolve manually")
 
     # ── Step 7: Export Excel to trading/output/ ───────────────────────────────
     print(f"\n[pipeline] Writing report -> {output_path}")

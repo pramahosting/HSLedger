@@ -9,7 +9,7 @@ Canonical row fields:
     asset_class       "equity" | "crypto"
     code              str       (ASX ticker or crypto symbol)
     name              str
-    transaction       str       (BUY | SELL | DIV | INT | LND | INC | OB | OS | OPT | DEP | WD)
+    transaction       str       (BUY | SELL | DIV | INT | LND | INC | OB | OS | OPT | DEP | WD | SS | SC)
     qty               float     (always positive)
     direction         "buy" | "sell" | "income" | "cash"
     price             float
@@ -145,12 +145,16 @@ TXN_NORM: dict[str, str] = {
     # Cash
     "DEP": "DEP", "WD": "WD",
     "DEPOSIT": "DEP", "WITHDRAWAL": "WD",
+    # Short selling
+    "SS": "SS", "SC": "SC",
+    "SHORT SELL": "SS", "SHORT SALE": "SS", "SELL SHORT": "SS",
+    "SHORT COVER": "SC", "COVER SHORT": "SC", "BUY TO COVER": "SC",
 }
 
 INCOME_TYPES = {"DIV", "INT", "LND", "INC"}
 CASH_TYPES   = {"DEP", "WD"}
-BUY_TYPES    = {"BUY", "OB"}
-SELL_TYPES   = {"SELL", "OS", "OPT"}
+BUY_TYPES    = {"BUY", "OB", "SC"}
+SELL_TYPES   = {"SELL", "OS", "OPT", "SS"}
 
 
 # ── Helpers ───────────────────────────────────────────────────────────────────
@@ -211,6 +215,9 @@ _OPT_DESC_BUY  = {"option buy", "buy option", "option open", "open option", "opt
 _OPT_DESC_SELL = {"option sell", "sell option", "option close", "close option", "option expired", "expired worthless"}
 _OPT_DESC_EXE  = {"exercised", "exercise", "option exercise"}
 
+_SHORT_DESC_SELL  = {"short sell", "short sale", "sell short"}
+_SHORT_DESC_COVER = {"short cover", "cover short", "buy to cover"}
+
 def _detect_option_from_desc(txn: str, desc: str) -> str:
     """
     Upgrade a generic BUY/SELL classification to OB/OS/OPT when the row
@@ -226,6 +233,22 @@ def _detect_option_from_desc(txn: str, desc: str) -> str:
         return "OS"
     if any(k in dl for k in _OPT_DESC_BUY):
         return "OB"
+    return txn
+
+
+def _detect_short_from_desc(txn: str, desc: str) -> str:
+    """
+    Upgrade a generic BUY/SELL to SS/SC when the description contains
+    short-selling keywords.  Only fires after option detection so option
+    rows are never reclassified.
+    """
+    if txn not in ("BUY", "SELL"):
+        return txn
+    dl = desc.lower()
+    if any(k in dl for k in _SHORT_DESC_SELL):
+        return "SS"
+    if any(k in dl for k in _SHORT_DESC_COVER):
+        return "SC"
     return txn
 
 
@@ -308,6 +331,7 @@ def normalise(
 
         txn  = _normalise_txn(raw_txn, raw_qty)
         txn  = _detect_option_from_desc(txn, desc)
+        txn  = _detect_short_from_desc(txn, desc)
         qty  = abs(raw_qty)
         sett = sett_d if sett_d else (_t2(trade_d) if trade_d else None)
 
