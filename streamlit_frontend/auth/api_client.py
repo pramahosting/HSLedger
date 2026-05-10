@@ -312,3 +312,126 @@ def list_crypto_tax_reports(token: str, financial_year: str) -> list[dict]:
         return []
     except Exception:
         return []
+
+
+# ── Crypto manual lot persistence ─────────────────────────────────────────────
+# Stored in /trading/crypto/lots — never mixed with shares lots.
+
+def save_crypto_lot(
+    token:            str,
+    financial_year:   str,
+    asset:            str,
+    acquisition_date: str,
+    qty:              float,
+    total_cost_aud:   float,
+    fee_aud:          float = 0.0,
+    crypto_batch_id:  Optional[str] = None,
+) -> Optional[dict]:
+    """Save one manual crypto acquisition lot. Returns the saved lot dict (with id) or None."""
+    try:
+        response = httpx.post(
+            f"{FASTAPI_BASE_URL}/trading/crypto/lots",
+            headers=_auth_headers(token),
+            json={
+                "financial_year":   financial_year,
+                "asset":            asset,
+                "acquisition_date": acquisition_date,
+                "qty":              qty,
+                "total_cost_aud":   total_cost_aud,
+                "fee_aud":          fee_aud,
+                "crypto_batch_id":  crypto_batch_id,
+            },
+            timeout=10.0,
+        )
+        if response.status_code == 201:
+            return response.json()
+        return None
+    except Exception:
+        return None
+
+
+def load_crypto_lots(
+    token:           str,
+    financial_year:  Optional[str] = None,
+    asset:           Optional[str] = None,
+    crypto_batch_id: Optional[str] = None,
+) -> list[dict]:
+    """Fetch saved crypto lots for the current user, filtered by FY, asset, and/or batch."""
+    try:
+        params: dict = {}
+        if financial_year:
+            params["financial_year"] = financial_year
+        if asset:
+            params["asset"] = asset
+        if crypto_batch_id:
+            params["crypto_batch_id"] = crypto_batch_id
+        response = httpx.get(
+            f"{FASTAPI_BASE_URL}/trading/crypto/lots",
+            headers=_auth_headers(token),
+            params=params,
+            timeout=10.0,
+        )
+        if response.status_code == 200:
+            return response.json()
+        return []
+    except Exception:
+        return []
+
+
+def delete_crypto_lot(token: str, lot_id: int) -> bool:
+    """Delete a saved crypto lot by id. Returns True on success."""
+    try:
+        response = httpx.delete(
+            f"{FASTAPI_BASE_URL}/trading/crypto/lots/{lot_id}",
+            headers=_auth_headers(token),
+            timeout=10.0,
+        )
+        return response.status_code == 204
+    except Exception:
+        return False
+
+
+def update_crypto_lot(
+    token:            str,
+    lot_id:           int,
+    acquisition_date: Optional[str]   = None,
+    qty:              Optional[float] = None,
+    total_cost_aud:   Optional[float] = None,
+    fee_aud:          Optional[float] = None,
+) -> Optional[dict]:
+    """Edit a saved crypto lot. Returns the updated lot dict or None on failure."""
+    try:
+        body: dict = {}
+        if acquisition_date is not None: body["acquisition_date"] = acquisition_date
+        if qty              is not None: body["qty"]              = qty
+        if total_cost_aud   is not None: body["total_cost_aud"]   = total_cost_aud
+        if fee_aud          is not None: body["fee_aud"]          = fee_aud
+        response = httpx.put(
+            f"{FASTAPI_BASE_URL}/trading/crypto/lots/{lot_id}",
+            headers=_auth_headers(token),
+            json=body,
+            timeout=10.0,
+        )
+        if response.status_code == 200:
+            return response.json()
+        return None
+    except Exception:
+        return None
+
+
+def delete_crypto_lots_by_batch(
+    token:           str,
+    financial_year:  str,
+    crypto_batch_id: str,
+) -> bool:
+    """Delete all crypto lots for the current user + FY + crypto_batch_id."""
+    try:
+        response = httpx.delete(
+            f"{FASTAPI_BASE_URL}/trading/crypto/lots",
+            headers=_auth_headers(token),
+            params={"financial_year": financial_year, "crypto_batch_id": crypto_batch_id},
+            timeout=10.0,
+        )
+        return response.status_code == 204
+    except Exception:
+        return False

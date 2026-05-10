@@ -15,6 +15,7 @@ from sqlalchemy.orm import Session
 
 from app.api.deps import get_current_user
 from app.database import get_db
+from app.models.manual_crypto_lot import ManualCryptoLot
 from app.models.manual_purchase_lot import ManualPurchaseLot
 from app.models.tax_report import TaxReport
 from app.models.user import User
@@ -272,3 +273,133 @@ def list_crypto_reports(
         .order_by(TaxReport.created_at.desc())
         .all()
     )
+
+
+# ── Crypto manual lot routes ──────────────────────────────────────────────────
+# Stored in manual_crypto_lots — never mixed with shares lots.
+
+class CryptoLotCreate(BaseModel):
+    financial_year:   str
+    asset:            str
+    acquisition_date: str           # "dd/mm/yyyy"
+    qty:              float
+    total_cost_aud:   float
+    fee_aud:          float = 0.0
+    crypto_batch_id:  Optional[str] = None
+
+
+class CryptoLotUpdate(BaseModel):
+    acquisition_date: Optional[str]   = None
+    qty:              Optional[float] = None
+    total_cost_aud:   Optional[float] = None
+    fee_aud:          Optional[float] = None
+
+
+class CryptoLotResponse(BaseModel):
+    id:               int
+    financial_year:   str
+    asset:            str
+    acquisition_date: str
+    qty:              float
+    total_cost_aud:   float
+    fee_aud:          float
+    crypto_batch_id:  Optional[str]
+    created_at:       datetime
+
+    class Config:
+        from_attributes = True
+
+
+@router.post("/crypto/lots", response_model=CryptoLotResponse, status_code=status.HTTP_201_CREATED)
+def save_crypto_lot(
+    body:         CryptoLotCreate,
+    current_user: User    = Depends(get_current_user),
+    db:           Session = Depends(get_db),
+):
+    lot = ManualCryptoLot(
+        user_id          = current_user.id,
+        financial_year   = body.financial_year,
+        asset            = body.asset.upper().strip(),
+        acquisition_date = body.acquisition_date,
+        qty              = body.qty,
+        total_cost_aud   = body.total_cost_aud,
+        fee_aud          = body.fee_aud,
+        crypto_batch_id  = body.crypto_batch_id,
+    )
+    db.add(lot)
+    db.commit()
+    db.refresh(lot)
+    return lot
+
+
+@router.get("/crypto/lots", response_model=list[CryptoLotResponse])
+def get_crypto_lots(
+    financial_year:  str           = Query(...),
+    asset:           Optional[str] = Query(None),
+    crypto_batch_id: Optional[str] = Query(None),
+    current_user:    User          = Depends(get_current_user),
+    db:              Session       = Depends(get_db),
+):
+    q = db.query(ManualCryptoLot).filter(
+        ManualCryptoLot.user_id        == current_user.id,
+        ManualCryptoLot.financial_year == financial_year,
+    )
+    if asset:
+        q = q.filter(ManualCryptoLot.asset == asset.upper().strip())
+    if crypto_batch_id:
+        q = q.filter(ManualCryptoLot.crypto_batch_id == crypto_batch_id)
+    return q.order_by(ManualCryptoLot.asset, ManualCryptoLot.acquisition_date).all()
+
+
+@router.put("/crypto/lots/{lot_id}", response_model=CryptoLotResponse)
+def update_crypto_lot(
+    lot_id:       int,
+    body:         CryptoLotUpdate,
+    current_user: User    = Depends(get_current_user),
+    db:           Session = Depends(get_db),
+):
+    lot = db.query(ManualCryptoLot).filter(
+        ManualCryptoLot.id      == lot_id,
+        ManualCryptoLot.user_id == current_user.id,
+    ).first()
+    if not lot:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Crypto lot not found")
+    if body.acquisition_date is not None: lot.acquisition_date = body.acquisition_date
+    if body.qty              is not None: lot.qty              = body.qty
+    if body.total_cost_aud   is not None: lot.total_cost_aud   = body.total_cost_aud
+    if body.fee_aud          is not None: lot.fee_aud          = body.fee_aud
+    db.commit()
+    db.refresh(lot)
+    return lot
+
+
+@router.delete("/crypto/lots", status_code=status.HTTP_204_NO_CONTENT)
+def delete_crypto_lots_batch(
+    financial_year:  str = Query(...),
+    crypto_batch_id: str = Query(...),
+    current_user:    User    = Depends(get_current_user),
+    db:              Session = Depends(get_db),
+):
+    """Delete all crypto lots for the current user + FY + crypto_batch_id."""
+    db.query(ManualCryptoLot).filter(
+        ManualCryptoLot.user_id         == current_user.id,
+        ManualCryptoLot.financial_year  == financial_year,
+        ManualCryptoLot.crypto_batch_id == crypto_batch_id,
+    ).delete(synchronize_session=False)
+    db.commit()
+
+
+@router.delete("/crypto/lots/{lot_id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_crypto_lot(
+    lot_id:       int,
+    current_user: User    = Depends(get_current_user),
+    db:           Session = Depends(get_db),
+):
+    lot = db.query(ManualCryptoLot).filter(
+        ManualCryptoLot.id      == lot_id,
+        ManualCryptoLot.user_id == current_user.id,
+    ).first()
+    if not lot:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Crypto lot not found")
+    db.delete(lot)
+    db.commit()

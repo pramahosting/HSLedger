@@ -5,17 +5,6 @@ from datetime import datetime, timedelta
 import extra_streamlit_components as stx
 from auth.api_client import login, register
 
-# current_dir = os.path.dirname(os.path.abspath(__file__))
-# auth_dir = os.path.join(current_dir, "Auth")
-# if auth_dir not in sys.path:
-#     sys.path.append(auth_dir)
-
-from auth.json_module import (
-    get_user, get_user_count, add_user, update_password,
-    set_reset_token, get_user_by_token, update_user, delete_user,
-    send_reset_email, get_all_users
-)
-
 # ===== COOKIE MANAGER =====
 def get_cookie_manager():
     return stx.CookieManager()
@@ -88,15 +77,7 @@ def login_tab(cookie_manager):
 
     with col2:
         if st.button("Forgot Password?", key="forgot_btn"):
-            if not email:
-                st.warning("Enter your email above first.")
-            else:
-                user = get_user(email)
-                if not user:
-                    st.error("No account found with that email.")
-                else:
-                    token = set_reset_token(email)
-                    send_reset_email(email, token)
+            st.info("Password reset is not available. Contact your administrator.")
 
     # Safely delete other related cookies if needed
     for cookie_name in ["auth_token", "user_role"]:  # add any other cookies you use
@@ -106,16 +87,7 @@ def login_tab(cookie_manager):
 
 # ===== RESET PASSWORD =====
 def reset_password_ui(token):
-    user = get_user_by_token(token)
-    if not user:
-        st.error("Invalid or expired reset link.")
-        return
-
-    st.subheader("Reset Password")
-    new_pass = st.text_input("New Password", type="password", key="reset_new_pass")
-    if st.button("Update Password", key="reset_update_btn"):
-        update_password(user["email"], new_pass)
-        st.success("Password updated! You can now log in.")
+    st.error("Password reset via link is not available. Contact your administrator.")
 
 
 # ===== SIGNUP TAB =====
@@ -177,34 +149,7 @@ def signup_tab():
 
 # ===== ADMIN PANEL =====
 def admin_panel():
-    search_query = st.text_input("Search by name or email", key="admin_search")
-
-    users = get_all_users(search_query)
-
-    for user in users:
-        with st.expander(f"{user['name']} ({user['email']})"):
-            name = st.text_input("Name", value=user.get("name", ""), key=f"name_{user['id']}")
-            email = st.text_input("Email", value=user.get("email", ""), key=f"email_{user['id']}")
-            address = st.text_area("Address", value=user.get("address", ""), key=f"address_{user['id']}")
-            company = st.text_input("Company", value=user.get("company", ""), key=f"company_{user['id']}")
-            phone = st.text_input("Phone", value=user.get("phone", ""), key=f"phone_{user['id']}")
-            is_admin = st.checkbox("Admin", value=user.get("is_admin", False), key=f"admin_{user['id']}")
-
-            if st.button("Save Changes", key=f"save_{user['id']}"):
-                try:
-                    update_user(user['id'], name, email, address, company, phone, is_admin)
-                    st.success("User updated")
-                    st.rerun()
-                except Exception as e:
-                    st.error(str(e))
-
-            if st.button("Delete User", key=f"delete_{user['id']}"):
-                try:
-                    delete_user(user['id'])
-                    st.warning("User deleted")
-                    st.rerun()
-                except Exception as e:
-                    st.error(str(e))
+    st.info("Admin user management is handled via the backend API. Use the database admin tools directly.")
 
 
 # ===== MAIN AUTH FUNCTION =====
