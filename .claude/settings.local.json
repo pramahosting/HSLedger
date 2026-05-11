@@ -13,7 +13,9 @@
       "Bash(pip install *)",
       "Bash(.venv/bin/pip install *)",
       "Bash(curl -s http://localhost:8000/trading/lots?financial_year=2024-25 -H \"X-Auth-Token: bad\")",
-      "Bash(curl -s http://localhost:8000/openapi.json)"
+      "Bash(curl -s http://localhost:8000/openapi.json)",
+      "Bash(awk -F',' 'NR>1 {print $2}' /home/ammulap/PycharmProjects/HSLedger/Test-Trading/crypto/fake_binance_transactions_1000.csv)",
+      "Bash(awk -F',' 'NR>1 {print $2}' /home/ammulap/PycharmProjects/HSLedger/Test-Trading/crypto/fake_coinspot_transactions_1000.csv)"
     ]
   }
 }
