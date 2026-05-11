@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python -c \"from app.api.trading import router; print\\('trading.py imports OK'\\)\")"
+    ]
+  }
+}

@@ -13,6 +13,7 @@ from app.models.permission import Permission
 from app.models.invoice import BusinessDetail, Customer, Invoice, InvoiceItem
 from app.models.session_token import SessionToken
 from app.models.manual_purchase_lot import ManualPurchaseLot
+from app.models.manual_crypto_lot import ManualCryptoLot
 from app.models.tax_report import TaxReport
 from app.models import association
 
@@ -62,6 +63,30 @@ def _migrate_add_trading_batch_id(db):
         ))
         db.commit()
         print("Migration: added trading_batch_id column to manual_purchase_lots.")
+
+
+def _migrate_create_manual_crypto_lots(db):
+    """Create manual_crypto_lots table if it doesn't exist (added in Crypto Module)."""
+    from sqlalchemy import inspect, text
+    if "manual_crypto_lots" not in inspect(engine).get_table_names():
+        db.execute(text("""
+            CREATE TABLE manual_crypto_lots (
+                id               INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_id          INTEGER NOT NULL,
+                financial_year   TEXT NOT NULL,
+                asset            TEXT NOT NULL,
+                acquisition_date TEXT NOT NULL,
+                qty              REAL NOT NULL,
+                total_cost_aud   REAL NOT NULL,
+                fee_aud          REAL DEFAULT 0.0,
+                crypto_batch_id  TEXT,
+                created_at       DATETIME DEFAULT CURRENT_TIMESTAMP
+            )
+        """))
+        db.execute(text("CREATE INDEX IF NOT EXISTS ix_manual_crypto_lots_user_id ON manual_crypto_lots (user_id)"))
+        db.execute(text("CREATE INDEX IF NOT EXISTS ix_manual_crypto_lots_crypto_batch_id ON manual_crypto_lots (crypto_batch_id)"))
+        db.commit()
+        print("Migration: created manual_crypto_lots table.")
 
 
 def _migrate_add_report_type(db):

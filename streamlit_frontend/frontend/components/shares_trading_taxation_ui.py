@@ -1135,6 +1135,7 @@ def _render_missing_buys_tab(result: TradingPipelineResult) -> None:
     if _batch_id and _auth_token() and _fy_now:
         if st.button(
             "🗑 Clear all lots for this upload",
+            key=f"{_P}clear_batch_btn",
             type="secondary",
             help="Permanently delete all manually entered lots for the current upload batch.",
         ):
@@ -1296,12 +1297,14 @@ def render() -> None:
         st.markdown("")
         process_btn = st.button(
             "▶ Process Files",
+            key=f"{_P}process_btn",
             type="primary",
             disabled=not uploaded,
             use_container_width=True,
         )
         reset_btn = st.button(
             "↺ Reset",
+            key=f"{_P}reset_btn",
             disabled=_get("result") is None,
             use_container_width=True,
         )
@@ -1446,6 +1449,7 @@ def render() -> None:
     with c1:
         gen_clicked = st.button(
             btn_label,
+            key=f"{_P}gen_report_btn",
             type="primary",
             use_container_width=True,
             disabled=not source_dir,
@@ -1453,6 +1457,7 @@ def render() -> None:
     with c2:
         partial_clicked = st.button(
             "Generate with partial data",
+            key=f"{_P}gen_partial_btn",
             use_container_width=True,
             disabled=not source_dir,
             help="Generate immediately even if some tickers still have unresolved missing buys.",

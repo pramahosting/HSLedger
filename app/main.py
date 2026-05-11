@@ -10,11 +10,12 @@ from app.api import trading
 async def lifespan(app: FastAPI):
     # Run idempotent schema migrations on every startup.
     from app.database import SessionLocal
-    from app.init_db import _migrate_add_trading_batch_id, _migrate_add_report_type
+    from app.init_db import _migrate_add_trading_batch_id, _migrate_add_report_type, _migrate_create_manual_crypto_lots
     db = SessionLocal()
     try:
         _migrate_add_trading_batch_id(db)
         _migrate_add_report_type(db)
+        _migrate_create_manual_crypto_lots(db)
     finally:
         db.close()
     yield
