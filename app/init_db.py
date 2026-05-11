@@ -56,7 +56,10 @@ ROLE_PERMISSIONS = {
 def _migrate_add_trading_batch_id(db):
     """Add trading_batch_id column to manual_purchase_lots if it doesn't exist yet."""
     from sqlalchemy import inspect, text
-    cols = [c["name"] for c in inspect(engine).get_columns("manual_purchase_lots")]
+    insp = inspect(engine)
+    if "manual_purchase_lots" not in insp.get_table_names():
+        return
+    cols = [c["name"] for c in insp.get_columns("manual_purchase_lots")]
     if "trading_batch_id" not in cols:
         db.execute(text(
             "ALTER TABLE manual_purchase_lots ADD COLUMN trading_batch_id TEXT"
@@ -92,7 +95,10 @@ def _migrate_create_manual_crypto_lots(db):
 def _migrate_add_report_type(db):
     """Add report_type column to tax_reports to separate stocks vs crypto reports."""
     from sqlalchemy import inspect, text
-    cols = [c["name"] for c in inspect(engine).get_columns("tax_reports")]
+    insp = inspect(engine)
+    if "tax_reports" not in insp.get_table_names():
+        return
+    cols = [c["name"] for c in insp.get_columns("tax_reports")]
     if "report_type" not in cols:
         db.execute(text(
             "ALTER TABLE tax_reports ADD COLUMN report_type TEXT DEFAULT 'stocks'"

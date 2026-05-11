@@ -8,9 +8,10 @@ from app.api import trading
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Run idempotent schema migrations on every startup.
-    from app.database import SessionLocal
+    from app.database import SessionLocal, engine
+    from app.models.base import Base
     from app.init_db import _migrate_add_trading_batch_id, _migrate_add_report_type, _migrate_create_manual_crypto_lots
+    Base.metadata.create_all(bind=engine)
     db = SessionLocal()
     try:
         _migrate_add_trading_batch_id(db)

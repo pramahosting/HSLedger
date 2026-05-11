@@ -1,7 +1,19 @@
 {
   "permissions": {
     "allow": [
-      "Bash(python -c \"from app.api.trading import router; print\\('trading.py imports OK'\\)\")"
+      "Bash(python -c \"from app.api.trading import router; print\\('trading.py imports OK'\\)\")",
+      "Bash(git ls-tree *)",
+      "Bash(.venv/bin/python *)",
+      "Bash(./../.venv/bin/python -c ' *)",
+      "Bash(./../.venv/bin/python *)",
+      "Bash(sqlite3 *)",
+      "Bash(pkill -f \"uvicorn main:app\")",
+      "Bash(echo \"PID: $!\")",
+      "Bash(grep -E \"\\\\.py$|\\\\.txt$\")",
+      "Bash(pip install *)",
+      "Bash(.venv/bin/pip install *)",
+      "Bash(curl -s http://localhost:8000/trading/lots?financial_year=2024-25 -H \"X-Auth-Token: bad\")",
+      "Bash(curl -s http://localhost:8000/openapi.json)"
     ]
   }
 }
